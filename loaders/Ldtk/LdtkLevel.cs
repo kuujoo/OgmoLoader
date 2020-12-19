@@ -1,4 +1,4 @@
-﻿namespace kuujoo.Alla
+﻿namespace kuujoo.Pixel
 {
     public class LdtkLevel
     {
