@@ -29,6 +29,10 @@ namespace kuujoo.Pixel
 		{
 			return min + NextFloat(max - min);
 		}
+		public static Vector2 Range(Vector2 min, Vector2 max)
+        {
+			return new Vector2(Range(min.X, max.X), Range(min.Y, max.Y));
+        }
 		public static Microsoft.Xna.Framework.Vector2 Point(Microsoft.Xna.Framework.Vector2 min, Microsoft.Xna.Framework.Vector2 max)
 		{
 			return min + new Microsoft.Xna.Framework.Vector2(NextFloat(max.X - min.X), NextFloat(max.Y - min.Y));
