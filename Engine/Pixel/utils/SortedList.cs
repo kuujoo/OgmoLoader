@@ -14,6 +14,25 @@ namespace kuujoo.Pixel
         {
             _sort = true;
         }
+        public I GetItemOfType<I>() where I : class
+        {
+            for(var i = 0; i < _items.Count; i++)
+            {
+                if(_items[i] is I)
+                {
+                    return _items[i] as I;
+                }
+            }
+
+            for (var i = 0; i < _itemsToAdd.Count; i++)
+            {
+                if (_itemsToAdd[i] is I)
+                {
+                    return _itemsToAdd[i] as I;
+                }
+            }
+            return null;
+        }
         public void UpdateLists()
         {
             if(_itemsToRemove.Count > 0)
