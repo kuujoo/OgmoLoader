@@ -37,14 +37,7 @@ namespace kuujoo.Pixel
         }
         public T GetComponent<T>() where T : class
         {
-            for(var i = 0; i < Components.Count; i++)
-            {
-                if(Components[i] is T)
-                {
-                    return Components[i] as T;
-                }
-            }
-            return null;
+            return Components.GetItemOfType<T>();
         }
         public void SetDepth(int depth)
         {
