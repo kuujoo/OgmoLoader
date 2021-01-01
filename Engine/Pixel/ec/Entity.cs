@@ -8,7 +8,7 @@ namespace kuujoo.Pixel
 {
     public class Entity : IComparable<Entity>
     {
-        public Microsoft.Xna.Framework.Vector2 Position { get; set; }
+        public Vector2 Position;
         public bool Enabled => _enabled;
         public uint Id { get; private set; }
         public int Depth { get; set; }
