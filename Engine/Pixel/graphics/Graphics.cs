@@ -12,6 +12,7 @@ namespace kuujoo.Pixel
         public GraphicsDevice Device => DeviceManager.GraphicsDevice;
         public Texture2D Pixel { get; private set; }
         public SpriteBatch SpriteBatch { get; set; }
+        Surface _currentSurface = null;
         public void SetRenderTargetToBackBuffer()
         {
             Device.SetRenderTarget(null);
@@ -30,34 +31,34 @@ namespace kuujoo.Pixel
                 Pixel.SetData<Color>(colors);
             }
         }
-        public void Begin(Surface surface)
+        public void Begin(Camera camera = null)
         {
-            if (surface != null)
+            if (camera != null && camera.Surface != null)
             {
-                Device.SetRenderTarget(surface.Target);
+                Device.SetRenderTarget(camera.Surface.Target); 
             }
             else
             {
                 Device.SetRenderTarget(null);
             }
-            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-        }
-        public void Begin(Surface surface, Color clearcolor)
-        {
-            if (surface != null)
+
+            if (camera != null && camera.Type == CameraType.Base)
             {
-                Device.SetRenderTarget(surface.Target);
+                Device.Clear(camera.BackgroundColor);
+            }
+            if (camera != null)
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, camera.Matrix);
             }
             else
             {
-                Device.SetRenderTarget(null);
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
             }
-            Device.Clear(clearcolor);
-            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
         }
         public void End()
         {
             SpriteBatch.End();
+            _currentSurface = null;
         }
         public void DrawSprite(Microsoft.Xna.Framework.Vector2 at, Sprite sprite, Color color)
         {

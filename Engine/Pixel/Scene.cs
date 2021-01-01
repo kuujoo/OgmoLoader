@@ -13,7 +13,7 @@ namespace kuujoo.Pixel
         public PixelContentManager Content { get; private set; }
         public bool Paused;
         public EntityList Entities;
-        List<Renderer> _renderers = new List<Renderer>();
+        List<Camera> _cameras = new List<Camera>();
         List<SceneComponent> _sceneComponents = new List<SceneComponent>();
         Rectangle _finalDestinationRect;
         public Scene(int game_width, int game_height)
@@ -46,13 +46,13 @@ namespace kuujoo.Pixel
             }
             return null;
         }
-        public void AddRenderer(Renderer renderer)
+        public void AddCamera(Camera camera)
         {
-            if(renderer.Surface == null)
+            if(camera.Surface == null)
             {
-                renderer.Surface = ApplicationSurface;
+                camera.Surface = ApplicationSurface;
             }
-            _renderers.Add(renderer);
+            _cameras.Add(camera);
         }
         public void ResizeApplicationSurface(int game_width, int game_height)
         {
@@ -148,11 +148,10 @@ namespace kuujoo.Pixel
         }
         public void Render()
         {
-            for (var i = 0; i < _renderers.Count; i++)
+            _cameras.Sort();
+            for (var i = 0; i < _cameras.Count; i++)
             {
-                _renderers[i].BeginRender(this);
-                _renderers[i].Render(this);
-                _renderers[i].EndRender(this);
+                _cameras[i].Render(this);
             }
 
             var gfx = Engine.Instance.Graphics;

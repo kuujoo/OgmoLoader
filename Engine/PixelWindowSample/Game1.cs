@@ -15,7 +15,7 @@ namespace kuujoo.Pixel
         {
             base.Initialize();
             var room = new Scene(384, 216);
-            room.AddRenderer(new DefaultRenderer());
+            room.AddCamera(new Camera(384, 216));
             Scene = room;
         }
     }
