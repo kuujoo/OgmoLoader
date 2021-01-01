@@ -3,10 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace kuujoo.Pixel
 {
-    public class AseSpriteSheet : SpriteSheet
+    public class AseSpriteAtlas : SpriteAtlas
     {
         AseSprite _asesprite;
-        public AseSpriteSheet(AseSprite ase)
+        public AseSpriteAtlas(AseSprite ase)
         {
             Texture = Texture;
             _asesprite = ase;
@@ -37,16 +37,16 @@ namespace kuujoo.Pixel
 
     public partial class PixelContentManager
     {
-        public SpriteSheet LoadASESpriteSheet(string name)
+        public SpriteAtlas LoadASESpriteSheet(string name)
         {
             if (_loadedAssets.TryGetValue(name, out var asset))
             {
-                if (asset is SpriteSheet s)
+                if (asset is SpriteAtlas s)
                 {
                     return s;
                 }
             }
-            var sheet = new AseSpriteSheet(new AseSprite(name, false));
+            var sheet = new AseSpriteAtlas(new AseSprite(name, false));
             _loadedAssets[name] = sheet;
             _disposableAssets.Add(sheet);
             return sheet;

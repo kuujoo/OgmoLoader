@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace kuujoo.Pixel
 {
-    public abstract class SpriteSheet : IDisposable
+    public abstract class SpriteAtlas : IDisposable
     {
         public string Name { get; protected set; }
         public Texture2D Texture { get; protected set; }
