@@ -1,1 +1,1 @@
-Pixel is collection of classes and systems for 2D games.
+Pixel is simple 2D game framework made in C# .NET Core.
