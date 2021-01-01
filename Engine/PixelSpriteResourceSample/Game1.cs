@@ -51,7 +51,7 @@ namespace kuujoo.Pixel
 
             var room = new Scene(384, 216);
             room.AddSceneComponent(new SpriteResources());
-            room.AddRenderer(new DefaultRenderer());
+            room.AddCamera(new Camera(384, 216));
 
             // Entity & Component - preferred
             var entity = room.CreateEntity();
