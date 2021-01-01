@@ -1,0 +1,57 @@
+{ "frames": {
+   "12x12_sheet.aseprite": {
+    "frame": { "x": 0, "y": 0, "w": 240, "h": 240 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 240 },
+    "sourceSize": { "w": 240, "h": 240 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.25-x64",
+  "image": "12x12_sheet.png",
+  "format": "RGBA8888",
+  "size": { "w": 240, "h": 240 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Tiles", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+   { "name": "Trampoliini", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 0, "y": 144, "w": 48, "h": 12 } }] },
+   { "name": "Lift", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 0, "y": 108, "w": 144, "h": 12 } }] },
+   { "name": "SpikesUp", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 0, "y": 168, "w": 12, "h": 12 } }] },
+   { "name": "Torch", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 0, "y": 120, "w": 12, "h": 24 } }] },
+   { "name": "SolidTiles", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 0, "y": 0, "w": 120, "h": 96 } }] },
+   { "name": "DecorTiles", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 144, "y": 0, "w": 96, "h": 72 } }] },
+   { "name": "WaterTiles", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 180, "y": 120, "w": 60, "h": 24 } }] },
+   { "name": "WaterFallTop", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 180, "y": 72, "w": 60, "h": 12 } }] },
+   { "name": "WaterFallMid", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 180, "y": 84, "w": 60, "h": 12 } }] },
+   { "name": "WaterFallBottom", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 180, "y": 96, "w": 60, "h": 12 } }] },
+   { "name": "Symbols", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 0, "y": 96, "w": 108, "h": 12 } }] },
+   { "name": "LargeMetalBox_9slice", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 96, "y": 132, "w": 36, "h": 36 } }] },
+   { "name": "SmallMetalBox", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 132, "y": 120, "w": 12, "h": 12 } }] },
+   { "name": "SmallWoodBox", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 144, "y": 120, "w": 12, "h": 12 } }] },
+   { "name": "SpikesRight", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 12, "y": 168, "w": 12, "h": 12 } }] },
+   { "name": "SpikesDown", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 24, "y": 168, "w": 12, "h": 12 } }] },
+   { "name": "SpikesLeft", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 36, "y": 168, "w": 12, "h": 12 } }] },
+   { "name": "Flame", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 24, "y": 156, "w": 12, "h": 12 } }] },
+   { "name": "TorchLight", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 12, "y": 120, "w": 12, "h": 24 } }] },
+   { "name": "InteractableIcon", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 12, "y": 156, "w": 12, "h": 12 }, "pivot": {"x": 6, "y": 12 } }] },
+   { "name": "Owen", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 24, "y": 120, "w": 13, "h": 24 } }] },
+   { "name": "OwenLight", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 38, "y": 120, "w": 13, "h": 24 } }] },
+   { "name": "CrumblingPlatform", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 60, "y": 132, "w": 12, "h": 12 }, "pivot": {"x": 0, "y": 0 } }] },
+   { "name": "CrumbledCrumblingPlatform", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 72, "y": 132, "w": 12, "h": 12 }, "pivot": {"x": 0, "y": 0 } }] },
+   { "name": "BreakablePlatform", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 60, "y": 144, "w": 12, "h": 12 } }] },
+   { "name": "BrokenBreakablePlatform", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 72, "y": 144, "w": 12, "h": 12 } }] },
+   { "name": "MetalPlatform", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 96, "y": 120, "w": 36, "h": 12 } }] },
+   { "name": "Door", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 60, "y": 168, "w": 12, "h": 36 }, "pivot": {"x": 0, "y": 0 } }] },
+   { "name": "ArtifactPedestalLight", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 0, "y": 204, "w": 24, "h": 12 }, "pivot": {"x": 0, "y": 0 } }] },
+   { "name": "ArtifactOfFlame", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 0, "y": 192, "w": 12, "h": 12 }, "pivot": {"x": 5, "y": 12 } }] },
+   { "name": "ArtifactPedestal", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 24, "y": 204, "w": 24, "h": 12 }, "pivot": {"x": 0, "y": 0 } }] }
+  ]
+ }
+}
