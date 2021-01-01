@@ -96,7 +96,7 @@ namespace kuujoo.Pixel
             _sceneComponents.Clear();
             Entities.RemoveAll();
         }
-        public void Update ()
+        public virtual void Update ()
         {
             if (Paused) return;
             Entities.UpdateLists();
