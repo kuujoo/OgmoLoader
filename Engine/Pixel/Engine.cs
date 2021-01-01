@@ -53,9 +53,7 @@ namespace kuujoo.Pixel
         protected override void Initialize()
         {
             base.Initialize();          
-            Window.ClientSizeChanged += OnClientSizeChanged;
-            //Workaround for monogame 3.8 bug: base.initialize changes the window size, so lets change it back.
-            Screen.SetSize(1920, 1080);          
+            Window.ClientSizeChanged += OnClientSizeChanged;      
         }
         [Conditional("DEBUG")]
         private void StartDebugUpdate(GameTime gameTime)
