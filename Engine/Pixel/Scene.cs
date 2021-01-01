@@ -23,7 +23,12 @@ namespace kuujoo.Pixel
             Entities = new EntityList(this);
             ApplicationSurface = new Surface(game_width, game_height);
             UpdateDrawRect();
+            Initialize();
 ;       }
+        public virtual void Initialize()
+        {
+
+        }
         public void AddSceneComponent(SceneComponent sceneComponent)
         {
             sceneComponent.Scene = this;
