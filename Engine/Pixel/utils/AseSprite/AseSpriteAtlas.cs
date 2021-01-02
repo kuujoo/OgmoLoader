@@ -35,7 +35,7 @@ namespace kuujoo.Pixel
         }       
     }
 
-    public partial class PixelContentManager
+    public partial class RuntimeContentManager
     {
         public SpriteAtlas LoadASESpriteSheet(string name)
         {

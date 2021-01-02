@@ -10,7 +10,7 @@ namespace kuujoo.Pixel
     {
         public Color ClearColor { get; set; }
         public Surface ApplicationSurface { get; set; }
-        public PixelContentManager Content { get; private set; }
+        public RuntimeContentManager Content { get; private set; }
         public bool Paused;
         List<Camera> _cameras = new List<Camera>();
         List<SceneComponent> _sceneComponents = new List<SceneComponent>();
@@ -19,7 +19,7 @@ namespace kuujoo.Pixel
         public Scene(int game_width, int game_height)
         {
             ClearColor = Color.Aquamarine;
-            Content = new PixelContentManager();
+            Content = new RuntimeContentManager();
             ApplicationSurface = new Surface(game_width, game_height);
             UpdateDrawRect();
             Initialize();

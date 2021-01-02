@@ -1,17 +1,16 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Content;
 using System.IO;
 using Microsoft.Xna.Framework;
 
 namespace kuujoo.Pixel
 {
-    public partial class PixelContentManager : IDisposable
+    public partial class RuntimeContentManager : IDisposable
 	{
 		Dictionary<string, object> _loadedAssets = new Dictionary<string, object>();
 		List<IDisposable> _disposableAssets = new List<IDisposable>();
-		public PixelContentManager()
+		public RuntimeContentManager()
 		{
 		}
 		public Texture2D LoadTexture(string name)
@@ -29,33 +28,6 @@ namespace kuujoo.Pixel
 				_disposableAssets.Add(texture);
 
 				return texture;
-			}
-		}
-		public void UnloadAsset<T>(string assetName) where T : class, IDisposable
-		{
-			if (_loadedAssets.ContainsKey(assetName))
-			{
-				try
-				{
-					// first fetch the actual asset. we already know its loaded so we'll grab it directly
-					var assetToRemove = _loadedAssets[assetName];
-					for (var i = 0; i < _disposableAssets.Count; i++)
-					{
-						// see if the asset is disposeable. If so, find and dispose of it.
-						var typedAsset = _disposableAssets[i] as T;
-						if (typedAsset != null && typedAsset == assetToRemove)
-						{
-							typedAsset.Dispose();
-							_disposableAssets.RemoveAt(i);
-							break;
-						}
-					}
-
-					_loadedAssets.Remove(assetName);
-				}
-				catch (Exception)
-				{
-				}
 			}
 		}
 		void Dispose(bool dispose)
