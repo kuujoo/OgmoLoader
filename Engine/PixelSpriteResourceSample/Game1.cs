@@ -51,17 +51,20 @@ namespace kuujoo.Pixel
 
             var room = new Scene(384, 216);
             room.AddSceneComponent(new SpriteResources());
-            room.AddCamera(new Camera(384, 216));
+            room.AddCamera(new Camera(384, 216)
+            {
+                BackgroundColor = Color.Aquamarine
+            });
 
+            room.CreateEntityLayer(0);
             // Entity & Component - preferred
-            var entity = room.CreateEntity();
+            var entity = room.CreateEntity(0);
             entity.AddComponent(new SpriteComponent());
-            entity.Position = new Microsoft.Xna.Framework.Vector2(50, 50);
-
-
+            entity.Position = new Vector2(50, 50);
             // Subclassed entity, fast and easy
-            var entity2 = room.AddEntity(new SpriteEntity());
-            entity2.Position = new Microsoft.Xna.Framework.Vector2(100, 100);
+            var entity2 = room.AddEntity(0, new SpriteEntity());
+            entity2.Position = new Vector2(100, 100);
+
             Scene = room;
         }
     }

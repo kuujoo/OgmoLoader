@@ -31,21 +31,22 @@ namespace kuujoo.Pixel
             base.Initialize();
             _camera = new TagCamera(384, 216)
             {
-                RenderTag = 1
+                RenderTag = 1,
+                Priority = 0
             };
 
             _camera2 = new TagCamera(384, 216)
             {
-                RenderTag = 2
+                RenderTag = 2,
+                Priority = 1
             };
+            _camera.SetCenterOrigin();
+            _camera2.SetCenterOrigin();
 
             AddCamera(_camera);
             AddCamera(_camera2);
+            CreateEntityLayer(0);
 
-            _camera.SetCenterOrigin();
-            _camera.Priority = 0;
-            _camera2.SetCenterOrigin();
-            _camera2.Priority = 1;
             _currentCamera = _camera2;
 
 
@@ -53,7 +54,7 @@ namespace kuujoo.Pixel
             {
                 for (var j = 0; j < 216 / 12; j++)
                 {
-                    var e = CreateEntity();
+                    var e = CreateEntity(0);
                     e.AddComponent(new RectangleRenderer(Color.White));
                     e.Position = new Vector2(i * 12, j * 12);
                     e.Tag = 1;
@@ -64,7 +65,7 @@ namespace kuujoo.Pixel
             {
                 for (var j = 0; j < 216 / 12; j++)
                 {
-                    var e = CreateEntity();
+                    var e = CreateEntity(0);
                     e.AddComponent(new RectangleRenderer(Color.Red));
                     e.Position = new Vector2(i * 12, j * 12);
                     e.Tag = 2;
