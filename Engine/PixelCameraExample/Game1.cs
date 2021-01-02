@@ -19,16 +19,37 @@ namespace kuujoo.Pixel
 
     public class RectangleScene : Scene
     {
+        Input UpInput;
+        Input DownInput;
+        Input LeftInput;
+        Input RightInput;
+        Input SwitchCameraInput;
+        Input ZoomInInput;
+        Input ZoomOutInput;
+
         Camera _camera;
         Camera _camera2;
         Camera _currentCamera;
-        bool _spaceReleased = true;
+ 
         public RectangleScene() : base(384, 216)
         {
+        }
+        void InitInputs()
+        {
+            LeftInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Left), new GamepadInputNode(0, Buttons.DPadLeft) }, 0.0f);
+            RightInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Right), new GamepadInputNode(0, Buttons.DPadRight) }, 0.0f);
+            UpInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Up), new GamepadInputNode(0, Buttons.DPadUp) }, 0.0f);
+            DownInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Down), new GamepadInputNode(0, Buttons.DPadDown) }, 0.0f);
+            SwitchCameraInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Space), new GamepadInputNode(0, Buttons.A)}, 0.0f);
+            ZoomOutInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Subtract), new GamepadInputNode(0, Buttons.LeftTrigger) }, 0.0f);
+            ZoomInInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Add), new GamepadInputNode(0, Buttons.RightTrigger) }, 0.0f);
         }
         public override void Initialize()
         {
             base.Initialize();
+
+            InitInputs();
+
             _camera = new TagCamera(384, 216)
             {
                 RenderTag = 1,
@@ -74,31 +95,31 @@ namespace kuujoo.Pixel
         }
         public override void Update()
         {
-            if(Keyboard.GetState().IsKeyDown(Keys.Left))
+            if(LeftInput.Down)
             {
                 _currentCamera.Translate(-60 * Time.DeltaTime, 0.0f);
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            if (RightInput.Down)
             {
                 _currentCamera.Translate(60 * Time.DeltaTime, 0.0f);
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            if (UpInput.Down)
             {
                 _currentCamera.Translate(0.0f, -60 * Time.DeltaTime);
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            if (DownInput.Down)
             {
                 _currentCamera.Translate(0.0f, +60 * Time.DeltaTime);
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Add))
+            if (ZoomInInput.Down)
             {
-                _currentCamera.Zoom = MathHelper.Clamp(_camera.Zoom + 0.5f * Time.DeltaTime, 1.0f, 3.0f);
+                _currentCamera.Zoom = MathHelper.Clamp(_currentCamera.Zoom + 0.5f * Time.DeltaTime, 1.0f, 3.0f);
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Subtract))
+            if (ZoomOutInput.Down)
             {
-                _currentCamera.Zoom = MathHelper.Clamp(_camera.Zoom - 0.5f * Time.DeltaTime, 1.0f, 3.0f);
+                _currentCamera.Zoom = MathHelper.Clamp(_currentCamera.Zoom - 0.5f * Time.DeltaTime, 1.0f, 3.0f);
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && _spaceReleased)
+            if (SwitchCameraInput.Pressed)
             {
                 if (_currentCamera == _camera)
                 {
@@ -112,13 +133,8 @@ namespace kuujoo.Pixel
                     _camera2.Priority = 0;
                     _currentCamera = _camera;
                 }
-                _spaceReleased = false;
             }
-            if(Keyboard.GetState().IsKeyUp(Keys.Space))
-            {
-                _spaceReleased = true;
-            }
-                base.Update();
+            base.Update();
         }
     }
 
@@ -128,7 +144,6 @@ namespace kuujoo.Pixel
         {
 
         }
-
         protected override void Initialize()
         {
             base.Initialize();
