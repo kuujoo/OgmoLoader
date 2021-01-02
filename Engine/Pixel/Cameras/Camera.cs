@@ -14,6 +14,7 @@ namespace kuujoo.Pixel
     }
     public class Camera : IComparable<Camera>
     {
+        public bool Enabled { get; set; }
         public Color BackgroundColor { get; set; }
         public CameraType Type { get; set; }
         public int Priority { get; set; }
@@ -75,6 +76,7 @@ namespace kuujoo.Pixel
         float _zoom = 1.0f;
         public Camera(int width, int height, CameraType type = CameraType.Base, int priority = 0)
         {
+            Enabled = true;
             var port = default(Viewport);
             port.Width = width;
             port.Height = height;
