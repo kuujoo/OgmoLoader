@@ -9,7 +9,7 @@ namespace kuujoo.Pixel
 
     public class Engine : Game
     {
-        public static Color ClearColor = Color.Black;
+        public Color ClearColor = Color.Black;
         public static Engine Instance => _instance;
         public Graphics Graphics { get; set; }
         public Scene Scene { get { return _scene; } set { _nextScene = value; } }
