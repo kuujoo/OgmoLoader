@@ -12,6 +12,7 @@ namespace kuujoo.Pixel
         public Color ClearColor = Color.Black;
         public static Engine Instance => _instance;
         public Graphics Graphics { get; set; }
+        public Inputs Inputs { get; private set; }
         public Scene Scene { get { return _scene; } set { _nextScene = value; } }
         public bool PauseOnFocusLost { get; set; }     
         FpsCounter _frameCounter = new FpsCounter();
@@ -44,6 +45,7 @@ namespace kuujoo.Pixel
             Graphics = new Graphics();
             Graphics.Bind(graphics);
             Screen.Bind(graphics);
+            Inputs = new Inputs();
             _coroutineManager = new CoroutineManager();
         }
         public ICoroutine StartCoroutine(IEnumerator enumerator)
@@ -72,6 +74,7 @@ namespace kuujoo.Pixel
             }
             StartDebugUpdate(gameTime);
             {
+                Inputs.Update();
                 Time.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                 _coroutineManager.Update();
                 if (_nextScene != null)
