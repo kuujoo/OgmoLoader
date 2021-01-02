@@ -7,18 +7,9 @@
         {
             RenderTag = 0;
         }
-        public override void Render(Scene scene)
+        public override bool CanSee(Entity entity)
         {
-            var gfx = Engine.Instance.Graphics;
-            gfx.Begin(this);
-            for (var i = 0; i < scene.Entities.Count; i++)
-            {
-                if (scene.Entities[i].Tag == RenderTag)
-                {
-                    scene.Entities[i].Render(gfx);
-                }
-            }
-            gfx.End();
+            return entity.Tag == RenderTag;
         }
     }
 }

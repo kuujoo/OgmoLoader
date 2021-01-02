@@ -16,6 +16,7 @@ namespace kuujoo.Pixel
         public int Tag { get; set; }
         public Scene Scene { get; set; }
         public ComponentList Components { get; private set; }
+        public EntityLayer Layer { get; set; }
 
         static uint _idGenerator = 0;
         bool _enabled = true;
@@ -44,40 +45,32 @@ namespace kuujoo.Pixel
             if(Depth != depth)
             {
                 Depth = depth;
-                Scene.Entities.MarkListUnsorted();
+                Layer.Entities.MarkListUnsorted();
             }
         }
         public virtual void Render(Graphics graphics)
         {
-            for (var i = 0; i < Components.Count; i++)
-            {
-                if (Components[i].Enabled)
-                {
-                    Components[i].Render(graphics);
-                }
-            }
+            var visitor = ComponentListVisitor.RenderVisitor;
+            visitor.Graphics = graphics;
+            Components.AcceptVisitor(visitor, false);
         }
         public virtual void OnGraphicsDeviceReset()
         {
-            for(var i = 0; i < Components.Count; i++)
-            {
-                Components[i].OnGraphicsDeviceReset();
-            }
+            Components.AcceptVisitor(ComponentListVisitor.GraphicsDeviceResetVisitor, true);
         }
         public virtual void Destroy()
         {
-            Components.RemoveAll();
+            Components.AcceptVisitor(ComponentListVisitor.DestroyVisitor, true);
+        }
+        public virtual void CleanUp()
+        {
+            Components.AcceptVisitor(ComponentListVisitor.CleanUpVisitor, true);
+            Components.Clear();
         }
         public virtual void Update()
         {
             Components.UpdateLists();
-            for (var i = 0; i < Components.Count; i++)
-            {
-                if (Components[i].Enabled)
-                {
-                    Components[i].Update();
-                }
-            }
+            Components.AcceptVisitor(ComponentListVisitor.UpdateVisitor, false);
         }
         public int CompareTo(Entity other)
         {

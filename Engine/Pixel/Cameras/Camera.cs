@@ -14,6 +14,7 @@ namespace kuujoo.Pixel
     }
     public class Camera : IComparable<Camera>
     {
+        public List<int> IgnoreLayers { get; private set; }
         public bool Enabled { get; set; }
         public Color BackgroundColor { get; set; }
         public CameraType Type { get; set; }
@@ -68,13 +69,25 @@ namespace kuujoo.Pixel
                 _updateMatrices = true;
             }
         }
+        public Rectangle Bounds
+        {
+            get
+            {
+                if (_updateMatrices)
+                {
+                    UpdateMatrices();
+                    _updateMatrices = false;
+                }
+                return new Rectangle(Vector2.Transform(Vector2.Zero, _inverseMatrix).ToPoint(), Vector2.Transform(new Vector2(Viewport.Width, Viewport.Height), _inverseMatrix).ToPoint());
+            }
+        }
         private Matrix _matrix = Matrix.Identity;
         private Matrix _inverseMatrix = Matrix.Identity;
         Vector2 _position = Vector2.Zero;
         Vector2 _origin = Vector2.Zero;
         bool _updateMatrices = true;
         float _zoom = 1.0f;
-        public Camera(int width, int height, CameraType type = CameraType.Base, int priority = 0)
+        public Camera(int width, int height, CameraType type = CameraType.Base)
         {
             Enabled = true;
             var port = default(Viewport);
@@ -82,8 +95,9 @@ namespace kuujoo.Pixel
             port.Height = height;
             Viewport = port;
             Type = type;
-            Priority = Priority;
+            Priority = 0;
             BackgroundColor = Color.Black;
+            IgnoreLayers = new List<int>();
         }
         public void Translate(float x, float y)
         {
@@ -99,22 +113,19 @@ namespace kuujoo.Pixel
             _matrix = Matrix.Identity * translation * scale * origin_translation;
             _inverseMatrix = Matrix.Invert(_matrix);
         }
+        public bool CanRenderLayer(Layer layer)
+        {
+            return !IgnoreLayers.Contains(layer.Id);
+        }
         public void SetCenterOrigin()
         {
             _origin = new Vector2(Viewport.Width / 2.0f, Viewport.Height / 2.0f);
             _updateMatrices = true;
         }
-        public virtual void Render(Scene scene)
+        public virtual bool CanSee(Entity entity)
         {
-            var gfx = Engine.Instance.Graphics;
-            gfx.Begin(this);
-            for (var i = 0; i < scene.Entities.Count; i++)
-            {
-                scene.Entities[i].Render(gfx);
-            }
-            gfx.End();
+            return true;
         }
-
         public int CompareTo([AllowNull] Camera other)
         {
             return Priority.CompareTo(other.Priority);

@@ -12,34 +12,56 @@ namespace kuujoo.Pixel
         public Surface ApplicationSurface { get; set; }
         public PixelContentManager Content { get; private set; }
         public bool Paused;
-        public EntityList Entities;
         List<Camera> _cameras = new List<Camera>();
         List<SceneComponent> _sceneComponents = new List<SceneComponent>();
         Rectangle _finalDestinationRect;
+        List<Layer> _layers = new List<Layer>();
         public Scene(int game_width, int game_height)
         {
             ClearColor = Color.Aquamarine;
             Content = new PixelContentManager();
-            Entities = new EntityList(this);
             ApplicationSurface = new Surface(game_width, game_height);
             UpdateDrawRect();
             Initialize();
-;       }
+        }
         public virtual void Initialize()
         {
 
         }
-        public void AddSceneComponent(SceneComponent sceneComponent)
+        public EntityLayer CreateEntityLayer(int id)
+        {
+            var layer = new EntityLayer(this, id);
+            _layers.Add(layer);
+            return layer;
+        }
+        public TileLayer CreateTileLayer(int id, int width, int height, Tileset tileset)
+        {
+            var layer = new TileLayer(this, id, width, height, tileset);
+            _layers.Add(layer);
+            return layer;
+        }
+        public T GetLayer<T>(int id) where T: Layer
+        {
+            for (var i = 0; i < _layers.Count; i++) {
+                if(_layers[i].Id == id)
+                {
+                    return _layers[i] as T;
+                }
+            }
+            return null;
+        }
+        public SceneComponent AddSceneComponent(SceneComponent sceneComponent)
         {
             sceneComponent.Scene = this;
             sceneComponent.Initialize();
             _sceneComponents.Add(sceneComponent);
+            return sceneComponent;
         }
         public T GetSceneComponent<T>() where T : SceneComponent
         {
-            for(var i = 0; i < _sceneComponents.Count; i++)
+            for (var i = 0; i < _sceneComponents.Count; i++)
             {
-                if(_sceneComponents[i] is T)
+                if (_sceneComponents[i] is T)
                 {
                     return _sceneComponents[i] as T;
                 }
@@ -48,7 +70,7 @@ namespace kuujoo.Pixel
         }
         public void AddCamera(Camera camera)
         {
-            if(camera.Surface == null)
+            if (camera.Surface == null)
             {
                 camera.Surface = ApplicationSurface;
             }
@@ -58,64 +80,108 @@ namespace kuujoo.Pixel
         {
             ApplicationSurface.Resize(game_width, game_height);
         }
-        public Entity CreateEntity()
+        public Entity CreateEntity(int layerid)
         {
-            var entity = new Entity();
-            Entities.AddEntity(entity);
-            return entity;
+            for (var i = 0; i < _layers.Count; i++)
+            {
+                if (_layers[i].Id == layerid)
+                {
+                    var entity_layer = _layers[i] as EntityLayer;
+                    if (entity_layer != null)
+                    {
+                        var entity = new Entity();
+                        entity_layer.Entities.AddEntity(entity);
+                        return entity;
+                    }
+                }
+            }
+            return null;
         }
         public void DestroyEntity(Entity entity)
         {
-            Entities.Remove(entity);
+            for (var i = 0; i < _layers.Count; i++)
+            {
+                var entity_layer = _layers[i] as EntityLayer;
+                if (entity_layer != null)
+                {
+                    entity.Destroy();
+                    entity.CleanUp();
+                    entity_layer.Entities.Remove(entity);
+                }
+            }
         }
         public void RemoveSceneComponent(SceneComponent component)
         {
             _sceneComponents.Remove(component);
             component.RemovedFromScene();
         }
-        public T CreateEntity<T>() where T : Entity, new()
+        public T CreateEntity<T>(int layerid) where T : Entity, new()
         {
-            var entity = new T();
-            Entities.AddEntity(entity);
-            return entity;
+            for (var i = 0; i < _layers.Count; i++)
+            {
+                if (_layers[i].Id == layerid)
+                {
+                    var entity_layer = _layers[i] as EntityLayer;
+                    if (entity_layer != null)
+                    {
+                        var entity = new T();
+                        entity_layer.Entities.AddEntity(entity);
+                        return entity;
+                    }
+                }
+            }
+            return null;
         }
-        public Entity AddEntity(Entity entity)
+        public Entity AddEntity(int layerid, Entity entity)
         {
-            Entities.AddEntity(entity);
-            return entity;
+            for (var i = 0; i < _layers.Count; i++)
+            {
+                if (_layers[i].Id == layerid)
+                {
+                    var entity_layer = _layers[i] as EntityLayer;
+                    if (entity_layer != null)
+                    {
+                        entity_layer.Entities.AddEntity(entity);
+                        return entity;
+                    }
+                }
+            }
+            return null;
         }
         public void BeginScene()
         {
         }
         public void EndScene()
         {
-            for(var i = 0; i < _sceneComponents.Count; i++)
+            for (var i = 0; i < _sceneComponents.Count; i++)
             {
                 _sceneComponents[i].CleanUp();
             }
             _sceneComponents.Clear();
-            Entities.RemoveAll();
+
+            for (var i = 0; i < _layers.Count; i++)
+            {
+                _layers[i].CleanUp();
+            }
+            _layers.Clear();
         }
-        public virtual void Update ()
+        public virtual void Update()
         {
             if (Paused) return;
-            Entities.UpdateLists();
-            for(var i = 0; i < _sceneComponents.Count; i++)
+            for (var i = 0; i < _sceneComponents.Count; i++)
             {
                 _sceneComponents[i].Update();
             }
-
-            for (var i = 0; i < Entities.Count; i++)
+            for (var i = 0; i < _layers.Count; i++)
             {
-                Entities[i].Update(); ;
+                _layers[i].Update();
             }
-
         }
         public void OnGraphicsDeviceReset()
         {
-            for (var i = 0; i < Entities.Count; i++)
+            for (var i = 0; i < _layers.Count; i++)
             {
-                Entities[i].OnGraphicsDeviceReset();
+                _layers[i].OnGraphicsDeviceReset();
             }
 
             UpdateDrawRect();
@@ -126,35 +192,51 @@ namespace kuujoo.Pixel
             var sw = Screen.Width;
             var sh = Screen.Height;
             var saspect = (float)sw / (float)sh;
-            
+
             var surface_w = ApplicationSurface.Target.Width;
             var surface_h = ApplicationSurface.Target.Height;
 
 
             int scale = 1;
-            if( (float)surface_w / (float)surface_h > saspect )
+            if ((float)surface_w / (float)surface_h > saspect)
             {
                 scale = sw / surface_w;
-            } 
+            }
             else
             {
                 scale = sh / surface_h;
             }
 
-            _finalDestinationRect.Width = (int) Math.Ceiling( (double)surface_w * scale );
-            _finalDestinationRect.Height = (int) Math.Ceiling( (double) surface_h * scale);
+            _finalDestinationRect.Width = (int)Math.Ceiling((double)surface_w * scale);
+            _finalDestinationRect.Height = (int)Math.Ceiling((double)surface_h * scale);
             _finalDestinationRect.X = (sw - _finalDestinationRect.Width) / 2;
             _finalDestinationRect.Y = (sh - _finalDestinationRect.Height) / 2;
         }
         public void Render()
         {
+            // FIXME: sort only when needed
             _cameras.Sort();
-            for (var i = 0; i < _cameras.Count; i++)
-            {
-                _cameras[i].Render(this);
-            }
+            _layers.Sort();
 
             var gfx = Engine.Instance.Graphics;
+            for (var i = 0; i < _cameras.Count; i++)
+            {
+                if (_cameras[i].Enabled)
+                {
+                    gfx.Begin(_cameras[i]);
+                    for (var j = 0; j < _layers.Count; j++)
+                    {
+                        if (_cameras[i].CanRenderLayer(_layers[j]))
+                        {
+                            _layers[j].Render(_cameras[i]);
+                        }
+                    }
+                    gfx.End();
+                }
+            }
+
+            // Final render
+
             gfx.Begin(null);
             gfx.Device.Clear(Color.Black);
             gfx.SpriteBatch.Draw(ApplicationSurface.Target, _finalDestinationRect, Color.White);
@@ -163,7 +245,7 @@ namespace kuujoo.Pixel
 
         void Dispose(bool dispose)
         {
-            if(dispose)
+            if (dispose)
             {
                 ApplicationSurface.Dispose();
                 Content.Dispose();

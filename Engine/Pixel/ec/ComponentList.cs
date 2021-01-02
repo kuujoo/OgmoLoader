@@ -1,5 +1,58 @@
 ﻿namespace kuujoo.Pixel
 {
+    public class ComponentDestroyVisitor : ISortedListVisitor<Component>
+    {
+        public void Visit(Component item)
+        {
+            item.Destroy();
+        }
+    }
+
+    public class ComponentGraphicsDeviceResetVisitor : ISortedListVisitor<Component>
+    {
+        public void Visit(Component item)
+        {
+            item.OnGraphicsDeviceReset();
+        }
+    }
+    public class ComponentUpdateVisitor : ISortedListVisitor<Component>
+    {
+        public void Visit(Component item)
+        {
+            if (item.Enabled)
+            {
+                item.Update();
+            }
+        }
+    }
+
+    public class ComponentCleanUpVisitor : ISortedListVisitor<Component>
+    {
+        public void Visit(Component item)
+        {
+            item.CleanUp();
+        }
+    }
+    public class ComponentRenderVisitor : ISortedListVisitor<Component>
+    {
+        public Graphics Graphics { get; set; }
+        public void Visit(Component item)
+        {
+            if (item.Enabled)
+            {
+                item.Render(Graphics);
+            }
+        }
+    }
+    public static class ComponentListVisitor
+    {
+        public static ComponentDestroyVisitor DestroyVisitor = new ComponentDestroyVisitor();
+        public static ComponentGraphicsDeviceResetVisitor GraphicsDeviceResetVisitor = new ComponentGraphicsDeviceResetVisitor();
+        public static ComponentUpdateVisitor UpdateVisitor = new ComponentUpdateVisitor();
+        public static ComponentCleanUpVisitor CleanUpVisitor = new ComponentCleanUpVisitor();
+        public static ComponentRenderVisitor RenderVisitor = new ComponentRenderVisitor();
+    }
+
     public class ComponentList : SortedList<Component>
     {
         Entity _entity;
@@ -13,12 +66,6 @@
             component.Initialize();
             Add(component);
             return component;
-        }
-        public override void OnItemRemoved(Component item)
-        {
-            base.OnItemRemoved(item);
-            item.Destroy();
-            item.Entity = null;
         }
     }
 }

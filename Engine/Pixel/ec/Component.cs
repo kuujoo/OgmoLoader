@@ -26,6 +26,7 @@ namespace kuujoo.Pixel
         public virtual void Render(Graphics graphics) {}
         public virtual void Update() { }
         public virtual void Destroy() { }
+        public virtual void CleanUp() { }
 
         public virtual void OnGraphicsDeviceReset() { }
 
