@@ -8,7 +8,7 @@ namespace kuujoo.Pixel
     public abstract class Collider
     {
         public Entity Entity { get; set; }
-        public Microsoft.Xna.Framework.Vector2 Position;
+        public Vector2 Position;
         public float AbsoluteX
         {
             get
@@ -31,79 +31,30 @@ namespace kuujoo.Pixel
                 return Position.Y;
             }
         }
-        public float AbsoluteRight => Entity.Position.X + Right;
-        public float AbsoluteLeft => Entity.Position.X + Left;
-        public float AbsoluteTop => Entity.Position.Y - Top;
-        public float AbsoluteBottom => Entity.Position.Y + Bottom;
-        public abstract float Left { get; set; }
-        public abstract float Right { get; set; }
-        public abstract float Top { get; set; }
-        public abstract float Bottom { get; set; }
+        public Rectangle AbsoluteBounds => new Rectangle((int)AbsoluteX, (int)AbsoluteY, (int)Width, (int)Height);
         public abstract float Width { get; set; }
         public abstract float Height { get; set; }
         public abstract bool Collides(Collider collider);
     }
 
-    public class Hitbox : Collider
+    public class BoxCollider : Collider
     {
-        public override float Left
-        {
-            get
-            {
-                return Position.X;
-            }
-            set
-            {
-                Position.X = value;
-            }
-        }
-        public override float Right
-        {
-            get
-            {
-                return Position.X + Width;
-            }
-            set
-            {
-                Position.X = value - Width;
-            }
-        }
-        public override float Top
-        { 
-            get
-            {
-                return Position.Y;
-            }
-            set
-            {
-                Position.Y = value;
-            }
-        }
-        public override float Bottom
-        {
-            get
-            {
-                return Position.Y + Height;
-            }
-            set
-            {
-                Position.Y = value - Height;
-            }
-        }
         public override float Width { get; set; }
         public override float Height { get; set; }
-         public Hitbox(float x, float y, float width, float height)
+        public BoxCollider(float x, float y, float width, float height)
         {
             Width = width;
             Height = height;
             Position.X = x;
             Position.Y = y;
         }
-        public bool Intersects(Hitbox hitbox)
+        public bool Intersects(BoxCollider other)
         {
-            if (AbsoluteLeft < hitbox.AbsoluteRight && AbsoluteRight > hitbox.AbsoluteLeft && AbsoluteBottom > hitbox.AbsoluteTop)
+            var me = AbsoluteBounds;
+            var otherb = other.AbsoluteBounds;
+            if (me.Left < otherb.Right && me.Right > otherb.Left && me.Bottom > otherb.Top)
             {
-                return AbsoluteTop < hitbox.AbsoluteBottom;
+                return me.Top < otherb.Bottom;
             }
             else
             {
@@ -112,9 +63,9 @@ namespace kuujoo.Pixel
         }
         public override bool Collides(Collider collider)
         {
-            if(collider is Hitbox)
+            if(collider is BoxCollider)
             {
-                return Intersects(collider as Hitbox);
+                return Intersects(collider as BoxCollider);
             } 
             else
             {
