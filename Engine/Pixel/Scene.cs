@@ -91,7 +91,7 @@ namespace kuujoo.Pixel
         {
             for(var i = 0; i < _sceneComponents.Count; i++)
             {
-                _sceneComponents[i].Destroy();
+                _sceneComponents[i].CleanUp();
             }
             _sceneComponents.Clear();
             Entities.RemoveAll();

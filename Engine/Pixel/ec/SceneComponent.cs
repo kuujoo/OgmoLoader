@@ -11,7 +11,7 @@
         {
 
         }
-        public virtual void Destroy() { }
+        public virtual void CleanUp() { }
         public virtual void RemovedFromScene() { }
     }
 }
