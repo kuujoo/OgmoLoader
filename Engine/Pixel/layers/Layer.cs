@@ -6,6 +6,7 @@ namespace kuujoo.Pixel
     public abstract class Layer : IComparable<Layer>
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public abstract void Render(Camera camera);
         public abstract void Update();
         public abstract void CleanUp();

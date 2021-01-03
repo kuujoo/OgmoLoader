@@ -28,15 +28,17 @@ namespace kuujoo.Pixel
         {
 
         }
-        public EntityLayer CreateEntityLayer(int id)
+        public EntityLayer CreateEntityLayer(int id, string name)
         {
             var layer = new EntityLayer(this, id);
+            layer.Name = name;
             _layers.Add(layer);
             return layer;
         }
-        public TileLayer CreateTileLayer(int id, int width, int height, Tileset tileset)
+        public TileLayer CreateTileLayer(int id, string name, int width, int height, Tileset tileset)
         {
             var layer = new TileLayer(this, id, width, height, tileset);
+            layer.Name = name;
             _layers.Add(layer);
             return layer;
         }

@@ -19,7 +19,7 @@ namespace kuujoo.Pixel
             room.AddCamera(new Camera(384, 216));
             var sp = res.GetSprite(SheetName, "colors_strip_4");
             var tileset = new Tileset(16, 16, sp.Texture, sp.Bounds);
-            var layer = room.CreateTileLayer(0, 100, 100, tileset);
+            var layer = room.CreateTileLayer(0, "tiles", 100, 100, tileset);
             for(var i = 0; i < layer.Width * layer.Height; i++)
             {
                 layer.SetValueByIndex(i, (byte)(i % 3 + 1));

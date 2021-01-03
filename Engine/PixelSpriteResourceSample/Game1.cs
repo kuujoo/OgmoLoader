@@ -56,7 +56,7 @@ namespace kuujoo.Pixel
                 BackgroundColor = Color.Aquamarine
             });
 
-            room.CreateEntityLayer(0);
+            room.CreateEntityLayer(0, "entities");
             // Entity & Component - preferred
             var entity = room.CreateEntity(0);
             entity.AddComponent(new SpriteComponent());

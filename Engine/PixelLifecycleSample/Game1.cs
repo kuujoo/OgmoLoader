@@ -51,7 +51,7 @@ namespace kuujoo.Pixel
         {
             base.Initialize();
             var room = new Scene(384, 216);
-            room.CreateEntityLayer(0);
+            room.CreateEntityLayer(0, "entities");
             var entity = room.CreateEntity<LifeCycleEntity>(0); // Entity::Initialize
             entity.AddComponent(new LifeCycleComponent()); // Componoent::Initialize
             room.DestroyEntity(entity); // Entity::Destroy, Component::Destroy

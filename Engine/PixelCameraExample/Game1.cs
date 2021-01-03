@@ -66,7 +66,7 @@ namespace kuujoo.Pixel
 
             AddCamera(_camera);
             AddCamera(_camera2);
-            CreateEntityLayer(0);
+            CreateEntityLayer(0, "entities");
 
             _currentCamera = _camera2;
 
