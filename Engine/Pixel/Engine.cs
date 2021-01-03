@@ -15,6 +15,7 @@ namespace kuujoo.Pixel
         public Inputs Inputs { get; private set; }
         public Scene Scene { get { return _scene; } set { _nextScene = value; } }
         public bool PauseOnFocusLost { get; set; }     
+        public Reflection Reflection { get; set; }
         FpsCounter _frameCounter = new FpsCounter();
         internal static Engine _instance;
         bool _resizing = false;
@@ -47,6 +48,7 @@ namespace kuujoo.Pixel
             Screen.Bind(graphics);
             Inputs = new Inputs();
             _coroutineManager = new CoroutineManager();
+            Reflection = new Reflection();
         }
         public ICoroutine StartCoroutine(IEnumerator enumerator)
         {
