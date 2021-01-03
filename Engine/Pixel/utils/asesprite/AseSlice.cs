@@ -12,7 +12,7 @@
 
 namespace kuujoo.Pixel
 {
-    public struct AseSlice : IAseUserData
+    public class AseSlice : IAseUserData
     {
         public int Frame;
         public string Name;
