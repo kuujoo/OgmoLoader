@@ -60,9 +60,9 @@ namespace kuujoo.Pixel
             int right = (int)Math.Ceiling((float) bounds.Right / Tileset.TileWidth);
             int top = bounds.Top / Tileset.TileHeight;
             int bottom = bounds.Bottom / Tileset.TileHeight;
-            for(var j = top; j <= bottom; j++)
+            for(var j = top; j < bottom; j++)
             {
-                for (var i = left; i <= right; i++)
+                for (var i = left; i < right; i++)
                 {
                     var tile_id = GetValue(i, j);
                     if(tile_id != EmptyTile)
