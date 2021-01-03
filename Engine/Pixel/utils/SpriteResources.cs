@@ -15,5 +15,10 @@ namespace kuujoo.Pixel
             var sheet = Scene.Content.LoadASESpriteSheet(sheetpath);
             return sheet.GetSprite(region);
         }
+        public Tileset GetTileset(string sheetpath, string region)
+        {
+            var sheet = Scene.Content.LoadASESpriteSheet(sheetpath);
+            return sheet.GetTileset(region);
+        }
     }
 }
