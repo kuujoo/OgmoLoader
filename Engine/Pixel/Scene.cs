@@ -99,6 +99,22 @@ namespace kuujoo.Pixel
             }
             return null;
         }
+        public Entity AddEntity(Entity entity, int layerid)
+        {
+            for (var i = 0; i < _layers.Count; i++)
+            {
+                if (_layers[i].Id == layerid)
+                {
+                    var entity_layer = _layers[i] as EntityLayer;
+                    if (entity_layer != null)
+                    {
+                        entity_layer.Entities.AddEntity(entity);
+                        return entity;
+                    }
+                }
+            }
+            return null;
+        }
         public void DestroyEntity(Entity entity)
         {
             for (var i = 0; i < _layers.Count; i++)
