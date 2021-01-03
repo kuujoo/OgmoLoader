@@ -1,12 +1,12 @@
 ﻿namespace kuujoo.Pixel
 {
-    public class SpriteResourcesTilesetProvider : ITilesetProvider
+    public class AseSpriteTilesetProvider : ITilesetProvider
     {
         SpriteResources _resources;
         string _sheetPath;
         int _tileWidth;
         int _tileHeight;
-        public SpriteResourcesTilesetProvider(SpriteResources resources, string sheetpath, int tilewidth, int tileheight)
+        public AseSpriteTilesetProvider(SpriteResources resources, string sheetpath, int tilewidth, int tileheight)
         {
             _resources = resources;
             _sheetPath = sheetpath;

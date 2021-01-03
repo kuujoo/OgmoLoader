@@ -9,7 +9,7 @@ namespace kuujoo.Pixel
     {
         List<OgmoLevel> _levels = new List<OgmoLevel>();
         Rectangle _bounds;
-        public OgmoSceneBuilder(Scene scene, ITilesetProvider tilesetprovider, string directory) : base(scene, tilesetprovider)
+        public OgmoSceneBuilder(Scene scene, string directory) : base(scene)
         {
             var ogmo_levels = Directory.GetFiles(directory, "*.json");
             if (ogmo_levels.Length > 0)
@@ -59,13 +59,10 @@ namespace kuujoo.Pixel
         public override void Build()
         {
             if (!VerifyLayers(_levels)) return;
-            var resources = _scene.GetSceneComponent<SpriteResources>();
-            var sp = resources.GetSprite("Content/Sprites/tiles.ase", "tiles");
             for (var i = 0; i < _levels.Count; i++)
             {
                 for (var j = 0; j < _levels[i].Layers.Length; j++)
                 {
-
                     var layer = _levels[i].Layers[j];
                     if (layer.Type == OgmoLayerType.Tile)
                     {
@@ -89,7 +86,18 @@ namespace kuujoo.Pixel
                     }
                     else if(layer.Type == OgmoLayerType.Entity)
                     {
-                        // TODO
+                        BeginEntityLayer(j, layer.Name);
+                        for (var e = 0; e < layer.Entities.Length; e++)
+                        {
+                            var settings = new OgmoSettingsComponent();
+                            if(settings != null)
+                            {
+                                settings.SetPoint("Position", new Vector2(_levels[i].OffsetX + layer.Entities[e].X, _levels[i].OffsetY + layer.Entities[e].Y));
+                                settings.SetPoint("Origin", new Vector2(layer.Entities[e].OriginX, layer.Entities[e].OriginY));
+                            }
+                           CreateEntity(layer.Entities[e].Name, settings);
+                        }
+                        EndLayer();
                     }
                 }
             }

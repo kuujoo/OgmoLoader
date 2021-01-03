@@ -5,14 +5,16 @@ namespace kuujoo.Pixel
     public abstract class SceneBuilder
     {
         protected Scene _scene;
-        ITilesetProvider _tilesetProvider;
         TileLayer _activeTileLayer = null;
         EntityLayer _activeEntityLayer = null;
         Dictionary<string, Tileset> _tilesets = new Dictionary<string, Tileset>();
-        public SceneBuilder(Scene scene, ITilesetProvider tileset)
+        public SceneBuilder(Scene scene)
         {
             _scene = scene;
-            _tilesetProvider = tileset;
+        }
+        public void AddTileset(string key, Tileset tileset)
+        {
+            _tilesets[key] = tileset;
         }
         public abstract void Build();
 
@@ -33,14 +35,7 @@ namespace kuujoo.Pixel
         }
         protected Tileset GetTileset(string tileset_name)
         {
-            Tileset tileset;
-            if(_tilesets.TryGetValue(tileset_name, out tileset))
-            {
-                return tileset;
-            }
-            tileset = _tilesetProvider.GetTileset(tileset_name);
-            _tilesets[tileset_name] = tileset;
-            return tileset;
+            return _tilesets[tileset_name];
         }
         protected void SetTile(int index, byte tile)
         {
@@ -61,6 +56,13 @@ namespace kuujoo.Pixel
             {
                 _activeEntityLayer = _scene.CreateEntityLayer(id, name);
             }
+        }
+        protected Entity CreateEntity(string entity, SettingsComponent injectsettings)
+        {
+            var e = Engine.Instance.Reflection.BuildEntity(entity);
+            e.AddComponent(injectsettings);
+            _scene.AddEntity(e, _activeEntityLayer.Id);
+            return e;
         }
         protected void EndLayer()
         {

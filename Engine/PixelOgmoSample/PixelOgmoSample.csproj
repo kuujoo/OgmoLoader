@@ -49,7 +49,7 @@
     <None Update="Content\levels\tiles.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sprites\TestEntity.aseprite">
+    <None Update="Content\Sprites\TestEntity.ase">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Sprites\tiles.ase">
