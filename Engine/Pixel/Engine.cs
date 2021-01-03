@@ -14,7 +14,7 @@ namespace kuujoo.Pixel
         public Graphics Graphics { get; set; }
         public Inputs Inputs { get; private set; }
         public Scene Scene { get { return _scene; } set { _nextScene = value; } }
-        public bool PauseOnFocusLost { get; set; }     
+        public bool PauseOnFocusLost { get; set; }
         public Reflection Reflection { get; set; }
         FpsCounter _frameCounter = new FpsCounter();
         internal static Engine _instance;
