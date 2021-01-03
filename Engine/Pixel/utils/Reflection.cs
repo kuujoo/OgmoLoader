@@ -16,16 +16,6 @@ namespace kuujoo.Pixel
             var b = _buildables[buildableclass];
             return Activator.CreateInstance(b) as Entity;
         }
-        public FieldInfo GetFieldInfo(Type type, string fieldName)
-        {
-            FieldInfo fieldInfo = null;
-            do
-            {
-                fieldInfo = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                type = type.BaseType;
-            } while (fieldInfo == null && type != null);
-            return fieldInfo;
-        }
         private void FindBuildables()
         {
             Type[] types = Assembly.GetEntryAssembly().GetTypes();
