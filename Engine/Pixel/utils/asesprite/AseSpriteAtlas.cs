@@ -26,8 +26,18 @@ namespace kuujoo.Pixel
                         var slice = ase.Slices[j];
                         if (slice.Frame == i)
                         {
-                            var pivot = slice.Pivot.GetValueOrDefault(Vector2.Zero);
-                            AddRegion(slice.Name, new Rectangle(slice.OriginX, slice.OriginY, slice.Width, slice.Height), pivot);
+                            var userdata = (slice.UserDataText != null ? slice.UserDataText.Split('_') : null);
+                            if (userdata!= null && userdata[0] == "tileset")
+                            {
+                                var w = int.Parse(userdata[1]);
+                                var h = int.Parse(userdata[2]);
+                                AddTilesetRegion(slice.Name, new Rectangle(slice.OriginX, slice.OriginY, slice.Width, slice.Height), w, h);
+                            }
+                            else
+                            {
+                                var pivot = slice.Pivot.GetValueOrDefault(Vector2.Zero);
+                                AddSpriteRegion(slice.Name, new Rectangle(slice.OriginX, slice.OriginY, slice.Width, slice.Height), pivot);
+                            }
                         }
                     }
                 }
