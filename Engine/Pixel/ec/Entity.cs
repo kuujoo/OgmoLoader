@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -39,6 +40,10 @@ namespace kuujoo.Pixel
         public T GetComponent<T>() where T : class
         {
             return Components.GetItemOfType<T>();
+        }
+        public List<T> GetComponents<T>() where T : class
+        {
+            return Components.GetItemsOfType<T>();
         }
         public void SetDepth(int depth)
         {

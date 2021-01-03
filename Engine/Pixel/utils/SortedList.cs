@@ -52,6 +52,27 @@ namespace kuujoo.Pixel
             }
             return null;
         }
+
+        public List<I> GetItemsOfType<I>() where I : class
+        {
+            var list = ListPool<I>.Obtain();
+            for (var i = 0; i < _items.Count; i++)
+            {
+                if (_items[i] is I)
+                {
+                    list.Add(_items[i] as I);
+                }
+            }
+
+            for (var i = 0; i < _itemsToAdd.Count; i++)
+            {
+                if (_itemsToAdd[i] is I)
+                {
+                    list.Add(_items[i] as I);
+                }
+            }
+            return list;
+        }
         public void UpdateLists()
         {
             if(_itemsToRemove.Count > 0)
