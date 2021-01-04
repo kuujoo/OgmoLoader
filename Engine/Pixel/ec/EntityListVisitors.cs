@@ -42,6 +42,9 @@ namespace kuujoo.Pixel
             if(item.Enabled && Camera.CanSee(item))
             {
                 item.Render(Graphics);
+                var visitor = ComponentListVisitor.RenderVisitor;
+                visitor.Graphics = Graphics;
+                item.Components.AcceptVisitor(visitor, false);
             }
         }
     }

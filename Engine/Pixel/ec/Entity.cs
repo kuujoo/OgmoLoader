@@ -57,9 +57,6 @@ namespace kuujoo.Pixel
         }
         public virtual void Render(Graphics graphics)
         {
-            var visitor = ComponentListVisitor.RenderVisitor;
-            visitor.Graphics = graphics;
-            Components.AcceptVisitor(visitor, false);
         }
         public virtual void OnGraphicsDeviceReset()
         {
@@ -67,7 +64,7 @@ namespace kuujoo.Pixel
         }
         public virtual void Destroy()
         {
-            Components.AcceptVisitor(ComponentListVisitor.DestroyVisitor, true);
+           
         }
         public virtual void CleanUp()
         {
