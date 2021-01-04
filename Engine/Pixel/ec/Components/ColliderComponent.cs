@@ -37,18 +37,18 @@ namespace kuujoo.Pixel
         public abstract bool Collides(ColliderComponent collider);
     }
 
-    public class BoxCollider : ColliderComponent
+    public class BoxColliderComponent : ColliderComponent
     {
         public override float Width { get; set; }
         public override float Height { get; set; }
-        public BoxCollider(float x, float y, float width, float height)
+        public BoxColliderComponent(float x, float y, float width, float height)
         {
             Width = width;
             Height = height;
             Position.X = x;
             Position.Y = y;
         }
-        public bool Intersects(BoxCollider other)
+        public bool Intersects(BoxColliderComponent other)
         {
             var me = AbsoluteBounds;
             var otherb = other.AbsoluteBounds;
@@ -63,9 +63,9 @@ namespace kuujoo.Pixel
         }
         public override bool Collides(ColliderComponent collider)
         {
-            if(collider is BoxCollider)
+            if(collider is BoxColliderComponent)
             {
-                return Intersects(collider as BoxCollider);
+                return Intersects(collider as BoxColliderComponent);
             } 
             else
             {
