@@ -12,7 +12,6 @@ namespace kuujoo.Pixel
         public GraphicsDevice Device => DeviceManager.GraphicsDevice;
         public Texture2D Pixel { get; private set; }
         public SpriteBatch SpriteBatch { get; set; }
-        Surface _currentSurface = null;
         public void SetRenderTargetToBackBuffer()
         {
             Device.SetRenderTarget(null);
@@ -58,7 +57,6 @@ namespace kuujoo.Pixel
         public void End()
         {
             SpriteBatch.End();
-            _currentSurface = null;
         }
         public void DrawSprite(Microsoft.Xna.Framework.Vector2 at, Sprite sprite, Color color)
         {
