@@ -107,10 +107,7 @@ namespace kuujoo.Pixel
                     var entity_layer = _layers[i] as EntityLayer;
                     if (entity_layer != null)
                     {
-                        entity.Scene = this;
-                        entity.Layer = entity_layer;
-                        entity.Initialize();
-                        entity_layer.Entities.Add(entity);
+                        entity_layer.AddEntity(entity);
                         return entity;
                     }
                 }
@@ -124,9 +121,7 @@ namespace kuujoo.Pixel
                 var entity_layer = _layers[i] as EntityLayer;
                 if (entity_layer != null)
                 {
-                    entity.Destroy();
-                    entity.CleanUp();
-                    entity_layer.Entities.Remove(entity);
+                    entity_layer.DestroyEntity(entity);
                 }
             }
         }
