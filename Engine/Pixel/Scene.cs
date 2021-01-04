@@ -91,9 +91,8 @@ namespace kuujoo.Pixel
                     var entity_layer = _layers[i] as EntityLayer;
                     if (entity_layer != null)
                     {
-                        var entity = new Entity();
-                        entity_layer.Entities.AddEntity(entity);
-                        return entity;
+                        var entity = new Entity();                
+                        return entity_layer.AddEntity(entity);                   
                     }
                 }
             }
@@ -108,7 +107,10 @@ namespace kuujoo.Pixel
                     var entity_layer = _layers[i] as EntityLayer;
                     if (entity_layer != null)
                     {
-                        entity_layer.Entities.AddEntity(entity);
+                        entity.Scene = this;
+                        entity.Layer = entity_layer;
+                        entity.Initialize();
+                        entity_layer.Entities.Add(entity);
                         return entity;
                     }
                 }
@@ -143,7 +145,10 @@ namespace kuujoo.Pixel
                     if (entity_layer != null)
                     {
                         var entity = new T();
-                        entity_layer.Entities.AddEntity(entity);
+                        entity.Scene = this;
+                        entity.Layer = entity_layer;
+                        entity.Initialize();
+                        entity_layer.Entities.Add(entity);
                         return entity;
                     }
                 }
@@ -159,7 +164,10 @@ namespace kuujoo.Pixel
                     var entity_layer = _layers[i] as EntityLayer;
                     if (entity_layer != null)
                     {
-                        entity_layer.Entities.AddEntity(entity);
+                        entity.Scene = this;
+                        entity.Layer = entity_layer;
+                        entity.Initialize();
+                        entity_layer.Entities.Add(entity);
                         return entity;
                     }
                 }

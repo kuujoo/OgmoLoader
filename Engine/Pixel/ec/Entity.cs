@@ -16,14 +16,14 @@ namespace kuujoo.Pixel
         public string Name { get; set; }
         public int Tag { get; set; }
         public Scene Scene { get; set; }
-        public ComponentList Components { get; private set; }
+        public SortedList<Component> Components { get; private set; }
         public EntityLayer Layer { get; set; }
 
         static uint _idGenerator = 0;
         bool _enabled = true;
         public Entity()
         {
-            Components = new ComponentList(this);
+            Components = new SortedList<Component>();
             Id = _idGenerator;
             _idGenerator++;
         }
@@ -34,7 +34,9 @@ namespace kuujoo.Pixel
         }
         public Component AddComponent(Component component)
         {
-            Components.AddComponent(component);
+            component.Entity = this;
+            component.Initialize();
+            Components.Add(component);
             return component;
         }
         public T GetComponent<T>() where T : class
@@ -61,7 +63,7 @@ namespace kuujoo.Pixel
         }
         public virtual void OnGraphicsDeviceReset()
         {
-            Components.AcceptVisitor(ComponentListVisitor.GraphicsDeviceResetVisitor, true);
+           
         }
         public virtual void Destroy()
         {
@@ -69,13 +71,10 @@ namespace kuujoo.Pixel
         }
         public virtual void CleanUp()
         {
-            Components.AcceptVisitor(ComponentListVisitor.CleanUpVisitor, true);
-            Components.Clear();
+
         }
         public virtual void Update()
         {
-            Components.UpdateLists();
-            Components.AcceptVisitor(ComponentListVisitor.UpdateVisitor, false);
         }
         public int CompareTo(Entity other)
         {

@@ -2,13 +2,21 @@
 {
     public class EntityLayer : Layer
     {
-        public EntityList Entities { get; private set; }
+        public SortedList<Entity> Entities { get; private set; }
         Scene _scene;
         public EntityLayer(Scene scene, int layerid)
         {
             _scene = scene;
             Id = layerid;
-            Entities = new EntityList(_scene, this);
+            Entities = new SortedList<Entity>();
+        }
+        public Entity AddEntity(Entity entity)
+        {
+            entity.Scene = _scene;
+            entity.Layer = this;
+            entity.Initialize();
+            Entities.Add(entity);
+            return entity;
         }
         public override void Update()
         {

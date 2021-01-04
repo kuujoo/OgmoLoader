@@ -7,6 +7,7 @@ namespace kuujoo.Pixel
         public void Visit(Entity item)
         {
             item.OnGraphicsDeviceReset();
+            item.Components.AcceptVisitor(ComponentListVisitor.GraphicsDeviceResetVisitor, true);
         }
     }
     public class EntityUpdateVisitor : ISortedListVisitor<Entity>
@@ -16,6 +17,8 @@ namespace kuujoo.Pixel
             if (item.Enabled)
             {
                 item.Update();
+                item.Components.UpdateLists();
+                item.Components.AcceptVisitor(ComponentListVisitor.UpdateVisitor, false);
             }
         }
     }
@@ -25,6 +28,8 @@ namespace kuujoo.Pixel
         public void Visit(Entity item)
         {
             item.CleanUp();
+            item.Components.AcceptVisitor(ComponentListVisitor.CleanUpVisitor, false);
+            item.Components.Clear();
         }
     }
 
@@ -49,21 +54,4 @@ namespace kuujoo.Pixel
         public static EntityRenderVisitor RenderVisitor = new EntityRenderVisitor();
     }
 
-    public class EntityList : SortedList<Entity>
-    {
-        Scene _scene;
-        EntityLayer _layer;
-        public EntityList(Scene scene, EntityLayer layer)
-        {
-            _scene = scene;
-            _layer = layer;
-        }
-        public void AddEntity(Entity entity)
-        {
-            entity.Scene = _scene;
-            entity.Layer = _layer;
-            entity.Initialize();
-            Add(entity);
-        }
-    }
 }

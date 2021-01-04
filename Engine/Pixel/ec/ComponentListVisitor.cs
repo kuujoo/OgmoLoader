@@ -52,20 +52,4 @@
         public static ComponentCleanUpVisitor CleanUpVisitor = new ComponentCleanUpVisitor();
         public static ComponentRenderVisitor RenderVisitor = new ComponentRenderVisitor();
     }
-
-    public class ComponentList : SortedList<Component>
-    {
-        Entity _entity;
-        public ComponentList(Entity entity)
-        {
-            _entity = entity;
-        }
-        public Component AddComponent(Component component)
-        {
-            component.Entity = _entity;
-            component.Initialize();
-            Add(component);
-            return component;
-        }
-    }
 }
