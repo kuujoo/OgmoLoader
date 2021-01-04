@@ -130,11 +130,6 @@ namespace kuujoo.Pixel
                 }
             }
         }
-        public void RemoveSceneComponent(SceneComponent component)
-        {
-            _sceneComponents.Remove(component);
-            component.RemovedFromScene();
-        }
         public T CreateEntity<T>(int layerid) where T : Entity, new()
         {
             for (var i = 0; i < _layers.Count; i++)
