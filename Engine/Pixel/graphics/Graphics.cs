@@ -58,9 +58,9 @@ namespace kuujoo.Pixel
         {
             SpriteBatch.End();
         }
-        public void DrawSprite(Microsoft.Xna.Framework.Vector2 at, Sprite sprite, Color color)
+        public void DrawSprite(Microsoft.Xna.Framework.Vector2 at, Sprite sprite, int frame, Color color)
         {
-            SpriteBatch.Draw(sprite.Texture, at, sprite.Bounds, color);
+            SpriteBatch.Draw(sprite.Texture, at, sprite.Bounds[frame], color);
         }
         public void DrawPoint(Microsoft.Xna.Framework.Vector2 at, Color color)
         {

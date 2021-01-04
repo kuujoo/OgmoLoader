@@ -15,7 +15,7 @@ namespace kuujoo.Pixel
             base.Initialize();
             AddComponent(new SpriteComponent()
             {
-                Sprite = Scene.GetSceneComponent<SpriteResources>().GetSprite("Content/Sprites/TestEntity.ase", "TestEntity")
+                Sprite = Scene.GetSceneComponent<SpriteResources>().GetSprite("TestEntity")
             });
             var settings = GetComponent<OgmoSettingsComponent>();
             Position = settings.Position;
@@ -33,9 +33,13 @@ namespace kuujoo.Pixel
             base.Initialize();
             var room = new Scene(384 * 2 , 216);
             room.AddCamera(new Camera(384 * 2, 216));
-            var resources = room.AddSceneComponent(new SpriteResources()) as SpriteResources;
+            var resources = room.AddSceneComponent(new SpriteResources(1024, 1024)) as SpriteResources;
+            resources.AddAseSprite("tiles", "Content/Sprites/tiles.ase");
+            resources.AddAseSprite("TestEntity", "Content/Sprites/TestEntity.ase");
+            resources.Build();
+            resources.InitTileset("tiles", 12, 12);
             OgmoSceneBuilder builder = new OgmoSceneBuilder(room, "Content/levels/levels");
-            builder.AddTileset("tiles", resources.GetTileset("content/Sprites/tiles.ase", "tiles"));
+            builder.AddTileset("tiles", resources.GetTileset("tiles"));
             builder.Build();
             Scene = room;
         }
