@@ -5,7 +5,7 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
-    public abstract class Collider
+    public abstract class ColliderComponent
     {
         public Entity Entity { get; set; }
         public Vector2 Position;
@@ -34,10 +34,10 @@ namespace kuujoo.Pixel
         public Rectangle AbsoluteBounds => new Rectangle((int)AbsoluteX, (int)AbsoluteY, (int)Width, (int)Height);
         public abstract float Width { get; set; }
         public abstract float Height { get; set; }
-        public abstract bool Collides(Collider collider);
+        public abstract bool Collides(ColliderComponent collider);
     }
 
-    public class BoxCollider : Collider
+    public class BoxCollider : ColliderComponent
     {
         public override float Width { get; set; }
         public override float Height { get; set; }
@@ -61,7 +61,7 @@ namespace kuujoo.Pixel
                 return false;
             }
         }
-        public override bool Collides(Collider collider)
+        public override bool Collides(ColliderComponent collider)
         {
             if(collider is BoxCollider)
             {
