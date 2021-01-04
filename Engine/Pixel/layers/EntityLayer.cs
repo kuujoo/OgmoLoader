@@ -2,17 +2,16 @@
 {
     public class EntityLayer : Layer
     {
+        public Scene  Scene { get; private set; }
         public SortedList<Entity> Entities { get; private set; }
-        Scene _scene;
         public EntityLayer(Scene scene, int layerid)
         {
-            _scene = scene;
+            Scene = scene;
             Id = layerid;
             Entities = new SortedList<Entity>();
         }
         public Entity AddEntity(Entity entity)
         {
-            entity.Scene = _scene;
             entity.Layer = this;
             entity.Initialize();
             Entities.Add(entity);
@@ -35,7 +34,9 @@
         }
         public override void Render(Camera camera)
         {
-            var gfx = Engine.Instance.Graphics;
+            if (!camera.CanRenderLayer(this)) return;
+            
+             var gfx = Engine.Instance.Graphics;
             var visitor = EntityListVisitor.RenderVisitor;
             visitor.Camera = camera;
             visitor.Graphics = gfx;

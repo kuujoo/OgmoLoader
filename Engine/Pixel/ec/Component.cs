@@ -8,6 +8,7 @@ namespace kuujoo.Pixel
     {
         public bool Enabled => Entity.Enabled && _enabled;
         public Entity Entity {get; set;}
+        public Scene Scene => Entity.Scene;
         public int UpdateOrder { get; private set; }
         bool _enabled = true;
         public void SetEnabled(bool enabled)
@@ -27,7 +28,6 @@ namespace kuujoo.Pixel
         public virtual void Update() { }
         public virtual void Destroy() { }
         public virtual void CleanUp() { }
-
         public virtual void OnGraphicsDeviceReset() { }
 
         public int CompareTo(Component other)

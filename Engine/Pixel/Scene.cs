@@ -28,6 +28,72 @@ namespace kuujoo.Pixel
         {
 
         }
+        public void BeginScene()
+        {
+        }
+        public void EndScene()
+        {
+            for (var i = 0; i < _sceneComponents.Count; i++)
+            {
+                _sceneComponents[i].CleanUp();
+            }
+            _sceneComponents.Clear();
+
+            for (var i = 0; i < _layers.Count; i++)
+            {
+                _layers[i].CleanUp();
+            }
+            _layers.Clear();
+        }
+        public virtual void Update()
+        {
+            if (Paused) return;
+            for (var i = 0; i < _sceneComponents.Count; i++)
+            {
+                _sceneComponents[i].Update();
+            }
+            for (var i = 0; i < _layers.Count; i++)
+            {
+                _layers[i].Update();
+            }
+        }
+        public void OnGraphicsDeviceReset()
+        {
+            for (var i = 0; i < _layers.Count; i++)
+            {
+                _layers[i].OnGraphicsDeviceReset();
+            }
+
+            UpdateDrawRect();
+        }
+        public void Render()
+        {
+            // FIXME: sort only when needed
+            _cameras.Sort();
+            _layers.Sort();
+
+            var gfx = Engine.Instance.Graphics;
+            for (var i = 0; i < _cameras.Count; i++)
+            {
+                if (_cameras[i].Enabled)
+                {
+                    gfx.Begin(_cameras[i]);
+                    for (var j = 0; j < _layers.Count; j++)
+                    {                
+                        _layers[j].Render(_cameras[i]);
+                    }
+                    gfx.End();
+                }
+            }
+
+            // Final render
+
+            gfx.Begin(null);
+            gfx.Device.Clear(Color.Black);
+            gfx.SpriteBatch.Draw(ApplicationSurface.Target, _finalDestinationRect, Color.White);
+            gfx.End();
+        }
+
         public EntityLayer CreateEntityLayer(int id, string name)
         {
             var layer = new EntityLayer(this, id);
@@ -78,39 +144,23 @@ namespace kuujoo.Pixel
             }
             _cameras.Add(camera);
         }
-        public void ResizeApplicationSurface(int game_width, int game_height)
-        {
-            ApplicationSurface.Resize(game_width, game_height);
-        }
         public Entity CreateEntity(int layerid)
         {
-            for (var i = 0; i < _layers.Count; i++)
+            var layer = GetLayer<EntityLayer>(layerid);
+            if (layer != null)
             {
-                if (_layers[i].Id == layerid)
-                {
-                    var entity_layer = _layers[i] as EntityLayer;
-                    if (entity_layer != null)
-                    {
-                        var entity = new Entity();                
-                        return entity_layer.AddEntity(entity);                   
-                    }
-                }
+                var entity = new Entity();
+                return layer.AddEntity(entity);
             }
             return null;
         }
         public Entity AddEntity(Entity entity, int layerid)
         {
-            for (var i = 0; i < _layers.Count; i++)
+            var layer = GetLayer<EntityLayer>(layerid);
+            if (layer != null)
             {
-                if (_layers[i].Id == layerid)
-                {
-                    var entity_layer = _layers[i] as EntityLayer;
-                    if (entity_layer != null)
-                    {
-                        entity_layer.AddEntity(entity);
-                        return entity;
-                    }
-                }
+                layer.AddEntity(entity);
+                return entity;
             }
             return null;
         }
@@ -127,81 +177,27 @@ namespace kuujoo.Pixel
         }
         public T CreateEntity<T>(int layerid) where T : Entity, new()
         {
-            for (var i = 0; i < _layers.Count; i++)
+            var layer = GetLayer<EntityLayer>(layerid);
+            if (layer != null)
             {
-                if (_layers[i].Id == layerid)
-                {
-                    var entity_layer = _layers[i] as EntityLayer;
-                    if (entity_layer != null)
-                    {
-                        var entity = new T();
-                        entity.Scene = this;
-                        entity.Layer = entity_layer;
-                        entity.Initialize();
-                        entity_layer.Entities.Add(entity);
-                        return entity;
-                    }
-                }
+                var entity = new T();
+                layer.AddEntity(entity);
+                return entity;
             }
             return null;
         }
         public Entity AddEntity(int layerid, Entity entity)
         {
-            for (var i = 0; i < _layers.Count; i++)
+            var layer = GetLayer<EntityLayer>(layerid);
+            if(layer != null)
             {
-                if (_layers[i].Id == layerid)
-                {
-                    var entity_layer = _layers[i] as EntityLayer;
-                    if (entity_layer != null)
-                    {
-                        entity.Scene = this;
-                        entity.Layer = entity_layer;
-                        entity.Initialize();
-                        entity_layer.Entities.Add(entity);
-                        return entity;
-                    }
-                }
+                layer.AddEntity(entity);
+                layer.Entities.Add(entity);
+                return entity;
             }
             return null;
         }
-        public void BeginScene()
-        {
-        }
-        public void EndScene()
-        {
-            for (var i = 0; i < _sceneComponents.Count; i++)
-            {
-                _sceneComponents[i].CleanUp();
-            }
-            _sceneComponents.Clear();
-
-            for (var i = 0; i < _layers.Count; i++)
-            {
-                _layers[i].CleanUp();
-            }
-            _layers.Clear();
-        }
-        public virtual void Update()
-        {
-            if (Paused) return;
-            for (var i = 0; i < _sceneComponents.Count; i++)
-            {
-                _sceneComponents[i].Update();
-            }
-            for (var i = 0; i < _layers.Count; i++)
-            {
-                _layers[i].Update();
-            }
-        }
-        public void OnGraphicsDeviceReset()
-        {
-            for (var i = 0; i < _layers.Count; i++)
-            {
-                _layers[i].OnGraphicsDeviceReset();
-            }
-
-            UpdateDrawRect();
-        }
+   
         void UpdateDrawRect()
         {
 
@@ -228,37 +224,7 @@ namespace kuujoo.Pixel
             _finalDestinationRect.X = (sw - _finalDestinationRect.Width) / 2;
             _finalDestinationRect.Y = (sh - _finalDestinationRect.Height) / 2;
         }
-        public void Render()
-        {
-            // FIXME: sort only when needed
-            _cameras.Sort();
-            _layers.Sort();
-
-            var gfx = Engine.Instance.Graphics;
-            for (var i = 0; i < _cameras.Count; i++)
-            {
-                if (_cameras[i].Enabled)
-                {
-                    gfx.Begin(_cameras[i]);
-                    for (var j = 0; j < _layers.Count; j++)
-                    {
-                        if (_cameras[i].CanRenderLayer(_layers[j]))
-                        {
-                            _layers[j].Render(_cameras[i]);
-                        }
-                    }
-                    gfx.End();
-                }
-            }
-
-            // Final render
-
-            gfx.Begin(null);
-            gfx.Device.Clear(Color.Black);
-            gfx.SpriteBatch.Draw(ApplicationSurface.Target, _finalDestinationRect, Color.White);
-            gfx.End();
-        }
-
+     
         void Dispose(bool dispose)
         {
             if (dispose)

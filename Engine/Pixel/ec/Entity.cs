@@ -15,9 +15,9 @@ namespace kuujoo.Pixel
         public int Depth { get; set; }
         public string Name { get; set; }
         public int Tag { get; set; }
-        public Scene Scene { get; set; }
         public SortedList<Component> Components { get; private set; }
         public EntityLayer Layer { get; set; }
+        public Scene Scene => Layer.Scene;
 
         static uint _idGenerator = 0;
         bool _enabled = true;

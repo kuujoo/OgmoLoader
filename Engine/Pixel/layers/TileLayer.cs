@@ -54,6 +54,8 @@ namespace kuujoo.Pixel
         public override void Render(Camera camera)
         {
             if (Tileset == null) return;
+            if (!camera.CanRenderLayer(this)) return;
+
             var gfx = Engine.Instance.Graphics;
             var bounds = camera.Bounds;
             int left = (int)Math.Floor( (float)bounds.Left / Tileset.TileWidth);
