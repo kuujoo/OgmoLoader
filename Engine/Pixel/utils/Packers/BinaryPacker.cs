@@ -24,7 +24,10 @@ namespace kuujoo.Pixel
         public abstract int Height { get; set; }
         public int CompareTo(BinaryPackerRect other)
         {
-            return (Math.Max(other.Width, other.Height)).CompareTo(Math.Max(Width, Height));
+            var r = (Math.Max(other.Width, other.Height)).CompareTo(Math.Max(Width, Height));
+            if (r != 0) return r;
+
+            return (other.Width * other.Height).CompareTo(Width * Height);
         }
     }
 

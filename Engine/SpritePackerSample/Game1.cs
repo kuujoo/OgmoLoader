@@ -14,12 +14,12 @@ namespace kuujoo.Pixel
             int x = 0;
             for (var i = 0; i < resources.TexturePages.Length; i++)
             {
-                graphics.SpriteBatch.Draw(resources.TexturePages[i], new Vector2(Entity.Position.X + x, Entity.Position.Y + y), Color.White);
                 x = (i % 4) * 280;
-                if(i != 0 && i % 4 == 0)
+                if (i != 0 && i % 4 == 0)
                 {
                     y += 280;
                 }
+                graphics.SpriteBatch.Draw(resources.TexturePages[i], new Vector2(Entity.Position.X + x, Entity.Position.Y + y), Color.White);
             }
 
         }
@@ -36,8 +36,7 @@ namespace kuujoo.Pixel
             Screen.SetSize(1920, 1080);
             var room = new Scene(1920, 1080);
             var resources = room.AddSceneComponent(new SpriteResources(256, 256)) as SpriteResources;
-
-            for (var i = 0; i < 1; i++)
+            for (var i = 0; i < 40; i++)
             {
                 resources.AddAseSprite("0" + i.ToString(), "Content/Sprites/0.ase");
                 resources.AddAseSprite("1" + i.ToString(), "Content/Sprites/1.ase");
@@ -47,11 +46,7 @@ namespace kuujoo.Pixel
                 resources.AddAseSprite("5" + i.ToString(), "Content/Sprites/5.ase");
                 resources.AddAseSprite("6" + i.ToString(), "Content/Sprites/6.ase");
             }
-
-            var w = new System.Diagnostics.Stopwatch();
-            w.Start();
             resources.Build();
-            var t = w.Elapsed.TotalSeconds;
             room.AddCamera(new Camera(1920, 1080)
             {
                 BackgroundColor = Color.Aquamarine

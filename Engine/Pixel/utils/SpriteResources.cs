@@ -103,10 +103,14 @@ namespace kuujoo.Pixel
         {
             _sprites.Clear();
             _tilesets.Clear();
-            for (var i = 0; i< _texturePages.Length; i++)
+            if (_texturePages != null)
             {
-                _texturePages[i].Dispose();
+                for (var i = 0; i < _texturePages.Length; i++)
+                {
+                    _texturePages[i].Dispose();
+                }
             }
+            _texturePages = null;
         }
     }
 }
