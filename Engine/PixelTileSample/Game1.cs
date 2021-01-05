@@ -15,11 +15,10 @@ namespace kuujoo.Pixel
 
             var room = new Scene(384, 216);
             var res = room.AddSceneComponent(new SpriteResources(128,128)) as SpriteResources;
-            res.AddAseSprite("tiles", "Content/Sprites/sheet.ase");
+            res.AddAseTileset("tiles", "Content/Sprites/sheet.ase", 16, 16);
             res.Build();
             room.AddCamera(new Camera(384, 216));
-            var sp = res.GetSprite("tiles");
-            var tileset = new Tileset(16, 16, sp.Texture, sp.Bounds[0]);
+            var tileset = res.GetTileset("tiles");
             var layer = room.CreateTileLayer(0, "tiles", 100, 100, tileset);
             for(var i = 0; i < layer.Width * layer.Height; i++)
             {

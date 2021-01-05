@@ -10,7 +10,13 @@ namespace kuujoo.Pixel
         Texture2D[] _texturePages;
         Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>();
         Dictionary<string, Tileset> _tilesets = new Dictionary<string, Tileset>();
+        List<TilesetInfo> _tmpTilesetInfos = new List<TilesetInfo>();
         SpritePacker _packer;
+        struct TilesetInfo {
+            public string Name;
+            public int Width;
+            public int Height;
+        }
         public SpriteResources(int texturepagewidth, int texturepageheight)
         {
             _packer = new SpritePacker(texturepagewidth, texturepageheight);
@@ -23,14 +29,25 @@ namespace kuujoo.Pixel
                 _packer.Add(name, s.Width, s.Height, i, s.Frames[i].Pixels);
             }
         }
-        public void InitTileset(string spritename, int tilewidth, int tileheight)
+        public void AddAseTileset(string name, string ase, int tilew, int tileh)
         {
-            var sprite = GetSprite(spritename);
-            _tilesets[spritename] = new Tileset(12, 12, sprite.Texture, sprite.Bounds[0]);
+            _tmpTilesetInfos.Add(new TilesetInfo
+            {
+                Name = name,
+                Width = tilew,
+                Height = tileh
+            });
+            AddAseSprite(name, ase);
         }
         public void Build()
         {
             _sprites = _packer.Pack(out _texturePages);
+            for(var i = 0; i < _tmpTilesetInfos.Count; i++)
+            {
+                var sp = _sprites[_tmpTilesetInfos[i].Name];
+                _tilesets[_tmpTilesetInfos[i].Name] = new Tileset(_tmpTilesetInfos[i].Width, _tmpTilesetInfos[i].Height, sp.Texture, sp.Bounds[0]);
+            }
+            _tmpTilesetInfos.Clear();
         }
         public Sprite GetSprite(string sprite)
         {
