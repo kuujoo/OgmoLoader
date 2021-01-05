@@ -55,24 +55,6 @@ namespace kuujoo.Pixel
                 Layer.Entities.MarkListUnsorted();
             }
         }
-        public virtual void Render(Graphics graphics)
-        {
-        }
-        public virtual void OnGraphicsDeviceReset()
-        {
-           
-        }
-        public virtual void Destroy()
-        {
-           
-        }
-        public virtual void CleanUp()
-        {
-
-        }
-        public virtual void Update()
-        {
-        }
         public int CompareTo(Entity other)
         {
             var compare = Depth.CompareTo(other.Depth);

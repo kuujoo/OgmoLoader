@@ -4,8 +4,10 @@ namespace kuujoo.Pixel
 {
     public class Buildable : Attribute
     {
-        public Buildable()
+        public string Name { get; private set; }
+        public Buildable(string name)
         {
+            Name = name;
         }
     }
 }

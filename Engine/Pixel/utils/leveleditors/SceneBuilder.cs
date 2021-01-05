@@ -59,8 +59,10 @@ namespace kuujoo.Pixel
         }
         protected Entity CreateEntity(string entity, SettingsComponent injectsettings)
         {
-            var e = Engine.Instance.Reflection.BuildEntity(entity);
+            var e = _scene.CreateEntity(_activeEntityLayer.Id);
+            var component = Engine.Instance.Reflection.BuildComponent(entity);
             e.AddComponent(injectsettings);
+            e.AddComponent(component);
             _scene.AddEntity(e, _activeEntityLayer.Id);
             return e;
         }

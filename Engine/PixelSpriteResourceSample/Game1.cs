@@ -3,21 +3,7 @@ using System.Collections;
 
 namespace kuujoo.Pixel
 {
-    public class SpriteEntity : Entity
-    {
-        Sprite _sprite;
-        public override void Initialize()
-        {
-            _sprite = Scene.GetSceneComponent<SpriteResources>().GetSprite("Circle");
-        }
-        public override void Render(Graphics graphics)
-        {
-            base.Render(graphics);
-            graphics.DrawSprite(Position, _sprite, 0, Color.White);
-        }
-    }
-
-    public class AnimatedSpriteEntity : Entity
+    public class AnimatedSpriteComponent : Component
     {
         Sprite _sprite;
         float frame = 0;
@@ -33,15 +19,12 @@ namespace kuujoo.Pixel
         public override void Render(Graphics graphics)
         {
             base.Render(graphics);
-            graphics.DrawSprite(Position, _sprite, (int)frame % _sprite.Bounds.Length, Color.White);
+            graphics.DrawSprite(Entity.Position, _sprite, (int)frame % _sprite.Bounds.Length, Color.White);
         }
     }
 
-    public class TexturePagesEntity : Entity
+    public class TexturePagesComponent : Component
     {
-        public TexturePagesEntity()
-        {
-        }
         public override void Render(Graphics graphics)
         {
             base.Render(graphics);
@@ -49,7 +32,7 @@ namespace kuujoo.Pixel
             int y = 0;
             for (var i = 0; i < resources.TexturePages.Length; i++)
             {
-                graphics.SpriteBatch.Draw(resources.TexturePages[i], new Vector2(Position.X, Position.Y + y), Color.White);
+                graphics.SpriteBatch.Draw(resources.TexturePages[i], new Vector2(Entity.Position.X, Entity.Position.Y + y), Color.White);
                 y += 1 + resources.TexturePages[i].Height;
             }
             
@@ -80,11 +63,13 @@ namespace kuujoo.Pixel
             });
 
             room.CreateEntityLayer(0, "entities");
-            var animated_entity = new AnimatedSpriteEntity();
+            var animated_entity = room.CreateEntity(0);
+            animated_entity.AddComponent(new AnimatedSpriteComponent());
             animated_entity.Position = new Vector2(12, 12);
             room.AddEntity(animated_entity, 0);
 
-            var texturepages_entity = new TexturePagesEntity();
+            var texturepages_entity = room.CreateEntity(0);
+            texturepages_entity.AddComponent(new TexturePagesComponent());
             texturepages_entity.Position = new Vector2(64, 12);
             room.AddEntity(texturepages_entity, 0);
             Scene = room;

@@ -6,7 +6,6 @@ namespace kuujoo.Pixel
     {
         public void Visit(Entity item)
         {
-            item.OnGraphicsDeviceReset();
             item.Components.AcceptVisitor(ComponentListVisitor.GraphicsDeviceResetVisitor, true);
         }
     }
@@ -16,7 +15,6 @@ namespace kuujoo.Pixel
         {
             if (item.Enabled)
             {
-                item.Update();
                 item.Components.UpdateLists();
                 item.Components.AcceptVisitor(ComponentListVisitor.UpdateVisitor, false);
             }
@@ -27,7 +25,6 @@ namespace kuujoo.Pixel
     {
         public void Visit(Entity item)
         {
-            item.CleanUp();
             item.Components.AcceptVisitor(ComponentListVisitor.CleanUpVisitor, false);
             item.Components.Clear();
         }
@@ -41,7 +38,6 @@ namespace kuujoo.Pixel
         {
             if(item.Enabled && Camera.CanSee(item))
             {
-                item.Render(Graphics);
                 var visitor = ComponentListVisitor.RenderVisitor;
                 visitor.Graphics = Graphics;
                 item.Components.AcceptVisitor(visitor, false);

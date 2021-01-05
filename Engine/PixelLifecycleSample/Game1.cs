@@ -2,25 +2,6 @@
 
 namespace kuujoo.Pixel
 {
-    public class LifeCycleEntity : Entity
-    {
-        public override void Initialize()
-        {
-            base.Initialize();
-            Console.WriteLine("Entity initialized");
-        }
-        public override void Destroy()
-        {
-            base.Destroy();
-            Console.WriteLine("Entity destroyed");
-        }
-        public override void CleanUp()
-        {
-            base.CleanUp();
-            Console.WriteLine("Entity Cleanup");
-        }
-    }
-
     public class LifeCycleComponent : Component
     {
         public override void Initialize()
@@ -40,8 +21,6 @@ namespace kuujoo.Pixel
         }
     }
 
-  
-
     public class Game1 : Engine
     {
         public Game1() : base()
@@ -52,9 +31,9 @@ namespace kuujoo.Pixel
             base.Initialize();
             var room = new Scene(384, 216);
             room.CreateEntityLayer(0, "entities");
-            var entity = room.CreateEntity<LifeCycleEntity>(0); // Entity::Initialize
+            var entity = room.CreateEntity(0);
             entity.AddComponent(new LifeCycleComponent()); // Componoent::Initialize
-            room.DestroyEntity(entity); // Entity::Destroy, Component::Destroy
+            room.DestroyEntity(entity); // Component::Destroy
             Scene = room;
         }
     }

@@ -7,18 +7,18 @@ using System.IO;
 
 namespace kuujoo.Pixel
 {
-    [Buildable]
-    public class TestEntity : Entity
+    [Buildable("TestEntity")]
+    public class TestComponent : Component
     {
         public override void Initialize()
         {
             base.Initialize();
-            AddComponent(new SpriteComponent()
+            Entity.AddComponent(new SpriteComponent()
             {
                 Sprite = Scene.GetSceneComponent<SpriteResources>().GetSprite("TestEntity")
             });
-            var settings = GetComponent<OgmoSettingsComponent>();
-            Position = settings.Position;
+            var settings = Entity.GetComponent<OgmoSettingsComponent>();
+            Entity.Position = settings.Position;
         }
     }
 

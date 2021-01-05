@@ -19,10 +19,7 @@
         }
         public void DestroyEntity(Entity entity)
         {
-            entity.Destroy();
             entity.Components.AcceptVisitor(ComponentListVisitor.DestroyVisitor, true);
-
-            entity.CleanUp();
             entity.Components.AcceptVisitor(ComponentListVisitor.CleanUpVisitor, true);
             entity.Components.Clear();
             Entities.Remove(entity);

@@ -11,10 +11,10 @@ namespace kuujoo.Pixel
         {
             FindBuildables();
         }
-        public Entity BuildEntity(string buildableclass)
+        public Component BuildComponent(string buildableclass)
         {
             var b = _buildables[buildableclass];
-            return Activator.CreateInstance(b) as Entity;
+            return Activator.CreateInstance(b) as Component;
         }
         private void FindBuildables()
         {
@@ -26,9 +26,17 @@ namespace kuujoo.Pixel
                 if (customAttributes.Length != 0)
                 {
                     var buildable = customAttributes[0] as Buildable;
-                    if (buildable != null && typeof(Entity).IsAssignableFrom(type))
+                    if (buildable != null && typeof(Component).IsAssignableFrom(type))
                     {
-                        _buildables[type.Name] = type;
+                        if(buildable.Name != "")
+                        {
+                            _buildables[buildable.Name] = type;
+                        }
+                        else
+                        {
+                            _buildables[type.Name] = type;
+                        }
+                       
                     }
                 }
             }
