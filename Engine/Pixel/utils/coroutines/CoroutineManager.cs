@@ -96,7 +96,7 @@ namespace kuujoo.Pixel
 		public ICoroutine StartCoroutine(IEnumerator enumerator)
 		{
 			// find or create a CoroutineImpl
-			var coroutine = SimplePool<CoroutineImpl>.Obtain();
+			var coroutine = Pool<CoroutineImpl>.Obtain();
 			coroutine.PrepareForReuse();
 
 			// setup the coroutine and add it
@@ -125,7 +125,7 @@ namespace kuujoo.Pixel
 				// check for stopped coroutines
 				if (coroutine.IsDone)
 				{
-					SimplePool<CoroutineImpl>.Free(coroutine);
+					Pool<CoroutineImpl>.Free(coroutine);
 					continue;
 				}
 
@@ -174,7 +174,7 @@ namespace kuujoo.Pixel
 			// This coroutine has finished
 			if (!coroutine.Enumerator.MoveNext() || coroutine.IsDone)
 			{
-				SimplePool<CoroutineImpl>.Free(coroutine);
+				Pool<CoroutineImpl>.Free(coroutine);
 				return false;
 			}
 
