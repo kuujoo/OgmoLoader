@@ -18,7 +18,7 @@ namespace kuujoo.Pixel
                 Sprite = Scene.GetSceneComponent<SpriteResources>().GetSprite("TestEntity")
             });
             var settings = Entity.GetComponent<OgmoSettingsComponent>();
-            Entity.Position = settings.Position;
+            Entity.Transform.SetPosition(settings.Position.X, settings.Position.Y);
         }
     }
 

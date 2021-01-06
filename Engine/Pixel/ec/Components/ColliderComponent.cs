@@ -5,73 +5,68 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
-    public abstract class ColliderComponent
+    public static class CollisionMask
     {
-        public Entity Entity { get; set; }
-        public Vector2 Position;
-        public float AbsoluteX
-        {
-            get
-            {
-                if (Entity != null)
-                {
-                    return Entity.Position.X + Position.X;
-                }
-                return Position.X;
-            }
-        }
-        public float AbsoluteY
-        {
-            get
-            {
-                if (Entity != null)
-                {
-                    return Entity.Position.Y + Position.Y;
-                }
-                return Position.Y;
-            }
-        }
-        public Rectangle AbsoluteBounds => new Rectangle((int)AbsoluteX, (int)AbsoluteY, (int)Width, (int)Height);
-        public abstract float Width { get; set; }
-        public abstract float Height { get; set; }
-        public abstract bool Collides(ColliderComponent collider);
+        public static int Solid = 1 << 0;
+        public static int JumpThroughSolid = 1 << 1;
+        public static int Danger = 1 << 2;
+        public static int Actor = 1 << 3;
+        public static int Player = 1 << 4;
+        public static int Trigger = 1 << 5;
+        public static int Enemy = 1 << 6;
     }
 
+    public abstract class ColliderComponent : Component
+    {
+        public Action<ColliderComponent> Updated;
+        public Rectangle PhysicsBounds; // for spatialhash
+        public abstract Rectangle Bounds { get; }
+        public int Mask { get; set; }
+        public abstract bool Collides(ColliderComponent collider);
+        public ColliderComponent()
+        {
+            Mask = 0;
+        }
+        public override void TransformChanged(Transform transform)
+        {
+            Updated?.Invoke(this);
+        }
+        public ColliderComponent Check(int mask, Point point)
+        {
+            var bounds = Bounds;
+            bounds.Location = point;
+            var colliders = Entity.Scene.Tracker.Check(ref bounds, mask);
+            foreach(var c in colliders)
+            {
+                if (c == this || !c.Enabled || (c.Mask & mask) == 0) continue;
+
+                if( Collides(c) )
+                {
+                    return c;
+                }
+            }
+            return null;
+        }
+    }
     public class BoxColliderComponent : ColliderComponent
     {
-        public override float Width { get; set; }
-        public override float Height { get; set; }
-        public BoxColliderComponent(float x, float y, float width, float height)
+        public override Rectangle Bounds => new Rectangle( (Entity.Transform.Position + _position), _size.ToPoint());
+        Point _position;
+        Vector2 _size;
+        public BoxColliderComponent(int x, int y, int width, int height)
         {
-            Width = width;
-            Height = height;
-            Position.X = x;
-            Position.Y = y;
+            _position = new Point(x, y);
+            _size = new Vector2(width, height);
         }
-        public bool Intersects(BoxColliderComponent other)
+        public override bool Collides(ColliderComponent other)
         {
-            var me = AbsoluteBounds;
-            var otherb = other.AbsoluteBounds;
-            if (me.Left < otherb.Right && me.Right > otherb.Left && me.Bottom > otherb.Top)
+            if (other is BoxColliderComponent)
             {
-                return me.Top < otherb.Bottom;
+                var mybounds = Bounds;
+                var otherbounds = (other as BoxColliderComponent).Bounds;
+                return mybounds.Intersects(otherbounds);
             }
-            else
-            {
-                return false;
-            }
-        }
-        public override bool Collides(ColliderComponent collider)
-        {
-            if(collider is BoxColliderComponent)
-            {
-                return Intersects(collider as BoxColliderComponent);
-            } 
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
-
 }

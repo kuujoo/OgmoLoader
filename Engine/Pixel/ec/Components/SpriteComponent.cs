@@ -55,7 +55,7 @@ namespace kuujoo.Pixel
             base.Render(graphics);
             if (Sprite == null) return;
 
-            graphics.DrawSpriteFrame(Entity.Position, CurrentFrame, Color.White);  
+            graphics.DrawSpriteFrame(Entity.Transform.Position, CurrentFrame, Color.White);  
         }
         public void Play(string name)
         {

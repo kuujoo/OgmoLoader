@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -7,9 +6,10 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
+
     public class Entity : IComparable<Entity>
     {
-        public Vector2 Position;
+        public Transform Transform { get; private set; }
         public bool Enabled => _enabled;
         public uint Id { get; private set; }
         public int Depth { get; set; }
@@ -24,6 +24,7 @@ namespace kuujoo.Pixel
         public Entity()
         {
             Components = new SortedList<Component>();
+            Transform = new Transform();
             Id = _idGenerator;
             _idGenerator++;
         }
@@ -35,6 +36,7 @@ namespace kuujoo.Pixel
         public Component AddComponent(Component component)
         {
             component.Entity = this;
+            component.AddedToEntity();
             component.Initialize();
             Components.Add(component);
             return component;

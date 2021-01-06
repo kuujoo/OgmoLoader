@@ -19,7 +19,7 @@ namespace kuujoo.Pixel
                 {
                     y += 280;
                 }
-                graphics.SpriteBatch.Draw(resources.TexturePages[i].Texture, new Vector2(Entity.Position.X + x, Entity.Position.Y + y), Color.White);
+                graphics.SpriteBatch.Draw(resources.TexturePages[i].Texture, new Vector2(Entity.Transform.Position.X + x, Entity.Transform.Position.Y + y), Color.White);
             }
 
         }
@@ -45,7 +45,7 @@ namespace kuujoo.Pixel
             room.CreateEntityLayer(0, "entities");
             var texturepages_entity = room.CreateEntity(0);
             texturepages_entity.AddComponent(new TexturePagesComponent());
-            texturepages_entity.Position = new Vector2(0, 0);
+            texturepages_entity.Transform.SetPosition(12, 12);
             room.AddEntity(texturepages_entity, 0);
             Scene = room;
         }

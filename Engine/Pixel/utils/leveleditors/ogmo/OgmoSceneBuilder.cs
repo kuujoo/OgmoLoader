@@ -92,8 +92,8 @@ namespace kuujoo.Pixel
                             var settings = new OgmoSettingsComponent();
                             if(settings != null)
                             {
-                                settings.SetPoint("Position", new Vector2(_levels[i].OffsetX + layer.Entities[e].X, _levels[i].OffsetY + layer.Entities[e].Y));
-                                settings.SetPoint("Origin", new Vector2(layer.Entities[e].OriginX, layer.Entities[e].OriginY));
+                                settings.SetPoint("Position", new Point(_levels[i].OffsetX + layer.Entities[e].X, _levels[i].OffsetY + layer.Entities[e].Y));
+                                settings.SetPoint("Origin", new Point(layer.Entities[e].OriginX, layer.Entities[e].OriginY));
                             }
                            CreateEntity(layer.Entities[e].Name, settings);
                         }

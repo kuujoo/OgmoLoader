@@ -5,9 +5,9 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
-
     public class Scene : IDisposable
     {
+        public Tracker Tracker { get; private set; }
         public Color ClearColor { get; set; }
         public Surface ApplicationSurface { get; set; }
         public RuntimeContentManager Content { get; private set; }
@@ -20,6 +20,7 @@ namespace kuujoo.Pixel
         {
             ClearColor = Color.Aquamarine;
             Content = new RuntimeContentManager();
+            Tracker = new Tracker();
             ApplicationSurface = new Surface(game_width, game_height);
             UpdateDrawRect();
             Initialize();
@@ -223,8 +224,7 @@ namespace kuujoo.Pixel
             _finalDestinationRect.Height = (int)Math.Ceiling((double)surface_h * scale);
             _finalDestinationRect.X = (sw - _finalDestinationRect.Width) / 2;
             _finalDestinationRect.Y = (sh - _finalDestinationRect.Height) / 2;
-        }
-     
+        }    
         void Dispose(bool dispose)
         {
             if (dispose)
@@ -238,5 +238,6 @@ namespace kuujoo.Pixel
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
     }
 }

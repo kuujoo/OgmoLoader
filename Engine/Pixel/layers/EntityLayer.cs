@@ -21,6 +21,7 @@
         {
             entity.Components.AcceptVisitor(ComponentListVisitor.DestroyVisitor, true);
             entity.Components.AcceptVisitor(ComponentListVisitor.CleanUpVisitor, true);
+            entity.Components.AcceptVisitor(ComponentListVisitor.RemovedFromEntityVisitor, true);
             entity.Components.Clear();
             Entities.Remove(entity);
         }

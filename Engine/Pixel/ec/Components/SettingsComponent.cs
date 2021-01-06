@@ -18,10 +18,10 @@ namespace kuujoo.Pixel
         }
         public void SetPoint(string key, int x, int y)
         {
-            var v = new Vector2(x, y);
+            var v = new Point(x, y);
             SetPoint(key, v);
         }
-        public void SetPoint(string key, Vector2 position)
+        public void SetPoint(string key, Point position)
         {
             SetValueWithRecflection(key, position);
         }

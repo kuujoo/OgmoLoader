@@ -9,7 +9,7 @@ namespace kuujoo.Pixel
         {
             base.Render(graphics);
             var resources = Scene.GetSceneComponent<SpriteResources>();
-            graphics.SpriteBatch.Draw(resources.TexturePages[0].Texture, new Vector2(Entity.Position.X, Entity.Position.Y), Color.White);
+            graphics.SpriteBatch.Draw(resources.TexturePages[0].Texture, new Vector2(Entity.Transform.Position.X, Entity.Transform.Position.Y), Color.White);
         }
     }
     public class Game1 : Engine
@@ -36,7 +36,7 @@ namespace kuujoo.Pixel
             {
                 Sprite = resources.GetSprite("animation")
             });
-            animated_entity.Position = new Vector2(12, 12);
+            animated_entity.Transform.SetPosition(12, 12);
             animated_entity.GetComponent<SpriteComponent>().Play("ColorBox");
             room.AddEntity(animated_entity, 0);
 
@@ -45,16 +45,16 @@ namespace kuujoo.Pixel
             {
                 Sprite = resources.GetSprite("checker")
             });
-            e0.Position = new Vector2(200, 100);
+            e0.Transform.SetPosition(200, 100);
             var e1 = room.CreateEntity(0);     
             e1.AddComponent(new SpriteComponent()
             {
                 Sprite = resources.GetSprite("circle")
             });
-            e1.Position = new Vector2(100, 100);
+            e1.Transform.SetPosition(100, 100);
 
             var e2 = room.CreateEntity(0);
-            e2.Position = new Vector2(100, 0);
+            e2.Transform.SetPosition(100, 0);
             e2.AddComponent(new TexturePagesComponent());
             Scene = room;
         }

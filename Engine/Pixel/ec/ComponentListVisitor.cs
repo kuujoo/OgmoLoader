@@ -15,6 +15,15 @@
             item.OnGraphicsDeviceReset();
         }
     }
+
+    public class ComponentRemovedFromEntityVisitor : ISortedListVisitor<Component>
+    {
+        public void Visit(Component item)
+        {
+            item.RemovedFromEntity();
+        }
+    }
+
     public class ComponentUpdateVisitor : ISortedListVisitor<Component>
     {
         public void Visit(Component item)
@@ -51,5 +60,6 @@
         public static ComponentUpdateVisitor UpdateVisitor = new ComponentUpdateVisitor();
         public static ComponentCleanUpVisitor CleanUpVisitor = new ComponentCleanUpVisitor();
         public static ComponentRenderVisitor RenderVisitor = new ComponentRenderVisitor();
+        public static ComponentRemovedFromEntityVisitor RemovedFromEntityVisitor = new ComponentRemovedFromEntityVisitor();
     }
 }

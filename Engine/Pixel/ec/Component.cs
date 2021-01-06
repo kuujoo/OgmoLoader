@@ -23,6 +23,20 @@ namespace kuujoo.Pixel
                 Entity.Components.MarkListUnsorted();
             }
         }
+        public void AddedToEntity()
+        {
+            Entity.Scene.Tracker.RegisterComponent(this);
+            Entity.Transform.Changed += TransformChanged;
+        }
+        public void RemovedFromEntity()
+        {
+            Entity.Scene.Tracker.UnregisterComponent(this);
+            Entity.Transform.Changed -= TransformChanged;
+        }
+        public virtual void TransformChanged(Transform transform)
+        {
+
+        }
         public virtual void Initialize() { }
         public virtual void Render(Graphics graphics) {}
         public virtual void Update() { }

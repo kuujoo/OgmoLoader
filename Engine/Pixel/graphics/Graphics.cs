@@ -66,9 +66,9 @@ namespace kuujoo.Pixel
         {
             SpriteBatch.Draw(Pixel, rect, color);
         }
-        public void DrawSpriteFrame(Vector2 at, Sprite.Frame frame, Color color)
+        public void DrawSpriteFrame(Point at, Sprite.Frame frame, Color color)
         {
-            SpriteBatch.Draw(frame.Texture, at, frame.Rect, color);
+            SpriteBatch.Draw(frame.Texture, at.ToVector2(), frame.Rect, color);
         }
     }
 }
