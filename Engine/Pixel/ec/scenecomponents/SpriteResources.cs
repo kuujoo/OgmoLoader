@@ -55,7 +55,7 @@ namespace kuujoo.Pixel
                     {
                         var animation = new Sprite.Animation()
                         {
-                            Name = spriteInfo[i].AseSPrite.Tags[i].Name
+                            Name = spriteInfo[i].AseSPrite.Tags[t].Name
                         };
                         for (int f = spriteInfo[i].AseSPrite.Tags[t].From; f <= spriteInfo[i].AseSPrite.Tags[t].To; f++)
                         {
