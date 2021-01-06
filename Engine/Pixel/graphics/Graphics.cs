@@ -68,6 +68,14 @@ namespace kuujoo.Pixel
         {
             SpriteBatch.Draw(Pixel, rect, color);
         }
+        public void DrawHollowRect(Rectangle rect, Color color)
+        {
+            SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Top, 1, rect.Height), color);
+            SpriteBatch.Draw(Pixel, new Rectangle(rect.Right, rect.Top, 1, rect.Height), color);
+
+            SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Top, rect.Width, 1), color);
+            SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Bottom, rect.Width, 1), color);       
+        }
         public void DrawSpriteFrame(Point at, Sprite.Frame frame, Color color)
         {
             SpriteBatch.Draw(frame.Texture, at.ToVector2(), frame.Rect, color);
