@@ -27,6 +27,16 @@ namespace kuujoo.Pixel
         {
             Mask = 0;
         }
+        public override void Initialize()
+        {
+            base.Initialize();
+            Entity.Scene.Physics.RegisterCollider(this);
+        }
+        public override void CleanUp()
+        {
+            base.CleanUp();
+            Entity.Scene.Physics.UnregisterCollider(this);
+        }
         public override void TransformChanged(Transform transform)
         {
             Updated?.Invoke(this);
@@ -35,9 +45,10 @@ namespace kuujoo.Pixel
         {
             var bounds = Bounds;
             bounds.Location = point;
-            var colliders = Entity.Scene.Tracker.Check(ref bounds, mask);
-            foreach(var c in colliders)
+            var colliders = Entity.Scene.Physics.Check(ref bounds, mask);
+            for(var i = 0; i < colliders.Count; i++)
             {
+                var c = colliders[i];
                 if (c == this || !c.Enabled || (c.Mask & mask) == 0) continue;
 
                 if( Collides(c) )

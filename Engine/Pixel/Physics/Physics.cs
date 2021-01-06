@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace kuujoo.Pixel
 {
-    public class Tracker
+    public class Physics
     {
         SpatialHash _hash = new SpatialHash();
-        public void RegisterComponent(Component component)
+        public void RegisterCollider(Component component)
         {
             if(component is Collider)
             {
@@ -20,11 +20,11 @@ namespace kuujoo.Pixel
             _hash.Unregister(collider);
             _hash.Register(collider);
         }
-        public HashSet<Collider> Check(ref Rectangle rect, int mask)
+        public List<Collider> Check(ref Rectangle rect, int mask)
         {
             return _hash.Check(ref rect, mask);
         }
-        public void UnregisterComponent(Component component)
+        public void UnregisterCollider(Component component)
         {
             if (component is Collider)
             {

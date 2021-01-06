@@ -25,12 +25,10 @@ namespace kuujoo.Pixel
         }
         public void AddedToEntity()
         {
-            Entity.Scene.Tracker.RegisterComponent(this);
             Entity.Transform.Changed += TransformChanged;
         }
         public void RemovedFromEntity()
         {
-            Entity.Scene.Tracker.UnregisterComponent(this);
             Entity.Transform.Changed -= TransformChanged;
         }
         public virtual void TransformChanged(Transform transform)

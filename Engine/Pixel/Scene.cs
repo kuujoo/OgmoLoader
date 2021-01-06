@@ -8,7 +8,7 @@ namespace kuujoo.Pixel
     public class Scene : IDisposable
     {
         public SortedList<Entity> Entities { get; private set; }
-        public Tracker Tracker { get; private set; }
+        public Physics Physics { get; private set; }
         public Color ClearColor { get; set; }
         public Surface ApplicationSurface { get; set; }
         public RuntimeContentManager Content { get; private set; }
@@ -20,7 +20,7 @@ namespace kuujoo.Pixel
         {
             ClearColor = Color.Aquamarine;
             Content = new RuntimeContentManager();
-            Tracker = new Tracker();
+            Physics = new Physics();
             ApplicationSurface = new Surface(game_width, game_height);
             Entities = new SortedList<Entity>();
             UpdateDrawRect();

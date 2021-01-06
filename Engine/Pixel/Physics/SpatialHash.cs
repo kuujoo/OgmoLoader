@@ -77,7 +77,7 @@ namespace kuujoo.Pixel
         int _cellSize;
         float _inverseCellSize;
         IntIntDictionary _cells = new IntIntDictionary();
-        HashSet<Collider> _tempHashset = new HashSet<Collider>();
+        List<Collider> _tmpList = new List<Collider>(100);
         public SpatialHash(int cellsize = 100)
         {
             _cellSize = cellsize;
@@ -146,9 +146,9 @@ namespace kuujoo.Pixel
                 }
             }
         }
-        public HashSet<Collider> Check(ref Rectangle bounds, int mask)
+        public List<Collider> Check(ref Rectangle bounds, int mask)
         {
-            _tempHashset.Clear();
+            _tmpList.Clear();
             var p1 = CellAt(bounds.X, bounds.Y);
             var p2 = CellAt(bounds.Right, bounds.Bottom);
             for (var x = p1.X; x <= p2.X; x++)
@@ -170,12 +170,12 @@ namespace kuujoo.Pixel
                         }
                         if (bounds.Intersects(collider.Bounds))
                         {
-                            _tempHashset.Add(collider);
+                            _tmpList.Add(collider);
                         }
                     }
                 }
             }
-            return _tempHashset;
+            return _tmpList;
         }
         public void Clear()
         {
