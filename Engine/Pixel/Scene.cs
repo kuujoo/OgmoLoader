@@ -82,7 +82,7 @@ namespace kuujoo.Pixel
             gfx.SpriteBatch.Draw(ApplicationSurface.Target, _finalDestinationRect, Color.White);
             gfx.End();
         }
-        public SceneComponent AddSceneComponent(SceneComponent sceneComponent)
+        public T AddSceneComponent<T>(T sceneComponent) where T: SceneComponent
         {
             sceneComponent.Scene = this;
             sceneComponent.Initialize();

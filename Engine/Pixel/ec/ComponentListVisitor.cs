@@ -30,6 +30,7 @@
         {
             if (item.Enabled)
             {
+                item.PreUpdate();
                 item.Update();
             }
         }

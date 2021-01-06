@@ -1,78 +1,55 @@
-﻿namespace kuujoo.Pixel
+﻿using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+
+namespace kuujoo.Pixel
 {
     public class Input
     {
-        public bool Down => IsDown();
-        public bool Pressed => IsPressed();
-        public bool Released => IsReleased();
-        public bool Buffered => IsBuffered();
-
-        IInputNode[] _nodes;
+        public bool Down { get; private set; }
+        public bool Pressed { get; private set; }
+        public bool Released { get; private set; }
+        public bool Buffered => _buffer_timer > 0.0f;
         float _buffer_timer = 0.0f;
         float _buffer_time = 0.0f;
-        public Input(IInputNode[] nodes, float buffer_time)
+        List<IInputNode> _nodes = new List<IInputNode>();
+        public Input(float buffer_time)
         {
-            Engine.Instance.Inputs.RegisterInput(this);
-            _nodes = nodes;
             _buffer_time = buffer_time;
         }
-        public void Update()
+        public Input SetKey(Keys key)
+        {
+            _nodes.Add(new KeyboardInput(key));
+            return this;
+        }
+        public Input SetButton(int _gamepad, Buttons button)
+        {
+            _nodes.Add(new GamepadInput(0, button));
+            return this;
+        }
+        public void ConsumeBuffer()
+        {
+            _buffer_timer = 0.0f;
+        }
+        public void Update(IInputState state)
         {
             _buffer_timer = MathExt.Approach(_buffer_timer, 0.0f, Time.DeltaTime);
-            bool down = false;
-            for (var i = 0; i < _nodes.Length; i++)
+            Pressed = false;
+            Down = false;
+            Released = false;
+            for (var i = 0; i < _nodes.Count; i++)
             {
-                if(_nodes[i].Pressed)
-                {
-                    _buffer_timer = _buffer_time;
-                    down = true;
-                }
-                else if(_nodes[i].Down)
-                {
-                    down = true;
-                }
+                _nodes[i].Update(state);
+                Pressed = _nodes[i].Pressed || Pressed;
+                Down = _nodes[i].Down || Down;
+                Released = _nodes[i].Released || Released;
             }
-            if(!down)
+            if(Pressed)
+            {
+                _buffer_timer = _buffer_time;
+            } else if (!Down)
             {
                 _buffer_timer = 0.0f;
             }
-        }
-        bool IsDown()
-        {
-            for(var i = 0; i < _nodes.Length; i++)
-            {
-                if(_nodes[i].Down)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        bool IsPressed()
-        {
-            for (var i = 0; i < _nodes.Length; i++)
-            {
-                if (_nodes[i].Pressed)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        bool IsReleased()
-        {
-            for (var i = 0; i < _nodes.Length; i++)
-            {
-                if (_nodes[i].Released)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        bool IsBuffered()
-        {
-            return _buffer_timer > 0.0f;
         }
     }
 }

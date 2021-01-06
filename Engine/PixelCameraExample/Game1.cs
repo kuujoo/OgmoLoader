@@ -36,13 +36,14 @@ namespace kuujoo.Pixel
         }
         void InitInputs()
         {
-            LeftInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Left), new GamepadInputNode(0, Buttons.DPadLeft) }, 0.0f);
-            RightInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Right), new GamepadInputNode(0, Buttons.DPadRight) }, 0.0f);
-            UpInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Up), new GamepadInputNode(0, Buttons.DPadUp) }, 0.0f);
-            DownInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Down), new GamepadInputNode(0, Buttons.DPadDown) }, 0.0f);
-            SwitchCameraInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Space), new GamepadInputNode(0, Buttons.A)}, 0.0f);
-            ZoomOutInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Subtract), new GamepadInputNode(0, Buttons.LeftTrigger) }, 0.0f);
-            ZoomInInput = new Input(new IInputNode[] { new KeyboardInputNode(Keys.Add), new GamepadInputNode(0, Buttons.RightTrigger) }, 0.0f);
+            var inputs = AddSceneComponent(new SceneInputs());
+            LeftInput = inputs.CreateInput().SetKey(Keys.Left).SetButton(0, Buttons.DPadLeft);
+            RightInput = inputs.CreateInput().SetKey(Keys.Right).SetButton(0, Buttons.DPadRight);
+            UpInput = inputs.CreateInput().SetKey(Keys.Up).SetButton(0, Buttons.DPadUp);
+            DownInput = inputs.CreateInput().SetKey(Keys.Down).SetButton(0, Buttons.DPadDown);
+            SwitchCameraInput = inputs.CreateInput().SetKey(Keys.Space).SetButton(0, Buttons.A);
+            ZoomOutInput = inputs.CreateInput().SetKey(Keys.Subtract).SetButton(0, Buttons.LeftTrigger);
+            ZoomInInput = inputs.CreateInput().SetKey(Keys.Add).SetButton(0, Buttons.RightTrigger);
         }
         public override void Initialize()
         {
