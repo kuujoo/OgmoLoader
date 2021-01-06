@@ -8,6 +8,8 @@ namespace kuujoo.Pixel
         int _entityDepth = 0;
         TilemapRenderer _activeTilemap = null;
         Dictionary<string, Tileset> _tilesets = new Dictionary<string, Tileset>();
+        Dictionary<string, int> _gridColliders = new Dictionary<string, int>();
+        GridCollider _activeGridCollider;
         public SceneBuilder(Scene scene)
         {
             _scene = scene;
@@ -16,12 +18,22 @@ namespace kuujoo.Pixel
         {
             _tilesets[key] = tileset;
         }
+        public void AddGridCollider(string key, int mask)
+        {
+            _gridColliders[key] = mask;
+        }
         public abstract void Build();
 
         protected void BeginTileLayer(int id, string name, int width, int height, Tileset tileset)
         {
             var t = _scene.CreateEntity(id);        
             _activeTilemap = t.AddComponent(new TilemapRenderer(width, height, tileset));
+            int mask;
+            if(_gridColliders.TryGetValue(name, out mask))
+            {
+                _activeGridCollider = t.AddComponent(new GridCollider(width, height, tileset.TileWidth, tileset.TileHeight));
+                _activeGridCollider.Mask = mask;
+            }
         }
         protected Tileset GetTileset(string tileset_name)
         {
@@ -30,10 +42,14 @@ namespace kuujoo.Pixel
         protected void SetTile(int index, byte tile)
         {
             _activeTilemap.SetValueByIndex(index, tile);
+            if(_activeGridCollider != null)
+            {
+                _activeGridCollider.SetValueByIndex(index, 255);
+            }
         }
         protected void SetTile(int x, int y, byte tile)
         {
-            _activeTilemap.SetValue(x, y, tile);
+            SetTile(y * _activeTilemap.Width + x, tile);
         }
         protected void BeginEntityLayer(int id, string name)
         {
@@ -49,6 +65,8 @@ namespace kuujoo.Pixel
         protected void EndLayer()
         {
             _entityDepth = 0;
+            _activeGridCollider = null;
+            _activeTilemap = null;
         }
     }
 }
