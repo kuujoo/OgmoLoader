@@ -9,24 +9,7 @@ namespace kuujoo.Pixel
         {
             base.Render(graphics);
             var resources = Scene.GetSceneComponent<SpriteResources>();
-            graphics.SpriteBatch.Draw(resources.TexturePages[0], new Vector2(Entity.Position.X, Entity.Position.Y), Color.White);
-        }
-    }
-
-    public class AnimatedSpriteComponent : Component
-    {
-        public Sprite Sprite;
-        float frame = 0;
-    
-        public override void Update()
-        {
-            base.Update();
-            frame += 1.0f * Time.DeltaTime;
-        }
-        public override void Render(Graphics graphics)
-        {
-            base.Render(graphics);
-            graphics.DrawSprite(Entity.Position, Sprite, (int)frame % Sprite.Bounds.Length, Color.White);
+            graphics.SpriteBatch.Draw(resources.TexturePages[0].Texture, new Vector2(Entity.Position.X, Entity.Position.Y), Color.White);
         }
     }
     public class Game1 : Engine
@@ -40,15 +23,8 @@ namespace kuujoo.Pixel
             base.Initialize();
 
             var room = new Scene(384, 216);
-            var resources = room.AddSceneComponent(new SpriteResources(2048, 2048)) as SpriteResources;
-            resources.AddAseSprite("Checker", "Content/Sprites/checker.ase");
-            resources.AddAseSprite("Animated","Content/Sprites/animation.ase");
-            resources.AddAseSprite("Circle", "Content/Sprites/circle.ase");
-
+            var resources = room.AddSceneComponent(new SpriteResources(2048, 2048, "Content/Sprites")) as SpriteResources;
             var w = new System.Diagnostics.Stopwatch();
-            w.Start();
-            resources.Build();
-            var t = w.Elapsed.TotalSeconds;
             room.AddCamera(new Camera(384, 216)
             {
                 BackgroundColor = Color.Aquamarine
@@ -56,24 +32,24 @@ namespace kuujoo.Pixel
 
             room.CreateEntityLayer(0, "entities");
             var animated_entity = room.CreateEntity(0);
-            animated_entity.AddComponent(new AnimatedSpriteComponent()
+            animated_entity.AddComponent(new SpriteComponent()
             {
-                Sprite = resources.GetSprite("Animated", "ColorBox")
+                Sprite = resources.GetSprite("animation")
             });
             animated_entity.Position = new Vector2(12, 12);
+            animated_entity.GetComponent<SpriteComponent>().Play("ColorBox");
             room.AddEntity(animated_entity, 0);
 
             var e0 = room.CreateEntity(0);
             e0.AddComponent(new SpriteComponent()
             {
-                Sprite = resources.GetSprite("Checker")
+                Sprite = resources.GetSprite("checker")
             });
             e0.Position = new Vector2(200, 100);
-
             var e1 = room.CreateEntity(0);     
             e1.AddComponent(new SpriteComponent()
             {
-                Sprite = resources.GetSprite("Circle")
+                Sprite = resources.GetSprite("circle")
             });
             e1.Position = new Vector2(100, 100);
 

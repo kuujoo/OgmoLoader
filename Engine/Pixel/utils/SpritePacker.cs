@@ -6,28 +6,47 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace kuujoo.Pixel
 {
-    public class SpritePacker
+    public class TexturePage : IDisposable
     {
-        public class PixelRect : BinaryPackerRect
+        public Texture2D Texture { get; set; }
+        public Dictionary<int, Rectangle> SubTextures {get;set;}
+        public TexturePage()
         {
-            public override int Width { get; set; }
-            public override int Height { get; set; }
-            public string Name { get; set; }
-            public string Tag { get; set; }
-            public Color[] Pixels;
-            public int Frames { get; set; }
-            public PixelRect(string name, string tag, int frames, int width, int height)
+            SubTextures = new Dictionary<int, Rectangle>();
+        }
+
+        void Dispose(bool dispose)
+        {
+            if(dispose && Texture != null)
             {
-                Name = name;
-                Tag = tag;
-                Width = width;
-                Height = height;
-                Frames = frames;
-                Pixels = new Color[width * height];
+                Texture.Dispose();
+                Texture = null;
             }
         }
-        List<PixelRect> _packBuffer = new List<PixelRect>();
-        List<Texture2D> _texturePages = new List<Texture2D>();
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+    }
+    public class SpritePacker
+    {
+        public class SpritePixelData : BinaryPackerRect
+        {
+            public int Id { get; set; }
+            public override int Width { get; set; }
+            public override int Height { get; set; }
+            public Color[] Pixels;
+            public SpritePixelData(int id, int width, int height, Color[] pixels)
+            {
+                Id = id;
+                Width = width;
+                Height = height;
+                Pixels = pixels;
+            }
+        }
+        List<SpritePixelData> _packBuffer = new List<SpritePixelData>();
+        List<TexturePage> _texturePages = new List<TexturePage>();
         int _pageWidth;
         int _pageHeight;
         public SpritePacker(int texturepagewidth, int texturepageheight)
@@ -35,47 +54,37 @@ namespace kuujoo.Pixel
             _pageWidth = texturepagewidth;
             _pageHeight = texturepageheight;
         }
-        public void Add(PixelRect rect)
+        public void Add(int packid, int width, int height, Color[] pixels)
         {
-            _packBuffer.Add(rect);
+            _packBuffer.Add(new SpritePixelData(packid, width, height, pixels));
         }
-        Texture2D CreateTexturePage()
+        TexturePage CreateTexturePage()
         {
-            var texture = new Texture2D(Engine.Instance.GraphicsDevice, _pageWidth, _pageHeight);
-            _texturePages.Add(texture);
-            return texture;
+            var texturepage = new TexturePage()
+            {
+                Texture = new Texture2D(Engine.Instance.GraphicsDevice, _pageWidth, _pageHeight)
+            };
+            _texturePages.Add(texturepage);
+            return texturepage;
         }
-        public Dictionary<string, List<Sprite>> Pack(out Texture2D[] texturepages)
-        { 
-            Dictionary<string, List<Sprite>> sprites = new Dictionary<string, List<Sprite>>();
+        public TexturePage[] Pack()
+        {
             while (_packBuffer.Count > 0)
-            {      
+            {
                 int idx = BinaryPacker.Pack(_pageWidth, _pageHeight, ref _packBuffer);
-                var texture = CreateTexturePage();
+                var texturepage = CreateTexturePage();
                 for (var i = 0; i < idx; i++)
                 {
                     var pack = _packBuffer[i];
                     var rect = pack.Bounds;
-                    texture.SetData(0, rect, pack.Pixels, 0, pack.Pixels.Length);
-                    var true_w = pack.Width / pack.Frames;
-                    Rectangle[] rects = new Rectangle[pack.Frames];
-                    for (var kk = 0; kk < pack.Frames; kk++)
-                    {
-                        rects[kk] = new Rectangle(rect.X + kk * true_w, rect.Y, true_w, rect.Height);
-                    }
-
-                    if(!sprites.ContainsKey(pack.Name))
-                    {
-                        sprites[pack.Name] = new List<Sprite>();                     
-                    }
-                    sprites[pack.Name].Add(new Sprite(texture, rects, pack.Tag));
-
+                    texturepage.Texture.SetData(0, rect, pack.Pixels, 0, pack.Pixels.Length);
+                    texturepage.SubTextures[pack.Id] = rect;
                 }
                 _packBuffer.RemoveRange(0, idx);
             }
-            texturepages = _texturePages.ToArray();
+            var pages = _texturePages.ToArray();
             _texturePages.Clear();
-            return sprites;
-        }     
+            return pages;
+        }
     }
 }

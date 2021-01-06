@@ -1,29 +1,33 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace kuujoo.Pixel
 {
     public class Sprite
     {
-        public Texture2D Texture { get; protected set; }
-        public Rectangle[] Bounds => _bounds;
-        public Vector2 Pivot { get; protected set; }
-        public string Tag { get; protected set; }
-        Rectangle[] _bounds;
-        public Sprite(Texture2D texture, Rectangle[] bounds, string tag)
+        public class Frame
         {
-            Texture = texture;
-            _bounds = bounds;
-            Pivot = Vector2.Zero;
-            Tag = tag;
+            public Texture2D Texture { get; set; }
+            public Rectangle Rect {get;set;}
+            public float Duration { get; set; }
         }
-        public Sprite(Texture2D texture, Rectangle[] bounds, Vector2 pivot, string tag)
+        public class Animation
         {
-            Texture = texture;
-            _bounds = bounds;
-            Pivot = pivot;
-            Tag = tag;
+            public string Name { get; set; }
+            public List<Frame> Frames { get; protected set; }
+            public Animation()
+            {
+                Frames = new List<Frame>();
+            }
+        }
+        public Sprite.Frame DefaultFrame => Animations[0].Frames[0];
+        public Vector2 Pivot { get; protected set; }
+        public List<Animation> Animations { get; protected set; }
+        public Sprite()
+        {
+            Animations = new List<Animation>();
         }
     }
 }

@@ -33,12 +33,10 @@ namespace kuujoo.Pixel
             base.Initialize();
             var room = new Scene(384 * 2 , 216);
             room.AddCamera(new Camera(384 * 2, 216));
-            var resources = room.AddSceneComponent(new SpriteResources(1024, 1024)) as SpriteResources;
-            resources.AddAseTileset("tiles", "Content/Sprites/tiles.ase", 12, 12);
-            resources.AddAseSprite("TestEntity", "Content/Sprites/TestEntity.ase");
-            resources.Build();
+            var resources = room.AddSceneComponent(new SpriteResources(1024, 1024, "Content/Sprites")) as SpriteResources;
             OgmoSceneBuilder builder = new OgmoSceneBuilder(room, "Content/levels/levels");
-            builder.AddTileset("tiles", resources.GetTileset("tiles"));
+            var sp = resources.GetSprite("tiles");
+            builder.AddTileset("tiles", new Tileset(12,12,sp.DefaultFrame.Texture, sp.DefaultFrame.Rect));
             builder.Build();
             Scene = room;
         }

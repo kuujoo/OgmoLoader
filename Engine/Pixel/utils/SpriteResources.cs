@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;
 
@@ -7,102 +6,119 @@ namespace kuujoo.Pixel
 {
     public class SpriteResources : SceneComponent
     {
-        public Texture2D[] TexturePages => _texturePages;
-        Texture2D[] _texturePages;
-        Dictionary<string, List<Sprite>> _sprites = new Dictionary<string, List<Sprite>>();
-        Dictionary<string, Tileset> _tilesets = new Dictionary<string, Tileset>();
-        List<TilesetInfo> _tmpTilesetInfos = new List<TilesetInfo>();
-        
+        public TexturePage[] TexturePages => _texturePages;
+        TexturePage[] _texturePages;
+        Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>(); 
         SpritePacker _packer;
+        string _spritedirectory;
+        struct SpriteInfo
+        {
+            public string Name;
+            public AseSprite AseSPrite;
+            public int PackId;
+        }
         struct TilesetInfo {
             public string Name;
             public int Width;
             public int Height;
         }
-        public SpriteResources(int texturepagewidth, int texturepageheight)
+        public SpriteResources(int texturepagewidth, int texturepageheight, string spritedirectory)
         {
             _packer = new SpritePacker(texturepagewidth, texturepageheight);
+            _spritedirectory = spritedirectory;
+            BuildSprites();
         }
-        public void AddAseSprite(string name, string ase)
+        void BuildSprites()
         {
-            var s = new AseSprite(ase, false);
-            if (s.Tags.Count == 0)
+            var files = Directory.GetFiles(_spritedirectory, "*.ase");
+            int packid = 0;
+            List<SpriteInfo> spriteInfo = new List<SpriteInfo>(files.Length);
+            for(var i = 0; i < files.Length; i++)
             {
-                SpritePacker.PixelRect rect = new SpritePacker.PixelRect(name, "", s.FrameCount, s.FrameCount * s.Width, s.Height);
-                for (var i = 0; i < s.FrameCount; i++)
+                spriteInfo.Add(new SpriteInfo()
                 {
-                    for (var j = 0; j < s.Height; j++)
-                    {
-                        var ii = i * s.Width + j * rect.Width;
-                        var kk = j * s.Width;
-                        Array.Copy(s.Frames[i].Pixels, kk, rect.Pixels, ii, s.Width);
-                    }
+                    AseSPrite = new AseSprite(files[i]),
+                    Name = Path.GetFileNameWithoutExtension(files[i]),
+                    PackId = packid
+
+                });
+                for(var j = 0; j < spriteInfo[i].AseSPrite.FrameCount; j++)
+                {
+                    _packer.Add(packid, spriteInfo[i].AseSPrite.Width, spriteInfo[i].AseSPrite.Height, spriteInfo[i].AseSPrite.Frames[j].Pixels);
+                    packid++;
                 }
-                _packer.Add(rect);
             }
-            else
+
+            _texturePages = _packer.Pack();
+
+            for (var i = 0; i < spriteInfo.Count; i++)
             {
-                for (var t = 0; t < s.Tags.Count; t++)
+                var sprite = new Sprite();
+                if (spriteInfo[i].AseSPrite.Tags.Count > 0)
                 {
-                    var frames = s.Tags[t].To - s.Tags[t].From + 1;
-                    SpritePacker.PixelRect rect = new SpritePacker.PixelRect(name, s.Tags[t].Name, frames, frames * s.Width, s.Height);
-                    for (var i = s.Tags[t].From; i <= s.Tags[t].To; i++)
+                    for (var t = 0; t < spriteInfo[i].AseSPrite.Tags.Count; t++)
                     {
-                        for (var j = 0; j < s.Height; j++)
+                        var animation = new Sprite.Animation()
                         {
-                            var ii = i * s.Width + j * rect.Width;
-                            var kk = j * s.Width;
-                            Array.Copy(s.Frames[i].Pixels, kk, rect.Pixels, ii, s.Width);
+                            Name = spriteInfo[i].AseSPrite.Tags[i].Name
+                        };
+                        for (int f = spriteInfo[i].AseSPrite.Tags[t].From; f <= spriteInfo[i].AseSPrite.Tags[t].To; f++)
+                        {
+                            for (var p = 0; p < _texturePages.Length; p++)
+                            {
+                                Rectangle rect;
+                                if (_texturePages[p].SubTextures.TryGetValue(spriteInfo[i].PackId + f, out rect))
+                                {
+                                    var frame = new Sprite.Frame()
+                                    {
+                                        Texture = _texturePages[p].Texture,
+                                        Rect = rect,
+                                        Duration = spriteInfo[i].AseSPrite.Frames[f].Duration / 1000.0f
+                                    };
+                                    animation.Frames.Add(frame);
+                                }
+                            }
+                        }
+                        sprite.Animations.Add(animation);
+                    }
+                    _sprites[spriteInfo[i].Name] = sprite;
+                }
+                else
+                {
+                    var animation = new Sprite.Animation()
+                    {
+                        Name = "animation"
+                    };
+                    for (int f = 0; f < spriteInfo[i].AseSPrite.Frames.Count; f++)
+                    {
+                        for (var p = 0; p < _texturePages.Length; p++)
+                        {
+                            Rectangle rect;
+                            if (_texturePages[p].SubTextures.TryGetValue(spriteInfo[i].PackId + f, out rect))
+                            {
+                                var frame = new Sprite.Frame()
+                                {
+                                    Texture = _texturePages[p].Texture,
+                                    Rect = rect,
+                                    Duration = spriteInfo[i].AseSPrite.Frames[f].Duration / 1000.0f
+                                };
+                                animation.Frames.Add(frame);
+                                break;
+                            }
                         }
                     }
-                    _packer.Add(rect);
+                    sprite.Animations.Add(animation);
+                    _sprites[spriteInfo[i].Name] = sprite;
                 }
             }
-        }
-        public void AddAseTileset(string name, string ase, int tilew, int tileh)
-        {
-            _tmpTilesetInfos.Add(new TilesetInfo
-            {
-                Name = name,
-                Width = tilew,
-                Height = tileh
-            });
-            AddAseSprite(name, ase);
-        }
-        public void Build()
-        {
-            _sprites = _packer.Pack(out _texturePages);
-            for(var i = 0; i < _tmpTilesetInfos.Count; i++)
-            {
-                var sp = _sprites[_tmpTilesetInfos[i].Name];
-                _tilesets[_tmpTilesetInfos[i].Name] = new Tileset(_tmpTilesetInfos[i].Width, _tmpTilesetInfos[i].Height, sp[0].Texture, sp[0].Bounds[0]);
-            }
-            _tmpTilesetInfos.Clear();
         }
         public Sprite GetSprite(string sprite)
         {
-            return _sprites[sprite][0];
-        }
-        public Sprite GetSprite(string sprite, string tag)
-        {
-            var sprites = _sprites[sprite];
-            for(var i = 0; i < sprites.Count; i++)
-            {
-                if(sprites[i].Tag == tag)
-                {
-                    return sprites[i];
-                }
-            }
-            return null;
-        }
-        public Tileset GetTileset(string tileset)
-        {
-            return _tilesets[tileset];
+            return _sprites[sprite];
         }
         public override void CleanUp()
         {
             _sprites.Clear();
-            _tilesets.Clear();
             if (_texturePages != null)
             {
                 for (var i = 0; i < _texturePages.Length; i++)

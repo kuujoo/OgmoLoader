@@ -19,7 +19,7 @@ namespace kuujoo.Pixel
                 {
                     y += 280;
                 }
-                graphics.SpriteBatch.Draw(resources.TexturePages[i], new Vector2(Entity.Position.X + x, Entity.Position.Y + y), Color.White);
+                graphics.SpriteBatch.Draw(resources.TexturePages[i].Texture, new Vector2(Entity.Position.X + x, Entity.Position.Y + y), Color.White);
             }
 
         }
@@ -35,18 +35,8 @@ namespace kuujoo.Pixel
             base.Initialize();
             Screen.SetSize(1920, 1080);
             var room = new Scene(1920, 1080);
-            var resources = room.AddSceneComponent(new SpriteResources(256, 256)) as SpriteResources;
-            for (var i = 0; i < 40; i++)
-            {
-                resources.AddAseSprite("0" + i.ToString(), "Content/Sprites/0.ase");
-                resources.AddAseSprite("1" + i.ToString(), "Content/Sprites/1.ase");
-                resources.AddAseSprite("2" + i.ToString(), "Content/Sprites/2.ase");
-                resources.AddAseSprite("3" + i.ToString(), "Content/Sprites/3.ase");
-                resources.AddAseSprite("4" + i.ToString(), "Content/Sprites/4.ase");
-                resources.AddAseSprite("5" + i.ToString(), "Content/Sprites/5.ase");
-                resources.AddAseSprite("6" + i.ToString(), "Content/Sprites/6.ase");
-            }
-            resources.Build();
+            var resources = room.AddSceneComponent(new SpriteResources(256, 256, "Content/Sprites")) as SpriteResources;
+
             room.AddCamera(new Camera(1920, 1080)
             {
                 BackgroundColor = Color.Aquamarine
