@@ -40,6 +40,8 @@ namespace kuujoo.Pixel
         }
         public override void Update()
         {
+            if (Sprite == null) return;
+
             if(_play)
             {
                 _frameTimer = MathExt.Approach(_frameTimer, 0.0f, Time.DeltaTime);
