@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace kuujoo.Pixel
 {
-    public class TexturePagesComponent : Component
+    public class TexturePagesRenderer : Component
     {
         public override void Render(Graphics graphics)
         {
@@ -32,7 +32,7 @@ namespace kuujoo.Pixel
 
             var animated_entity = room.CreateEntity(0);
             animated_entity.Transform.SetPosition(12, 12);
-            var sprite = animated_entity.AddComponent(new SpriteComponent()
+            var sprite = animated_entity.AddComponent(new SpriteRenderer()
             {
                 Sprite = resources.GetSprite("animation")
             });
@@ -41,21 +41,21 @@ namespace kuujoo.Pixel
 
             var e0 = room.CreateEntity(0);
             e0.Transform.SetPosition(200, 100);
-            e0.AddComponent(new SpriteComponent()
+            e0.AddComponent(new SpriteRenderer()
             {
                 Sprite = resources.GetSprite("checker")
             });
 
             var e1 = room.CreateEntity(0);
             e1.Transform.SetPosition(100, 100);
-            e1.AddComponent(new SpriteComponent()
+            e1.AddComponent(new SpriteRenderer()
             {
                 Sprite = resources.GetSprite("circle")
             });
            
             var e2 = room.CreateEntity(0);
             e2.Transform.SetPosition(100, 0);
-            e2.AddComponent(new TexturePagesComponent());
+            e2.AddComponent(new TexturePagesRenderer());
             Scene = room;
         }
     }

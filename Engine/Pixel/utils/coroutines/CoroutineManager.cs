@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
-
 /**
-		Mostly taken From the fantastic NEZ Framework: https://github.com/prime31/Nez by Prime31
-	  
+ * Mostly Cherry picked from the Nez Framework: https://github.com/prime31/Nez
+ * ---------------------------------------------------------------------------------
 		The MIT License (MIT)
 
-		Copyright (c) 2016 Mike
+		Copyright (c) 2016 Mike, 2020 Joonas Kuusela 
 
 		Permission is hereby granted, free of charge, to any person obtaining a copy
 		of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +24,7 @@ using System.Collections;
 		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 		SOFTWARE.
+* ------------------------------------------------------------------------------------
 */
 
 namespace kuujoo.Pixel
@@ -96,7 +96,7 @@ namespace kuujoo.Pixel
 		public ICoroutine StartCoroutine(IEnumerator enumerator)
 		{
 			// find or create a CoroutineImpl
-			var coroutine = Pool<CoroutineImpl>.Obtain();
+			var coroutine = Pooler<CoroutineImpl>.Obtain();
 			coroutine.PrepareForReuse();
 
 			// setup the coroutine and add it
@@ -125,7 +125,7 @@ namespace kuujoo.Pixel
 				// check for stopped coroutines
 				if (coroutine.IsDone)
 				{
-					Pool<CoroutineImpl>.Free(coroutine);
+					Pooler<CoroutineImpl>.Free(coroutine);
 					continue;
 				}
 
@@ -174,7 +174,7 @@ namespace kuujoo.Pixel
 			// This coroutine has finished
 			if (!coroutine.Enumerator.MoveNext() || coroutine.IsDone)
 			{
-				Pool<CoroutineImpl>.Free(coroutine);
+				Pooler<CoroutineImpl>.Free(coroutine);
 				return false;
 			}
 

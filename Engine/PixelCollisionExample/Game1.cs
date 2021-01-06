@@ -3,17 +3,17 @@ using System.Collections;
 
 namespace kuujoo.Pixel
 {
-    public class TestComponent : Component
+    public class Test : Component
     {
         Vector2 _speed;
-        BoxColliderComponent _collider;
+        BoxCollider _collider;
         Color _color = Color.White;
         public override void Initialize()
         {
             base.Initialize();
             _speed = Random.Range(new Vector2(-100, -100), new Vector2(100, 100));
-            Entity.AddComponent(new BoxColliderComponent(0, 0, 32, 32));
-            _collider = Entity.GetComponent<BoxColliderComponent>();
+            Entity.AddComponent(new BoxCollider(0, 0, 32, 32));
+            _collider = Entity.GetComponent<BoxCollider>();
             _collider.Mask = CollisionMask.Solid;
         }
         public override void Update()
@@ -58,7 +58,7 @@ namespace kuujoo.Pixel
             for(var i = 0; i< 10; i++)
             {
                 var e = room.CreateEntity(0);
-                e.AddComponent(new TestComponent());
+                e.AddComponent(new Test());
                 e.Transform.SetPosition(Random.Range(0, 384), Random.Range(0, 216));
             }
             Scene = room;

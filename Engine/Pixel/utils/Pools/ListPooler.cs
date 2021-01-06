@@ -2,7 +2,7 @@
 
 namespace kuujoo.Pixel
 {
-    public static class ListPool<T>
+    public static class ListPooler<T>
 	{
 		private static Queue<List<T>> _objectQueue = new Queue<List<T>>();
 		public static List<T> Obtain()

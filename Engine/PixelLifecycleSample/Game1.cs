@@ -2,7 +2,7 @@
 
 namespace kuujoo.Pixel
 {
-    public class LifeCycleComponent : Component
+    public class LifeCyclePrinter : Component
     {
         public override void Initialize()
         {
@@ -31,7 +31,7 @@ namespace kuujoo.Pixel
             base.Initialize();
             var room = new Scene(384, 216);
             var entity = room.CreateEntity(0);
-            entity.AddComponent(new LifeCycleComponent()); // Componoent::Initialize
+            entity.AddComponent(new LifeCyclePrinter()); // Componoent::Initialize
             room.DestroyEntity(entity); // Component::Destroy, Component::Cleanup
             Scene = room;
         }

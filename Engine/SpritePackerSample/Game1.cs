@@ -4,7 +4,7 @@ using System.Collections;
 namespace kuujoo.Pixel
 {
 
-    public class TexturePagesComponent : Component
+    public class TexturePagesRenderer : Component
     {
         public override void Render(Graphics graphics)
         {
@@ -41,7 +41,7 @@ namespace kuujoo.Pixel
                 BackgroundColor = Color.Aquamarine
             });
             var texturepages_entity = room.CreateEntity(0);
-            texturepages_entity.AddComponent(new TexturePagesComponent());
+            texturepages_entity.AddComponent(new TexturePagesRenderer());
             texturepages_entity.Transform.SetPosition(12, 12);
             room.AddEntity(texturepages_entity, 0);
             Scene = room;

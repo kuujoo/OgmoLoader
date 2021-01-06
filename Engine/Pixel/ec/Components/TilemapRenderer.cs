@@ -14,7 +14,7 @@ namespace kuujoo.Pixel
         void SetValue(int x, int y, byte value);
         void SetValueByIndex(int index, byte value);
     }
-    public class TilemapComponent : Component, IGrid
+    public class TilemapRenderer : Component, IGrid
     {
         public static byte EmptyTile = 0;
         public int Width => _width_in_tiles;
@@ -23,7 +23,7 @@ namespace kuujoo.Pixel
         byte[] _grid;
         int _width_in_tiles;
         int _height_in_tiles;
-        public TilemapComponent(int wtiles, int htiles, Tileset tileset)
+        public TilemapRenderer(int wtiles, int htiles, Tileset tileset)
         {
             _width_in_tiles = wtiles;
             _height_in_tiles = htiles;

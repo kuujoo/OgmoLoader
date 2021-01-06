@@ -6,7 +6,7 @@ namespace kuujoo.Pixel
     {
         protected Scene _scene;
         int _entityDepth = 0;
-        TilemapComponent _activeTilemap = null;
+        TilemapRenderer _activeTilemap = null;
         Dictionary<string, Tileset> _tilesets = new Dictionary<string, Tileset>();
         public SceneBuilder(Scene scene)
         {
@@ -21,7 +21,7 @@ namespace kuujoo.Pixel
         protected void BeginTileLayer(int id, string name, int width, int height, Tileset tileset)
         {
             var t = _scene.CreateEntity(id);        
-            _activeTilemap = t.AddComponent(new TilemapComponent(width, height, tileset));
+            _activeTilemap = t.AddComponent(new TilemapRenderer(width, height, tileset));
         }
         protected Tileset GetTileset(string tileset_name)
         {
@@ -39,7 +39,7 @@ namespace kuujoo.Pixel
         {
             _entityDepth = id;
         }
-        protected Entity CreateEntity(string entity, SettingsComponent injectsettings)
+        protected Entity CreateEntity(string entity, Settings injectsettings)
         {
             var e = _scene.CreateEntity(_entityDepth);
             var component = Engine.Instance.Reflection.BuildComponent(entity);

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
-    public class SpriteComponent : Component
+    public class SpriteRenderer : Component
     {
         public int AnimationIndex { 
             get { 
@@ -34,7 +34,7 @@ namespace kuujoo.Pixel
         int _frameIndex = 0;
         bool _play = false;
         float _frameTimer = 0.0f;
-        public SpriteComponent()
+        public SpriteRenderer()
         {
             Frame = 0;
         }

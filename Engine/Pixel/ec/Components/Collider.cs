@@ -16,14 +16,14 @@ namespace kuujoo.Pixel
         public static int Enemy = 1 << 6;
     }
 
-    public abstract class ColliderComponent : Component
+    public abstract class Collider : Component
     {
-        public Action<ColliderComponent> Updated;
+        public Action<Collider> Updated;
         public Rectangle PhysicsBounds; // for spatialhash
         public abstract Rectangle Bounds { get; }
         public int Mask { get; set; }
-        public abstract bool Collides(ColliderComponent collider);
-        public ColliderComponent()
+        public abstract bool Collides(Collider collider);
+        public Collider()
         {
             Mask = 0;
         }
@@ -31,7 +31,7 @@ namespace kuujoo.Pixel
         {
             Updated?.Invoke(this);
         }
-        public ColliderComponent Check(int mask, Point point)
+        public Collider Check(int mask, Point point)
         {
             var bounds = Bounds;
             bounds.Location = point;
@@ -48,22 +48,22 @@ namespace kuujoo.Pixel
             return null;
         }
     }
-    public class BoxColliderComponent : ColliderComponent
+    public class BoxCollider : Collider
     {
         public override Rectangle Bounds => new Rectangle( (Entity.Transform.Position + _position), _size.ToPoint());
         Point _position;
         Vector2 _size;
-        public BoxColliderComponent(int x, int y, int width, int height)
+        public BoxCollider(int x, int y, int width, int height)
         {
             _position = new Point(x, y);
             _size = new Vector2(width, height);
         }
-        public override bool Collides(ColliderComponent other)
+        public override bool Collides(Collider other)
         {
-            if (other is BoxColliderComponent)
+            if (other is BoxCollider)
             {
                 var mybounds = Bounds;
-                var otherbounds = (other as BoxColliderComponent).Bounds;
+                var otherbounds = (other as BoxCollider).Bounds;
                 return mybounds.Intersects(otherbounds);
             }
             return false;

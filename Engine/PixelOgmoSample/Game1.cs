@@ -13,7 +13,7 @@ namespace kuujoo.Pixel
         public override void Initialize()
         {
             base.Initialize();
-            Entity.AddComponent(new SpriteComponent()
+            Entity.AddComponent(new SpriteRenderer()
             {
                 Sprite = Scene.GetSceneComponent<SpriteResources>().GetSprite("TestEntity")
             });

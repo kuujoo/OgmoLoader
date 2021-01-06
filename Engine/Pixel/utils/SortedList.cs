@@ -55,7 +55,7 @@ namespace kuujoo.Pixel
 
         public List<I> GetItemsOfType<I>() where I : class
         {
-            var list = ListPool<I>.Obtain();
+            var list = ListPooler<I>.Obtain();
             for (var i = 0; i < _items.Count; i++)
             {
                 if (_items[i] is I)

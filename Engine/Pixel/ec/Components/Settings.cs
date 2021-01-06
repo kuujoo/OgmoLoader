@@ -2,7 +2,7 @@
 
 namespace kuujoo.Pixel
 {
-    public abstract class SettingsComponent : Component
+    public abstract class Settings : Component
     {
         public void SetBool(string key, bool value)
         {

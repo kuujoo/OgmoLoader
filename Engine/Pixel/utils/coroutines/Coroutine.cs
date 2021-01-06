@@ -1,9 +1,9 @@
 ﻿/**
-		Mostly taken From the fantastic NEZ Framework: https://github.com/prime31/Nez by Prime31
-	  
+ * Mostly Cherry picked from the Nez Framework: https://github.com/prime31/Nez
+ * ---------------------------------------------------------------------------------
 		The MIT License (MIT)
 
-		Copyright (c) 2016 Mike
+		Copyright (c) 2016 Mike, 2020 Joonas Kuusela 
 
 		Permission is hereby granted, free of charge, to any person obtaining a copy
 		of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,7 @@
 		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 		SOFTWARE.
+* ------------------------------------------------------------------------------------
 */
 
 

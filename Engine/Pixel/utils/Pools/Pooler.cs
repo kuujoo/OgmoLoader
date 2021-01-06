@@ -2,7 +2,7 @@
 
 namespace kuujoo.Pixel
 {
-    public static class Pool<T> where T : new()
+    public static class Pooler<T> where T : new()
 	{
 		private static Queue<T> _pool = new Queue<T>(10);
 		public static void Clear()

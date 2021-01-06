@@ -1,15 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 
-// Originally from gist by Noel Berry
-// https://gist.github.com/NoelFB/778d190e5d17f1b86ebf39325346fcc5/revisions
-// Added few little modifications
-
-// File Format:
-// https://github.com/aseprite/aseprite/blob/master/docs/ase-file-specs.md
-
-// Note: I didn't test with with Indexed or Grayscale colors
-// Only implemented the stuff I needed / wanted, other stuff is ignored
-
 namespace kuujoo.Pixel
 {
     public static class AseBlends
@@ -50,7 +40,9 @@ namespace kuujoo.Pixel
 
                 a = (dest.A + MUL_UN8((src.A - dest.A), opacity));
                 if (a == 0)
+                {
                     r = g = b = 0;
+                }
 
                 dest.R = (byte)r;
                 dest.G = (byte)g;
