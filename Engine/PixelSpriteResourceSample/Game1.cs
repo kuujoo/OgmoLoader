@@ -30,29 +30,29 @@ namespace kuujoo.Pixel
                 BackgroundColor = Color.Aquamarine
             });
 
-            room.CreateEntityLayer(0, "entities");
             var animated_entity = room.CreateEntity(0);
-            animated_entity.AddComponent(new SpriteComponent()
+            animated_entity.Transform.SetPosition(12, 12);
+            var sprite = animated_entity.AddComponent(new SpriteComponent()
             {
                 Sprite = resources.GetSprite("animation")
             });
-            animated_entity.Transform.SetPosition(12, 12);
-            animated_entity.GetComponent<SpriteComponent>().Play("ColorBox");
-            room.AddEntity(animated_entity, 0);
+            sprite.Play("ColorBox");
+
 
             var e0 = room.CreateEntity(0);
+            e0.Transform.SetPosition(200, 100);
             e0.AddComponent(new SpriteComponent()
             {
                 Sprite = resources.GetSprite("checker")
             });
-            e0.Transform.SetPosition(200, 100);
-            var e1 = room.CreateEntity(0);     
+
+            var e1 = room.CreateEntity(0);
+            e1.Transform.SetPosition(100, 100);
             e1.AddComponent(new SpriteComponent()
             {
                 Sprite = resources.GetSprite("circle")
             });
-            e1.Transform.SetPosition(100, 100);
-
+           
             var e2 = room.CreateEntity(0);
             e2.Transform.SetPosition(100, 0);
             e2.AddComponent(new TexturePagesComponent());

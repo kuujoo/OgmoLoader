@@ -11,29 +11,23 @@ namespace kuujoo.Pixel
     {
         public Transform Transform { get; private set; }
         public bool Enabled => _enabled;
-        public uint Id { get; private set; }
         public int Depth { get; set; }
         public string Name { get; set; }
         public int Tag { get; set; }
         public SortedList<Component> Components { get; private set; }
-        public EntityLayer Layer { get; set; }
-        public Scene Scene => Layer.Scene;
-
-        static uint _idGenerator = 0;
+        public Scene Scene { get; set; }
         bool _enabled = true;
         public Entity()
         {
             Components = new SortedList<Component>();
             Transform = new Transform();
-            Id = _idGenerator;
-            _idGenerator++;
         }
         public virtual void Initialize() { }
         public void SetEnabled(bool enabled)
         {
             _enabled = enabled;
         }
-        public Component AddComponent(Component component)
+        public T AddComponent<T>(T component) where T: Component
         {
             component.Entity = this;
             component.AddedToEntity();
@@ -54,16 +48,12 @@ namespace kuujoo.Pixel
             if(Depth != depth)
             {
                 Depth = depth;
-                Layer.Entities.MarkListUnsorted();
+                Scene.Entities.MarkListUnsorted();
             }
         }
         public int CompareTo(Entity other)
         {
             var compare = Depth.CompareTo(other.Depth);
-            if(compare == 0)
-            {
-                compare = Id.CompareTo(other.Id);
-            }
             return compare;
         }
         public ICoroutine StartCoroutine(IEnumerator enumerator)

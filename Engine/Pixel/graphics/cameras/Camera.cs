@@ -113,10 +113,6 @@ namespace kuujoo.Pixel
             _matrix = Matrix.Identity * translation * scale * origin_translation;
             _inverseMatrix = Matrix.Invert(_matrix);
         }
-        public bool CanRenderLayer(Layer layer)
-        {
-            return !IgnoreLayers.Contains(layer.Id);
-        }
         public void SetCenterOrigin()
         {
             _origin = new Vector2(Viewport.Width / 2.0f, Viewport.Height / 2.0f);

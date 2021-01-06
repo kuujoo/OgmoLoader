@@ -14,7 +14,7 @@ namespace kuujoo.Pixel
         void SetValue(int x, int y, byte value);
         void SetValueByIndex(int index, byte value);
     }
-    public class TileLayer : Layer, IGrid
+    public class TilemapComponent : Component, IGrid
     {
         public static byte EmptyTile = 0;
         public int Width => _width_in_tiles;
@@ -23,11 +23,8 @@ namespace kuujoo.Pixel
         byte[] _grid;
         int _width_in_tiles;
         int _height_in_tiles;
-        Scene _scene;
-        public TileLayer(Scene scene, int id, int wtiles, int htiles, Tileset tileset)
+        public TilemapComponent(int wtiles, int htiles, Tileset tileset)
         {
-            Id = id;
-            _scene = scene;
             _width_in_tiles = wtiles;
             _height_in_tiles = htiles;
             _grid = new byte[_width_in_tiles * _height_in_tiles];
@@ -41,52 +38,44 @@ namespace kuujoo.Pixel
             var idx = y * _width_in_tiles + x;
             return GetValueByIndex(idx);
         }
-
         public byte GetValueByIndex(int idx)
         {
             return _grid[idx];
         }
-
         public override void OnGraphicsDeviceReset()
         {
         }
-
-        public override void Render(Camera camera)
+        public override void Render(Graphics graphics)
         {
             if (Tileset == null) return;
-            if (!camera.CanRenderLayer(this)) return;
-
             var gfx = Engine.Instance.Graphics;
-            var bounds = camera.Bounds;
-            int left = (int)Math.Floor( (float)bounds.Left / Tileset.TileWidth);
-            int right = (int)Math.Ceiling((float) bounds.Right / Tileset.TileWidth);
+            var bounds = graphics.Camera.Bounds;
+            int left = (int)Math.Floor((float)bounds.Left / Tileset.TileWidth);
+            int right = (int)Math.Ceiling((float)bounds.Right / Tileset.TileWidth);
             int top = bounds.Top / Tileset.TileHeight;
             int bottom = bounds.Bottom / Tileset.TileHeight;
-            for(var j = top; j < bottom; j++)
+            for (var j = top; j < bottom; j++)
             {
                 for (var i = left; i < right; i++)
                 {
                     var tile_id = GetValue(i, j);
-                    if(tile_id != EmptyTile)
+                    if (tile_id != EmptyTile)
                     {
                         var tile = Tileset.GetTile(tile_id);
-                        gfx.SpriteBatch.Draw(tile.Texture, new Vector2(i * Tileset.TileWidth, j * Tileset.TileHeight), tile.Bounds, Color.White);
+                        gfx.SpriteBatch.Draw(tile.Texture, Entity.Transform.Position.ToVector2() + new Vector2(i * Tileset.TileWidth, j * Tileset.TileHeight), tile.Bounds, Color.White);
                     }
                 }
             }
         }
-
         public void SetValue(int x, int y, byte value)
         {
             var idx = y * _width_in_tiles + x;
             SetValueByIndex(idx, value);
         }
-
         public void SetValueByIndex(int index, byte value)
         {
             _grid[index] = value;
         }
-
         public override void Update()
         {
         }

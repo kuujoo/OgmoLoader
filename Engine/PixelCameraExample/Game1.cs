@@ -13,7 +13,7 @@ namespace kuujoo.Pixel
         public override void Render(Graphics graphics)
         {
             base.Render(graphics);
-            graphics.DrawRect(new Rectangle(Entity.Position.ToPoint(), new Point(10, 10)), _color);
+            graphics.DrawRect(new Rectangle(Entity.Transform.Position, new Point(10, 10)), _color);
         }
     }
 
@@ -66,18 +66,14 @@ namespace kuujoo.Pixel
 
             AddCamera(_camera);
             AddCamera(_camera2);
-            CreateEntityLayer(0, "entities");
-
             _currentCamera = _camera2;
-
-
             for(var i = 0; i < 384 / 12; i++)
             {
                 for (var j = 0; j < 216 / 12; j++)
                 {
                     var e = CreateEntity(0);
                     e.AddComponent(new RectangleRenderer(Color.White));
-                    e.Position = new Vector2(i * 12, j * 12);
+                    e.Transform.SetPosition(i * 12, j * 12);
                     e.Tag = 1;
                 }
             }
@@ -88,7 +84,7 @@ namespace kuujoo.Pixel
                 {
                     var e = CreateEntity(0);
                     e.AddComponent(new RectangleRenderer(Color.Red));
-                    e.Position = new Vector2(i * 12, j * 12);
+                    e.Transform.SetPosition(i * 12, j * 12);
                     e.Tag = 2;
                 }
             }

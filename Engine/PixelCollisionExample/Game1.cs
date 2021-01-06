@@ -55,7 +55,6 @@ namespace kuujoo.Pixel
             {
                 BackgroundColor = Color.Aquamarine
             });
-            room.CreateEntityLayer(0, "entities");
             for(var i = 0; i< 10; i++)
             {
                 var e = room.CreateEntity(0);

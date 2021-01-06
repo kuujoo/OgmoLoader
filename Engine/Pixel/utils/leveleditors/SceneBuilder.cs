@@ -5,8 +5,8 @@ namespace kuujoo.Pixel
     public abstract class SceneBuilder
     {
         protected Scene _scene;
-        TileLayer _activeTileLayer = null;
-        EntityLayer _activeEntityLayer = null;
+        int _entityDepth = 0;
+        TilemapComponent _activeTilemap = null;
         Dictionary<string, Tileset> _tilesets = new Dictionary<string, Tileset>();
         public SceneBuilder(Scene scene)
         {
@@ -20,18 +20,8 @@ namespace kuujoo.Pixel
 
         protected void BeginTileLayer(int id, string name, int width, int height, Tileset tileset)
         {
-            var layer = _scene.GetLayer<TileLayer>(id);
-            if (layer != null)
-            {
-                if (layer.Width == width && layer.Height == height && layer.Tileset == tileset)
-                {
-                    _activeTileLayer = layer;
-                }
-            }
-            else
-            {
-                _activeTileLayer = _scene.CreateTileLayer(id, name, width, height, tileset);
-            }
+            var t = _scene.CreateEntity(id);        
+            _activeTilemap = t.AddComponent(new TilemapComponent(width, height, tileset));
         }
         protected Tileset GetTileset(string tileset_name)
         {
@@ -39,37 +29,26 @@ namespace kuujoo.Pixel
         }
         protected void SetTile(int index, byte tile)
         {
-            _activeTileLayer.SetValueByIndex(index, tile);
+            _activeTilemap.SetValueByIndex(index, tile);
         }
         protected void SetTile(int x, int y, byte tile)
         {
-            _activeTileLayer.SetValue(x, y, tile);
+            _activeTilemap.SetValue(x, y, tile);
         }
         protected void BeginEntityLayer(int id, string name)
         {
-            var layer = _scene.GetLayer<EntityLayer>(id);
-            if (layer != null)
-            {
-                _activeEntityLayer = layer;
-            }
-            else
-            {
-                _activeEntityLayer = _scene.CreateEntityLayer(id, name);
-            }
+            _entityDepth = id;
         }
         protected Entity CreateEntity(string entity, SettingsComponent injectsettings)
         {
-            var e = _scene.CreateEntity(_activeEntityLayer.Id);
+            var e = _scene.CreateEntity(_entityDepth);
             var component = Engine.Instance.Reflection.BuildComponent(entity);
             e.AddComponent(injectsettings);
             e.AddComponent(component);
-            _scene.AddEntity(e, _activeEntityLayer.Id);
-            return e;
-        }
+            return _scene.AddEntity(e, _entityDepth);        }
         protected void EndLayer()
         {
-            _activeEntityLayer = null;
-            _activeTileLayer = null;
+            _entityDepth = 0;
         }
     }
 }

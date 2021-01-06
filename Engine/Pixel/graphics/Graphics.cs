@@ -11,6 +11,7 @@ namespace kuujoo.Pixel
         public GraphicsDeviceManager DeviceManager { get; private set; }
         public GraphicsDevice Device => DeviceManager.GraphicsDevice;
         public Texture2D Pixel { get; private set; }
+        public Camera Camera { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
         public void SetRenderTargetToBackBuffer()
         {
@@ -32,6 +33,7 @@ namespace kuujoo.Pixel
         }
         public void Begin(Camera camera = null)
         {
+            Camera = camera;
             if (camera != null && camera.Surface != null)
             {
                 Device.SetRenderTarget(camera.Surface.Target); 

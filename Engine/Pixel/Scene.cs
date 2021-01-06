@@ -7,6 +7,7 @@ namespace kuujoo.Pixel
 {
     public class Scene : IDisposable
     {
+        public SortedList<Entity> Entities { get; private set; }
         public Tracker Tracker { get; private set; }
         public Color ClearColor { get; set; }
         public Surface ApplicationSurface { get; set; }
@@ -15,13 +16,13 @@ namespace kuujoo.Pixel
         List<Camera> _cameras = new List<Camera>();
         List<SceneComponent> _sceneComponents = new List<SceneComponent>();
         Rectangle _finalDestinationRect;
-        List<Layer> _layers = new List<Layer>();
         public Scene(int game_width, int game_height)
         {
             ClearColor = Color.Aquamarine;
             Content = new RuntimeContentManager();
             Tracker = new Tracker();
             ApplicationSurface = new Surface(game_width, game_height);
+            Entities = new SortedList<Entity>();
             UpdateDrawRect();
             Initialize();
         }
@@ -40,11 +41,7 @@ namespace kuujoo.Pixel
             }
             _sceneComponents.Clear();
 
-            for (var i = 0; i < _layers.Count; i++)
-            {
-                _layers[i].CleanUp();
-            }
-            _layers.Clear();
+            Entities.AcceptVisitor(EntityListVisitor.CleanUpVisitor, true);
         }
         public virtual void Update()
         {
@@ -53,36 +50,27 @@ namespace kuujoo.Pixel
             {
                 _sceneComponents[i].Update();
             }
-            for (var i = 0; i < _layers.Count; i++)
-            {
-                _layers[i].Update();
-            }
+            Entities.UpdateLists();
+            Entities.AcceptVisitor(EntityListVisitor.UpdateVisitor, false);
         }
         public void OnGraphicsDeviceReset()
         {
-            for (var i = 0; i < _layers.Count; i++)
-            {
-                _layers[i].OnGraphicsDeviceReset();
-            }
-
+            Entities.AcceptVisitor(EntityListVisitor.GraphicsDeviceResetVisitor, true);
             UpdateDrawRect();
         }
         public void Render()
         {
             // FIXME: sort only when needed
             _cameras.Sort();
-            _layers.Sort();
-
             var gfx = Engine.Instance.Graphics;
             for (var i = 0; i < _cameras.Count; i++)
             {
                 if (_cameras[i].Enabled)
                 {
                     gfx.Begin(_cameras[i]);
-                    for (var j = 0; j < _layers.Count; j++)
-                    {                
-                        _layers[j].Render(_cameras[i]);
-                    }
+                    var visitor = EntityListVisitor.RenderVisitor;
+                    visitor.Graphics = gfx;
+                    Entities.AcceptVisitor(visitor, false);
                     gfx.End();
                 }
             }
@@ -93,31 +81,6 @@ namespace kuujoo.Pixel
             gfx.Device.Clear(Color.Black);
             gfx.SpriteBatch.Draw(ApplicationSurface.Target, _finalDestinationRect, Color.White);
             gfx.End();
-        }
-
-        public EntityLayer CreateEntityLayer(int id, string name)
-        {
-            var layer = new EntityLayer(this, id);
-            layer.Name = name;
-            _layers.Add(layer);
-            return layer;
-        }
-        public TileLayer CreateTileLayer(int id, string name, int width, int height, Tileset tileset)
-        {
-            var layer = new TileLayer(this, id, width, height, tileset);
-            layer.Name = name;
-            _layers.Add(layer);
-            return layer;
-        }
-        public T GetLayer<T>(int id) where T: Layer
-        {
-            for (var i = 0; i < _layers.Count; i++) {
-                if(_layers[i].Id == id)
-                {
-                    return _layers[i] as T;
-                }
-            }
-            return null;
         }
         public SceneComponent AddSceneComponent(SceneComponent sceneComponent)
         {
@@ -137,81 +100,48 @@ namespace kuujoo.Pixel
             }
             return null;
         }
-        public void AddCamera(Camera camera)
+        public Camera AddCamera(Camera camera)
         {
             if (camera.Surface == null)
             {
                 camera.Surface = ApplicationSurface;
             }
             _cameras.Add(camera);
+            return camera;
         }
-        public Entity CreateEntity(int layerid)
+        public Entity CreateEntity(int depth)
         {
-            var layer = GetLayer<EntityLayer>(layerid);
-            if (layer != null)
-            {
-                var entity = new Entity();
-                return layer.AddEntity(entity);
-            }
-            return null;
+            return AddEntity(new Entity(), depth);
         }
-        public Entity AddEntity(Entity entity, int layerid)
+        public Entity AddEntity(Entity entity, int depth)
         {
-            var layer = GetLayer<EntityLayer>(layerid);
-            if (layer != null)
-            {
-                layer.AddEntity(entity);
-                return entity;
-            }
-            return null;
+            entity.Scene = this;
+            entity.Depth = depth;
+            entity.Initialize();
+            Entities.Add(entity);
+            return entity;
         }
         public void DestroyEntity(Entity entity)
         {
-            for (var i = 0; i < _layers.Count; i++)
-            {
-                var entity_layer = _layers[i] as EntityLayer;
-                if (entity_layer != null)
-                {
-                    entity_layer.DestroyEntity(entity);
-                }
-            }
+            entity.Components.AcceptVisitor(ComponentListVisitor.DestroyVisitor, true);
+            entity.Components.AcceptVisitor(ComponentListVisitor.CleanUpVisitor, true);
+            entity.Components.AcceptVisitor(ComponentListVisitor.RemovedFromEntityVisitor, true);
+            entity.Components.Clear();
+            Entities.Remove(entity);
         }
-        public T CreateEntity<T>(int layerid) where T : Entity, new()
-        {
-            var layer = GetLayer<EntityLayer>(layerid);
-            if (layer != null)
-            {
-                var entity = new T();
-                layer.AddEntity(entity);
-                return entity;
-            }
-            return null;
-        }
-        public Entity AddEntity(int layerid, Entity entity)
-        {
-            var layer = GetLayer<EntityLayer>(layerid);
-            if(layer != null)
-            {
-                layer.AddEntity(entity);
-                layer.Entities.Add(entity);
-                return entity;
-            }
-            return null;
-        }
-   
         void UpdateDrawRect()
         {
 
             var sw = Screen.Width;
             var sh = Screen.Height;
-            var saspect = (float)sw / (float)sh;
+            var saspect = sw / (float)sh;
 
             var surface_w = ApplicationSurface.Target.Width;
             var surface_h = ApplicationSurface.Target.Height;
 
 
             int scale = 1;
-            if ((float)surface_w / (float)surface_h > saspect)
+            if (surface_w / surface_h > saspect)
             {
                 scale = sw / surface_w;
             }

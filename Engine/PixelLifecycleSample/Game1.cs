@@ -12,7 +12,7 @@ namespace kuujoo.Pixel
         public override void Destroy()
         {
             base.Destroy();
-            Console.WriteLine("Component destroyed");
+            Console.WriteLine("Component destroy");
         }
         public override void CleanUp()
         {
@@ -30,10 +30,9 @@ namespace kuujoo.Pixel
         {
             base.Initialize();
             var room = new Scene(384, 216);
-            room.CreateEntityLayer(0, "entities");
             var entity = room.CreateEntity(0);
             entity.AddComponent(new LifeCycleComponent()); // Componoent::Initialize
-            room.DestroyEntity(entity); // Component::Destroy
+            room.DestroyEntity(entity); // Component::Destroy, Component::Cleanup
             Scene = room;
         }
     }

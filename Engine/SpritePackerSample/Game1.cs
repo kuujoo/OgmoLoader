@@ -36,13 +36,10 @@ namespace kuujoo.Pixel
             Screen.SetSize(1920, 1080);
             var room = new Scene(1920, 1080);
             var resources = room.AddSceneComponent(new SpriteResources(256, 256, "Content/Sprites")) as SpriteResources;
-
             room.AddCamera(new Camera(1920, 1080)
             {
                 BackgroundColor = Color.Aquamarine
             });
-
-            room.CreateEntityLayer(0, "entities");
             var texturepages_entity = room.CreateEntity(0);
             texturepages_entity.AddComponent(new TexturePagesComponent());
             texturepages_entity.Transform.SetPosition(12, 12);

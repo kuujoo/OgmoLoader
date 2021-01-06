@@ -32,11 +32,10 @@ namespace kuujoo.Pixel
 
     public class EntityRenderVisitor : ISortedListVisitor<Entity>
     {
-        public Camera Camera { get; set; }
         public Graphics Graphics { get; set; }
         public void Visit(Entity item)
         {
-            if(item.Enabled && Camera.CanSee(item))
+            if(item.Enabled && Graphics.Camera.CanSee(item))
             {
                 var visitor = ComponentListVisitor.RenderVisitor;
                 visitor.Graphics = Graphics;
