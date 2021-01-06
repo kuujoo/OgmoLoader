@@ -17,11 +17,6 @@ namespace kuujoo.Pixel
             public AseSprite AseSPrite;
             public int PackId;
         }
-        struct TilesetInfo {
-            public string Name;
-            public int Width;
-            public int Height;
-        }
         public SpriteResources(int texturepagewidth, int texturepageheight, string spritedirectory)
         {
             _packer = new SpritePacker(texturepagewidth, texturepageheight);
