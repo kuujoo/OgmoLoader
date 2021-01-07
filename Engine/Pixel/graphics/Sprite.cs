@@ -33,5 +33,16 @@ namespace kuujoo.Pixel
         {
             Pivot = pivot;
         }
+        public int GetAnimationIndex(string name)
+        {
+            for (var i = 0; i < Animations.Count; i++)
+            {
+                if (Animations[i].Name == name)
+                {
+                    return i;
+                }
+            }
+            return 0;
+        }
     }
 }
