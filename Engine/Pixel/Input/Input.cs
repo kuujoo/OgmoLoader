@@ -8,7 +8,7 @@ namespace kuujoo.Pixel
         public bool Down { get; private set; }
         public bool Pressed { get; private set; }
         public bool Released { get; private set; }
-        public bool Buffered => _buffer_timer > 0.0f;
+        public bool Buffered => Pressed || _buffer_timer > 0.0f;
         float _buffer_timer = 0.0f;
         float _buffer_time = 0.0f;
         List<IInputNode> _nodes = new List<IInputNode>();
