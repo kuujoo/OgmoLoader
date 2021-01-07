@@ -44,6 +44,7 @@ namespace kuujoo.Pixel
         }
         public byte GetValueByIndex(int idx)
         {
+            if (idx >= _grid.Length || idx < 0) return 0;
             return _grid[idx];
         }
         public override void OnGraphicsDeviceReset()
