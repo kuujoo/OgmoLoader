@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace kuujoo.Pixel
 {
     public abstract class SceneBuilder
     {
+        public List<Rectangle> RoomRects { get; private set; }
         protected Scene _scene;
         int _entityDepth = 0;
         TilemapRenderer _activeTilemap = null;
@@ -13,6 +15,7 @@ namespace kuujoo.Pixel
         public SceneBuilder(Scene scene)
         {
             _scene = scene;
+            RoomRects = new List<Rectangle>();
         }
         public void AddTileset(string key, Tileset tileset)
         {
@@ -34,6 +37,14 @@ namespace kuujoo.Pixel
                 _activeGridCollider = t.AddComponent(new GridCollider(width, height, tileset.TileWidth, tileset.TileHeight));
                 _activeGridCollider.Mask = mask;
             }
+        }
+        protected void BeginRoom(int x, int y, int width, int height)
+        {
+            RoomRects.Add(new Rectangle(x, y, width, height));
+        }
+        protected void EndRoom()
+        {
+
         }
         protected Tileset GetTileset(string tileset_name)
         {

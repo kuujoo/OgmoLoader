@@ -61,6 +61,7 @@ namespace kuujoo.Pixel
             if (!VerifyLayers(_levels)) return;
             for (var i = 0; i < _levels.Count; i++)
             {
+                BeginRoom(_levels[i].OffsetX, _levels[i].OffsetY, _levels[i].Width, _levels[i].Height);
                 for (var j = 0; j < _levels[i].Layers.Length; j++)
                 {
                     var layer = _levels[i].Layers[j];
@@ -100,6 +101,7 @@ namespace kuujoo.Pixel
                         EndLayer();
                     }
                 }
+                EndRoom();
             }
         }
     }

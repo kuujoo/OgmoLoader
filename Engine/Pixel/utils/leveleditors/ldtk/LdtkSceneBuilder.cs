@@ -44,9 +44,10 @@ namespace kuujoo.Pixel
             for(var l = 0; l < levels.Length; l++)
             {
                 var level = levels[l];
-
+                BeginRoom(level.WorldX, level.WorldY, level.PxWid, level.PxHei);
                 for(int i = 0; i < level.LayerInstances.Length; i++)
                 {
+                    var depth = (level.LayerInstances.Length-1) - i;
                     var layer = level.LayerInstances[i];
                     var layer_define = defs.GetLayerDefineByUid(layer.LayerDefUid);               
                     if(layer_define.Type == LdtkLayerTypes.Tiles)
@@ -54,7 +55,7 @@ namespace kuujoo.Pixel
                         var tileset_define = defs.GetTilesetsDefineByUid(layer_define.TilesetDefUid.Value);
                         var tileset = GetTileset(tileset_define.Identifier);
 
-                        BeginTileLayer(i, layer_define.Identifier, _bounds.Width / layer_define.GridSize, _bounds.Height / layer_define.GridSize, tileset);
+                        BeginTileLayer(depth, layer_define.Identifier, _bounds.Width / layer_define.GridSize, _bounds.Height / layer_define.GridSize, tileset);
                         for (var t = 0; t < layer.GridTiles.Length; t++)
                         {
                             var x = (level.WorldX + layer.GridTiles[t].Px[0]) / layer_define.GridSize;
@@ -66,7 +67,7 @@ namespace kuujoo.Pixel
                     }
                     else if(layer_define.Type == LdtkLayerTypes.Entities)
                     {
-                        BeginEntityLayer(i, layer_define.Identifier);
+                        BeginEntityLayer(depth, layer_define.Identifier);
                         for (var e = 0; e < layer.EntityInstances.Length; e++)
                         {
                             var entity = layer.EntityInstances[e];
@@ -83,6 +84,7 @@ namespace kuujoo.Pixel
                         EndLayer();
                     }
                 }
+                EndRoom();
             }
         }
     }
