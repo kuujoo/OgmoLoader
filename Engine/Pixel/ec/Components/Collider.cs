@@ -189,14 +189,14 @@ namespace kuujoo.Pixel
         {
             base.Render(graphics);
             var bounds = graphics.Camera.Bounds;
-            int left = (int)Math.Floor((float)bounds.Left / _cellW);
-            int right = (int)Math.Ceiling((float)bounds.Right / _cellW);
-            int top = bounds.Top / _cellH;
-            int bottom = bounds.Bottom / _cellH;
-            for (var j = top; j < bottom; j++)
             bounds.Location -= Entity.Transform.Position;
+            int left = Math.Clamp((int)Math.Floor((float)bounds.Left / _cellW), 0, Width);
+            int right = Math.Clamp((int)Math.Floor((float)bounds.Right / _cellW), 0, Width);
+            int top = Math.Clamp((int)Math.Floor((float)bounds.Top / _cellH), 0, Height);
+            int bottom = Math.Clamp((int)Math.Floor((float)bounds.Bottom / _cellH), 0, Height);
+            for (var j = top; j <= bottom; j++)
             {
-                for (var i = left; i < right; i++)
+                for (var i = left; i <= right; i++)
                 {
                     if(GetValue(i, j) != 0)
                     {

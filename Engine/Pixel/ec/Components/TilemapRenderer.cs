@@ -55,14 +55,14 @@ namespace kuujoo.Pixel
             if (Tileset == null) return;
             var gfx = Engine.Instance.Graphics;
             var bounds = graphics.Camera.Bounds;
-            int left = (int)Math.Floor((float)bounds.Left / Tileset.TileWidth);
-            int right = (int)Math.Ceiling((float)bounds.Right / Tileset.TileWidth);
-            int top = bounds.Top / Tileset.TileHeight;
-            int bottom = bounds.Bottom / Tileset.TileHeight;
-            for (var j = top; j < bottom; j++)
             bounds.Location -= Entity.Transform.Position;
+            int left = Math.Clamp( (int)Math.Floor((float)bounds.Left / Tileset.TileWidth), 0, Width);
+            int right = Math.Clamp( (int)Math.Floor((float)bounds.Right / Tileset.TileWidth), 0, Width);
+            int top = Math.Clamp((int)Math.Floor((float)bounds.Top / Tileset.TileHeight), 0, Height);
+            int bottom = Math.Clamp((int)Math.Floor((float)bounds.Bottom / Tileset.TileHeight), 0, Height);
+            for (var j = top; j <= bottom; j++)
             {
-                for (var i = left; i < right; i++)
+                for (var i = left; i <= right; i++)
                 {
                     var tile_id = GetValue(i, j);
                     if (tile_id != EmptyTile)
