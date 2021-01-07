@@ -128,9 +128,8 @@ namespace kuujoo.Pixel
             _size = rect.Size.ToVector2();
             Updated?.Invoke(this);
         }
-        public override void Render(Graphics graphics)
+        public override void DebugRender(Graphics graphics)
         {
-            graphics.DrawPoint(Entity.Transform.Position.ToVector2(), Color.White);
             graphics.DrawHollowRect(Bounds, Color.Red);
         }
     }
@@ -183,7 +182,8 @@ namespace kuujoo.Pixel
             }
             return false;
         }
-        public override void Render(Graphics graphics)
+
+        public override void DebugRender(Graphics graphics)
         {
             base.Render(graphics);
             var bounds = graphics.Camera.Bounds;

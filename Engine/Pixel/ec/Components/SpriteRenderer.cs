@@ -55,6 +55,11 @@ namespace kuujoo.Pixel
                 }
             }
         }
+        public override void DebugRender(Graphics graphics)
+        {
+            base.DebugRender(graphics);
+            graphics.DrawPoint(Entity.Transform.Position.ToVector2(), Color.Pink);
+        }
         public override void Render(Graphics graphics)
         {
             base.Render(graphics);

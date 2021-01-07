@@ -7,6 +7,7 @@ namespace kuujoo.Pixel
 {
     public class Scene : IDisposable
     {
+        public bool DebugRender { get; set; }
         public SortedList<Entity> Entities { get; private set; }
         public Physics Physics { get; private set; }
         public Color ClearColor { get; set; }
@@ -25,6 +26,7 @@ namespace kuujoo.Pixel
             Entities = new SortedList<Entity>();
             UpdateDrawRect();
             Initialize();
+            DebugRender = false;
         }
         public virtual void Initialize()
         {
@@ -71,6 +73,12 @@ namespace kuujoo.Pixel
                     var visitor = EntityListVisitor.RenderVisitor;
                     visitor.Graphics = gfx;
                     Entities.AcceptVisitor(visitor, false);
+                    if(DebugRender)
+                    {
+                        var debug_visitor = EntityListVisitor.DebugRenderVisitor;
+                        debug_visitor.Graphics = gfx;
+                        Entities.AcceptVisitor(debug_visitor, false);
+                    }
                     gfx.End();
                 }
             }

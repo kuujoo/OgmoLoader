@@ -54,6 +54,17 @@
             }
         }
     }
+    public class ComponentDebugRenderVisitor : ISortedListVisitor<Component>
+    {
+        public Graphics Graphics { get; set; }
+        public void Visit(Component item)
+        {
+            if (item.Enabled)
+            {
+                item.DebugRender(Graphics);
+            }
+        }
+    }
     public static class ComponentListVisitor
     {
         public static ComponentDestroyVisitor DestroyVisitor = new ComponentDestroyVisitor();
@@ -61,6 +72,7 @@
         public static ComponentUpdateVisitor UpdateVisitor = new ComponentUpdateVisitor();
         public static ComponentCleanUpVisitor CleanUpVisitor = new ComponentCleanUpVisitor();
         public static ComponentRenderVisitor RenderVisitor = new ComponentRenderVisitor();
+        public static ComponentDebugRenderVisitor DebugRenderVisitor = new ComponentDebugRenderVisitor();
         public static ComponentRemovedFromEntityVisitor RemovedFromEntityVisitor = new ComponentRemovedFromEntityVisitor();
     }
 }
