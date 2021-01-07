@@ -7,6 +7,8 @@ namespace kuujoo.Pixel
 {
     public interface IGrid
     {
+        public int CellWidth { get; }
+        public int CellHeight { get;}
         public int Width { get; }
         public int Height { get; }
         byte GetValue(int x, int y);
@@ -16,6 +18,8 @@ namespace kuujoo.Pixel
     }
     public class TilemapRenderer : Component, IGrid
     {
+        public int CellWidth => Tileset.TileWidth;
+        public int CellHeight => Tileset.TileHeight;
         public static byte EmptyTile = 0;
         public int Width => _width_in_tiles;
         public int Height => _height_in_tiles;
