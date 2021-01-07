@@ -61,7 +61,8 @@ namespace kuujoo.Pixel
             var component = Engine.Instance.Reflection.BuildComponent(entity);
             e.AddComponent(injectsettings);
             e.AddComponent(component);
-            return _scene.AddEntity(e, _entityDepth);        }
+            return e;
+        }
         protected void EndLayer()
         {
             _entityDepth = 0;
