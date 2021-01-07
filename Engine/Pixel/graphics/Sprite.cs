@@ -29,5 +29,9 @@ namespace kuujoo.Pixel
         {
             Animations = new List<Animation>();
         }
+        public void SetPivot(Vector2 pivot)
+        {
+            Pivot = pivot;
+        }
     }
 }

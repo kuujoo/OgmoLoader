@@ -49,6 +49,11 @@ namespace kuujoo.Pixel
             for (var i = 0; i < spriteInfo.Count; i++)
             {
                 var sprite = new Sprite();
+                if( spriteInfo[i].AseSPrite.Slices.Count > 0 && spriteInfo[i].AseSPrite.Slices[0].Pivot.HasValue)
+                {
+                    var pivot = spriteInfo[i].AseSPrite.Slices[0].Pivot.Value;
+                    sprite.SetPivot(pivot);
+                }
                 if (spriteInfo[i].AseSPrite.Tags.Count > 0)
                 {
                     for (var t = 0; t < spriteInfo[i].AseSPrite.Tags.Count; t++)
