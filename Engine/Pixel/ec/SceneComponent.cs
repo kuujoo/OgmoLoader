@@ -9,6 +9,9 @@
         public virtual void Update()
         {
         }
+        public virtual void LateUpdate()
+        {
+        }
         public virtual void CleanUp() 
         {
         }
