@@ -55,11 +55,11 @@ namespace kuujoo.Pixel
                         var tileset_define = defs.GetTilesetsDefineByUid(layer_define.TilesetDefUid.Value);
                         var tileset = GetTileset(tileset_define.Identifier);
 
-                        BeginTileLayer(depth, layer_define.Identifier, _bounds.Width / layer_define.GridSize, _bounds.Height / layer_define.GridSize, tileset);
+                        BeginTileLayer(depth, layer_define.Identifier, _bounds.Width / layer_define.GridSize, _bounds.Height / layer_define.GridSize, _bounds.X, _bounds.Y, tileset);
                         for (var t = 0; t < layer.GridTiles.Length; t++)
                         {
-                            var x = (level.WorldX + layer.GridTiles[t].Px[0]) / layer_define.GridSize;
-                            var y = (level.WorldY + layer.GridTiles[t].Px[1]) / layer_define.GridSize;
+                            var x = (level.WorldX + layer.GridTiles[t].Px[0] - _bounds.X) / layer_define.GridSize;
+                            var y = (level.WorldY + layer.GridTiles[t].Px[1] - _bounds.Y) / layer_define.GridSize;
                             var value = layer.GridTiles[t].T;
                             SetTile(x, y, (byte)value);
                         }

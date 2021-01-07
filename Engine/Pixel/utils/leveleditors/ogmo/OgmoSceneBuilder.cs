@@ -69,10 +69,10 @@ namespace kuujoo.Pixel
                     {
                         var w = _bounds.Width / layer.GridCellWidth;
                         var h = _bounds.Height / layer.GridCellHeight;
-                        var x = _levels[i].OffsetX / layer.GridCellWidth;
-                        var y = _levels[i].OffsetY / layer.GridCellHeight;
+                        var x = _levels[i].OffsetX / layer.GridCellWidth - _bounds.X;
+                        var y = _levels[i].OffsetY / layer.GridCellHeight - _bounds.Y;
                         var tileset = GetTileset(layer.Tileset);
-                        BeginTileLayer(j, layer.Name, w, h, tileset);
+                        BeginTileLayer(j, layer.Name, w, h, _bounds.X, _bounds.Y, tileset);
                         for (var t = 0; t < layer.Data.Length; t++)
                         {
                             var tile = layer.Data[t];

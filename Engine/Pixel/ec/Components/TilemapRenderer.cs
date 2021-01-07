@@ -60,6 +60,7 @@ namespace kuujoo.Pixel
             int top = bounds.Top / Tileset.TileHeight;
             int bottom = bounds.Bottom / Tileset.TileHeight;
             for (var j = top; j < bottom; j++)
+            bounds.Location -= Entity.Transform.Position;
             {
                 for (var i = left; i < right; i++)
                 {

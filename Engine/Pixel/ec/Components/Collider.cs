@@ -178,6 +178,7 @@ namespace kuujoo.Pixel
             if (other is BoxCollider)
             {
                 var r = other.Bounds;
+                r.Location -= Entity.Transform.Position;
                 r.Location += offset;
                 return CollisionChecks.RectAndGrid(r, this);            
             }
@@ -193,6 +194,7 @@ namespace kuujoo.Pixel
             int top = bounds.Top / _cellH;
             int bottom = bounds.Bottom / _cellH;
             for (var j = top; j < bottom; j++)
+            bounds.Location -= Entity.Transform.Position;
             {
                 for (var i = left; i < right; i++)
                 {

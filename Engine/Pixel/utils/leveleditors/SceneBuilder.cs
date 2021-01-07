@@ -27,9 +27,10 @@ namespace kuujoo.Pixel
         }
         public abstract void Build();
 
-        protected void BeginTileLayer(int id, string name, int width, int height, Tileset tileset)
+        protected void BeginTileLayer(int id, string name, int width, int height, int offsetx, int offsety, Tileset tileset)
         {
-            var t = _scene.CreateEntity(id);        
+            var t = _scene.CreateEntity(id);
+            t.Transform.SetPosition(offsetx, offsety);
             _activeTilemap = t.AddComponent(new TilemapRenderer(width, height, tileset));
             int mask;
             if(_gridColliders.TryGetValue(name, out mask))
