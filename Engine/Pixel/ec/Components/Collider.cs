@@ -92,6 +92,11 @@ namespace kuujoo.Pixel
         public override Rectangle Bounds => new Rectangle((Entity.Transform.Position + _position), _size.ToPoint());
         Point _position;
         Vector2 _size;
+        public BoxCollider(Rectangle rect)
+        {
+            _position = rect.Location;
+            _size = rect.Size.ToVector2();
+        }
         public BoxCollider(int x, int y, int width, int height)
         {
             _position = new Point(x, y);
@@ -111,8 +116,21 @@ namespace kuujoo.Pixel
             }
             return false;
         }
+        public void Resize(int x, int y, int width, int height)
+        {
+            _position = new Point(x, y);
+            _size = new Vector2(width, height);
+            Updated?.Invoke(this);
+        }
+        public void Resize(Rectangle rect)
+        {
+            _position = rect.Location;
+            _size = rect.Size.ToVector2();
+            Updated?.Invoke(this);
+        }
         public override void Render(Graphics graphics)
         {
+            graphics.DrawPoint(Entity.Transform.Position.ToVector2(), Color.White);
             graphics.DrawHollowRect(Bounds, Color.Red);
         }
     }
