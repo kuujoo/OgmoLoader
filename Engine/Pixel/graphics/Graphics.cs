@@ -76,9 +76,9 @@ namespace kuujoo.Pixel
             SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Top, rect.Width, 1), color);
             SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Bottom, rect.Width, 1), color);       
         }
-        public void DrawSpriteFrame(Vector2 at, Vector2 pivot, Sprite.Frame frame, Color color, SpriteEffects effect )
+        public void DrawSpriteFrame(Vector2 at, Vector2 pivot, Vector2 scale, Sprite.Frame frame, Color color, SpriteEffects effect )
         {
-            SpriteBatch.Draw(frame.Texture, at, frame.Rect, color, 0.0f, pivot, Vector2.One, effect, 0.0f);
+            SpriteBatch.Draw(frame.Texture, at, frame.Rect, color, 0.0f, pivot, scale, effect, 0.0f);
         }
     }
 }

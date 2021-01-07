@@ -8,6 +8,7 @@ namespace kuujoo.Pixel
 {
     public class SpriteRenderer : Component
     {
+        public Vector2 Scale { get; set; }
         public bool FlipX { get; set; }
         public int AnimationIndex { 
             get { 
@@ -38,6 +39,7 @@ namespace kuujoo.Pixel
         float _frameTimer = 0.0f;
         public SpriteRenderer()
         {
+            Scale = Vector2.One;
             Frame = 0;
             FlipX = false;
         }
@@ -65,7 +67,7 @@ namespace kuujoo.Pixel
             base.Render(graphics);
             if (Sprite == null) return;
 
-            graphics.DrawSpriteFrame(Entity.Transform.Position.ToVector2(), Sprite.Pivot, CurrentFrame, Color.White, FlipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None);  
+            graphics.DrawSpriteFrame(Entity.Transform.Position.ToVector2(), Sprite.Pivot, Scale, CurrentFrame, Color.White, FlipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None);  
         }
         public void Play(string name)
         {
