@@ -5,6 +5,34 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
+    public static class CollisionChecks
+    {
+        public static bool RectAndGrid(Rectangle rect, IGrid grid)
+        {
+            var r = rect;          
+            var left = (int)Math.Clamp((float)r.Left / grid.CellWidth, 0, grid.Width);
+            var right = (int)Math.Clamp((float)(r.Right) / grid.CellWidth, 0, grid.Width);
+            var up = (int)Math.Clamp((float)r.Top / grid.CellHeight, 0, grid.Height);
+            var down = (int)Math.Clamp((float)(r.Bottom) / grid.CellHeight, 0, grid.Height);
+
+            for (var i = left; i <= right; i++)
+            {
+                for (var j = up; j <= down; j++)
+                {
+                    var v = grid.GetValue(i, j);
+                    if (v != 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public static bool RectAndRect(Rectangle rect0, Rectangle rect1)
+        {
+            return rect0.Intersects(rect1);
+        }
+    }
     public static class CollisionMask
     {
         public static int Solid = 1 << 0;
@@ -73,13 +101,13 @@ namespace kuujoo.Pixel
         {
             if (other is BoxCollider)
             {
-                var mybounds = Bounds;
                 var otherbounds = (other as BoxCollider).Bounds;
                 otherbounds.Location += offset;
-                return mybounds.Intersects(otherbounds);
+                return CollisionChecks.RectAndRect(otherbounds, Bounds);
             }
             else if (other is GridCollider)
             {
+                return CollisionChecks.RectAndGrid(Bounds, other as IGrid);
             }
             return false;
         }
@@ -90,6 +118,8 @@ namespace kuujoo.Pixel
     }
     public class GridCollider : Collider, IGrid
     {
+        public int CellWidth => _cellW;
+        public int CellHeight => _cellH;
         public override Rectangle Bounds => new Rectangle((Entity.Transform.Position), new Point(Width * _cellW, Height * _cellH));
         public int Width { get; private set; }
         public int Height { get; private set; }
@@ -131,23 +161,7 @@ namespace kuujoo.Pixel
             {
                 var r = other.Bounds;
                 r.Location += offset;
-
-                var left = (int)Math.Clamp((float)r.Left / _cellW, 0, Width);
-                var right = (int)Math.Clamp((float)(r.Right) / _cellW, 0, Width);
-                var up = (int)Math.Clamp((float)r.Top / _cellH, 0, Height);
-                var down = (int)Math.Clamp((float)(r.Bottom) / _cellH, 0, Height);
-
-                for(var i = left; i <= right; i++)
-                {
-                    for(var j = up; j <= down; j++)
-                    {
-                        var v = GetValue(i, j);
-                        if(v != Free)
-                        {
-                            return true;
-                        }
-                    }
-                }
+                return CollisionChecks.RectAndGrid(r, this);            
             }
             return false;
         }
