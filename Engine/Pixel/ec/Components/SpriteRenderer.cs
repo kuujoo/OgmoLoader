@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +8,7 @@ namespace kuujoo.Pixel
 {
     public class SpriteRenderer : Component
     {
+        public bool FlipX { get; set; }
         public int AnimationIndex { 
             get { 
                 return _animationIndex;
@@ -37,6 +39,7 @@ namespace kuujoo.Pixel
         public SpriteRenderer()
         {
             Frame = 0;
+            FlipX = false;
         }
         public override void Update()
         {
@@ -57,7 +60,7 @@ namespace kuujoo.Pixel
             base.Render(graphics);
             if (Sprite == null) return;
 
-            graphics.DrawSpriteFrame(Entity.Transform.Position, CurrentFrame, Color.White);  
+            graphics.DrawSpriteFrame(Entity.Transform.Position.ToVector2(), Sprite.Pivot, CurrentFrame, Color.White, FlipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None);  
         }
         public void Play(string name)
         {
@@ -65,6 +68,8 @@ namespace kuujoo.Pixel
             {
                 if(Sprite.Animations[i].Name == name)
                 {
+                    if (_play == true && AnimationIndex == i) return;
+
                     AnimationIndex = i;
                     FrameIndex = 0;
                     _frameTimer = Sprite.Animations[_animationIndex].Frames[_frameIndex].Duration;
