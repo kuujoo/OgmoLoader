@@ -60,6 +60,18 @@ namespace kuujoo.Pixel
             Entities.AcceptVisitor(EntityListVisitor.GraphicsDeviceResetVisitor, true);
             UpdateDrawRect();
         }
+        public T FindFirstComponentOfType<T>() where T: Component
+        {
+            for(var i = 0; i < Entities.Count; i++)
+            {
+                var c = Entities[i].GetComponent<T>();
+                if(c != null)
+                {
+                    return c;
+                }
+            }
+            return null;
+        }
         public void Render()
         {
             // FIXME: sort only when needed
