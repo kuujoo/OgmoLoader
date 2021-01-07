@@ -13,6 +13,10 @@ namespace kuujoo.Pixel
 			}
 			return Math.Max(start - shift, end);
 		}
+		public static Vector2 Approach(Vector2 start, Vector2 end, float shift)
+		{
+			return new Vector2(Approach(start.X, end.X, shift), Approach(start.Y, end.Y, shift));
+		}
 		public static void UnionRects(ref Rectangle value1, ref Rectangle value2, out Rectangle result)
 		{
 			result.X = Math.Min(value1.X, value2.X);
