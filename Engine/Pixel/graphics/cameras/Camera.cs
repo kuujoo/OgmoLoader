@@ -78,9 +78,10 @@ namespace kuujoo.Pixel
                     UpdateMatrices();
                     _updateMatrices = false;
                 }
-                return new Rectangle(Vector2.Transform(Vector2.Zero, _inverseMatrix).ToPoint(), Vector2.Transform(new Vector2(Viewport.Width, Viewport.Height), _inverseMatrix).ToPoint());
+                return _bounds;
             }
         }
+        private Rectangle _bounds;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _inverseMatrix = Matrix.Identity;
         Vector2 _position = Vector2.Zero;
@@ -112,6 +113,11 @@ namespace kuujoo.Pixel
             var origin_translation = Matrix.CreateTranslation(new Vector3((int)_origin.X, (int)_origin.Y, 0.0f));
             _matrix = Matrix.Identity * translation * scale * origin_translation;
             _inverseMatrix = Matrix.Invert(_matrix);
+
+            var tl = Vector2.Transform(Vector2.Zero, _inverseMatrix);
+            var br = Vector2.Transform(new Vector2(Viewport.Width, Viewport.Height), _inverseMatrix);
+            var size = br - tl;
+            _bounds = new Rectangle(Vector2.Transform(Vector2.Zero, _inverseMatrix).ToPoint(), size.ToPoint());
         }
         public void SetCenterOrigin()
         {
