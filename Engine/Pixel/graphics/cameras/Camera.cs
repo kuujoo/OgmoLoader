@@ -12,10 +12,9 @@ namespace kuujoo.Pixel
         Base,
         Overlay
     }
-    public class Camera : IComparable<Camera>
+    public class Camera : Component, IComparable<Camera>
     {
         public List<int> IgnoreLayers { get; private set; }
-        public bool Enabled { get; set; }
         public Color BackgroundColor { get; set; }
         public CameraType Type { get; set; }
         public int Priority { get; set; }
@@ -25,11 +24,11 @@ namespace kuujoo.Pixel
         {
             get
             {
-                return _position;
+                return Entity.Transform.Position.ToVector2();
             }
             set
             {
-                _position = value;
+                Entity.Transform.SetPosition((int)value.X, (int)value.Y);
                 _updateMatrices = true;
             }
         }
@@ -84,13 +83,11 @@ namespace kuujoo.Pixel
         private Rectangle _bounds;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _inverseMatrix = Matrix.Identity;
-        Vector2 _position = Vector2.Zero;
         Vector2 _origin = Vector2.Zero;
         bool _updateMatrices = true;
         float _zoom = 1.0f;
         public Camera(int width, int height, CameraType type = CameraType.Base)
         {
-            Enabled = true;
             var port = default(Viewport);
             port.Width = width;
             port.Height = height;
@@ -100,10 +97,8 @@ namespace kuujoo.Pixel
             BackgroundColor = Color.Black;
             IgnoreLayers = new List<int>();
         }
-        public void Translate(float x, float y)
+        public override void TransformChanged(Transform transform)
         {
-            _position.X += x;
-            _position.Y += y;
             _updateMatrices = true;
         }
         void UpdateMatrices()
