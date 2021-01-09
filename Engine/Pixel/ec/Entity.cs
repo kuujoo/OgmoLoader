@@ -6,7 +6,6 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
-
     public class Entity : IComparable<Entity>
     {
         public Transform Transform { get; private set; }
@@ -14,12 +13,12 @@ namespace kuujoo.Pixel
         public int Depth { get; set; }
         public string Name { get; set; }
         public int Tag { get; set; }
-        public SortedList<Component> Components { get; private set; }
+        public ComponentList Components { get; private set; }
         public Scene Scene { get; set; }
         bool _enabled = true;
         public Entity()
         {
-            Components = new SortedList<Component>();
+            Components = new ComponentList();
             Transform = new Transform();
         }
         public virtual void Initialize() { }

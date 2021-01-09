@@ -143,7 +143,6 @@ namespace kuujoo.Pixel
         byte[] _grid;
         int _cellW;
         int _cellH;
-        byte Free = 0;
         public GridCollider(int width, int height, int cellw, int cellh)
         {
             Width = width;

@@ -8,7 +8,7 @@ namespace kuujoo.Pixel
     public class Scene : IDisposable
     {
         public bool DebugRender { get; set; }
-        public SortedList<Entity> Entities { get; private set; }
+        public EntityList Entities { get; private set; }
         public Physics Physics { get; private set; }
         public Color ClearColor { get; set; }
         public Surface ApplicationSurface { get; set; }
@@ -23,7 +23,7 @@ namespace kuujoo.Pixel
             Content = new RuntimeContentManager();
             Physics = new Physics();
             ApplicationSurface = new Surface(game_width, game_height);
-            Entities = new SortedList<Entity>();
+            Entities = new EntityList();
             UpdateDrawRect();
             Initialize();
             DebugRender = false;
@@ -43,7 +43,7 @@ namespace kuujoo.Pixel
             }
             _sceneComponents.Clear();
 
-            Entities.AcceptVisitor(EntityListVisitor.CleanUpVisitor, true);
+            Entities.CleanUp();
         }
         public virtual void Update()
         {
@@ -53,25 +53,16 @@ namespace kuujoo.Pixel
                 _sceneComponents[i].Update();
             }
             Entities.UpdateLists();
-            Entities.AcceptVisitor(EntityListVisitor.UpdateVisitor, false);
-
+            Entities.Update();
         }
         public void OnGraphicsDeviceReset()
         {
-            Entities.AcceptVisitor(EntityListVisitor.GraphicsDeviceResetVisitor, true);
+            Entities.OnGraphicsDeviceReset();
             UpdateDrawRect();
         }
-        public T FindFirstComponentOfType<T>() where T: Component
+        public T FindComponent<T>() where T: Component
         {
-            for(var i = 0; i < Entities.Count; i++)
-            {
-                var c = Entities[i].GetComponent<T>();
-                if(c != null)
-                {
-                    return c;
-                }
-            }
-            return null;
+            return Entities.FindComponent<T>();
         }
         public void Render()
         {
@@ -83,14 +74,10 @@ namespace kuujoo.Pixel
                 if (_cameras[i].Enabled)
                 {
                     gfx.Begin(_cameras[i]);
-                    var visitor = EntityListVisitor.RenderVisitor;
-                    visitor.Graphics = gfx;
-                    Entities.AcceptVisitor(visitor, false);
+                    Entities.Render(gfx);
                     if(DebugRender)
                     {
-                        var debug_visitor = EntityListVisitor.DebugRenderVisitor;
-                        debug_visitor.Graphics = gfx;
-                        Entities.AcceptVisitor(debug_visitor, false);
+                        Entities.DebugRender(gfx);
                     }
                     gfx.End();
                 }
@@ -144,9 +131,9 @@ namespace kuujoo.Pixel
         }
         public void DestroyEntity(Entity entity)
         {
-            entity.Components.AcceptVisitor(ComponentListVisitor.DestroyVisitor, true);
-            entity.Components.AcceptVisitor(ComponentListVisitor.CleanUpVisitor, true);
-            entity.Components.AcceptVisitor(ComponentListVisitor.RemovedFromEntityVisitor, true);
+            entity.Components.Destroy();
+            entity.Components.CleanUp();
+            entity.Components.RemovedFromEntity();
             entity.Components.Clear();
             Entities.Remove(entity);
         }
