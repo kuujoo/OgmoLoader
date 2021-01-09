@@ -134,7 +134,7 @@ namespace kuujoo.Pixel
             entity.Components.Destroy();
             entity.Components.CleanUp();
             entity.Components.RemovedFromEntity();
-            entity.Components.Clear();
+            entity.Components.RemoveAll();
             Entities.Remove(entity);
         }
         void UpdateDrawRect()

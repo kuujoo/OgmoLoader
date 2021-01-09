@@ -116,6 +116,17 @@ namespace kuujoo.Pixel
                 _itemsToRemove.Add(item);
             }  
         }
+        public void RemoveAll()
+        {
+            for (var i = 0; i < _items.Count; i++)
+            {
+                Remove(_items[i]);
+            }
+            for (var i = 0; i < _itemsToAdd.Count; i++)
+            {
+                Remove(_items[i]);
+            }
+        }
         public void Clear()
         {
             _itemsToRemove.Clear();
