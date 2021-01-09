@@ -22,45 +22,5 @@
             }
             return null;
         }
-        
-        public void Update()
-        {
-            for (var i = 0; i < _items.Count; i++)
-            {
-                _items[i].Components.UpdateLists();
-            }
-            for (var i = 0; i < _items.Count; i++)
-            {           
-                _items[i].Components.Update();
-            }
-        }
-        public void CleanUp()
-        {
-            for (var i = 0; i < _items.Count; i++)
-            {
-                _items[i].Components.CleanUp();
-            }
-        }
-        public void OnGraphicsDeviceReset()
-        {
-            for (var i = 0; i < _items.Count; i++)
-            {
-                _items[i].Components.OnGraphicsDeviceReset();
-            }
-        }
-        public void Render(Graphics gfx)
-        {
-            for (var i = 0; i < _items.Count; i++)
-            {
-                    _items[i].Components.Render(gfx);
-            }
-        }
-        public void DebugRender(Graphics gfx)
-        {
-            for (var i = 0; i < _items.Count; i++)
-            {
-                _items[i].Components.DebugRender(gfx);
-            }
-        }
     }
 }

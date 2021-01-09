@@ -126,10 +126,16 @@ namespace kuujoo.Pixel
         public virtual void Render(Graphics graphics, EntityList entities, bool debugrender)
         {
             graphics.Begin(this);
-            entities.Render(graphics);
+            for(var i = 0; i < entities.Count; i++)
+            {
+                entities[i].Components.Render(graphics);
+            }
             if (debugrender)
             {
-                entities.DebugRender(graphics);
+                for (var i = 0; i < entities.Count; i++)
+                {
+                    entities[i].Components.DebugRender(graphics);
+                }
             }
             graphics.End();
         }

@@ -43,7 +43,11 @@ namespace kuujoo.Pixel
             }
             _sceneComponents.Clear();
 
-            Entities.CleanUp();
+
+            for (var i = 0; i < Entities.Count; i++)
+            {
+                Entities[i].Components.CleanUp();
+            }
         }
         public virtual void Update()
         {
@@ -52,12 +56,21 @@ namespace kuujoo.Pixel
             {
                 _sceneComponents[i].Update();
             }
+
             Entities.UpdateLists();
-            Entities.Update();
+
+            for (var i = 0; i < Entities.Count; i++)
+            {
+                Entities[i].Components.UpdateLists();
+                Entities[i].Components.Update();
+            }
         }
         public void OnGraphicsDeviceReset()
         {
-            Entities.OnGraphicsDeviceReset();
+            for(var i = 0; i < Entities.Count; i++)
+            {
+                Entities[i].Components.OnGraphicsDeviceReset();
+            }
             UpdateDrawRect();
         }
         public T FindComponent<T>() where T: Component
