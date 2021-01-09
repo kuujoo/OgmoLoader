@@ -55,10 +55,6 @@ namespace kuujoo.Pixel
             Entities.UpdateLists();
             Entities.AcceptVisitor(EntityListVisitor.UpdateVisitor, false);
 
-            for (var i = 0; i < _sceneComponents.Count; i++)
-            {
-                _sceneComponents[i].LateUpdate();
-            }
         }
         public void OnGraphicsDeviceReset()
         {
