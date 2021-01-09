@@ -50,6 +50,10 @@ namespace kuujoo.Pixel
         public override void OnGraphicsDeviceReset()
         {
         }
+        public override bool IsVisibleFromCamera(Camera camera)
+        {
+            return true;
+        }
         public override void Render(Graphics graphics)
         {
             if (Tileset == null) return;

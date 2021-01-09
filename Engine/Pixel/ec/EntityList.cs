@@ -25,9 +25,12 @@
         
         public void Update()
         {
-            for(var i = 0; i < _items.Count; i++)
+            for (var i = 0; i < _items.Count; i++)
             {
                 _items[i].Components.UpdateLists();
+            }
+            for (var i = 0; i < _items.Count; i++)
+            {           
                 _items[i].Components.Update();
             }
         }
@@ -49,7 +52,7 @@
         {
             for (var i = 0; i < _items.Count; i++)
             {
-                _items[i].Components.Render(gfx);
+                    _items[i].Components.Render(gfx);
             }
         }
         public void DebugRender(Graphics gfx)

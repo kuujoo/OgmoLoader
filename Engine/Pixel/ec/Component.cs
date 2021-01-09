@@ -35,6 +35,10 @@ namespace kuujoo.Pixel
         {
 
         }
+        public virtual bool IsVisibleFromCamera(Camera camera)
+        {
+            return false;
+        }
         public virtual void Initialize() { }
         public virtual void Render(Graphics graphics) {}
         public virtual void DebugRender(Graphics graphics) { }

@@ -73,13 +73,7 @@ namespace kuujoo.Pixel
             {
                 if (_cameras[i].Enabled)
                 {
-                    gfx.Begin(_cameras[i]);
-                    Entities.Render(gfx);
-                    if(DebugRender)
-                    {
-                        Entities.DebugRender(gfx);
-                    }
-                    gfx.End();
+                    _cameras[i].Render(gfx, Entities, DebugRender);
                 }
             }
 

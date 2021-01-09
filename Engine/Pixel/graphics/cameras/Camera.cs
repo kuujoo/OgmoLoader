@@ -119,13 +119,19 @@ namespace kuujoo.Pixel
             _origin = new Vector2(Viewport.Width / 2.0f, Viewport.Height / 2.0f);
             _updateMatrices = true;
         }
-        public virtual bool CanSee(Entity entity)
-        {
-            return true;
-        }
         public int CompareTo([AllowNull] Camera other)
         {
             return Priority.CompareTo(other.Priority);
+        }
+        public virtual void Render(Graphics graphics, EntityList entities, bool debugrender)
+        {
+            graphics.Begin(this);
+            entities.Render(graphics);
+            if (debugrender)
+            {
+                entities.DebugRender(graphics);
+            }
+            graphics.End();
         }
     }
 }

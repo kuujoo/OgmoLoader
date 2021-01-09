@@ -7,9 +7,27 @@
         {
             RenderTag = 0;
         }
-        public override bool CanSee(Entity entity)
+        public override void Render(Graphics graphics, EntityList entities, bool debugrender)
         {
-            return entity.Tag == RenderTag;
+            graphics.Begin(this);
+            for(var i = 0; i< entities.Count; i++)
+            {
+                if(entities[i].Tag == RenderTag)
+                {
+                    entities[i].Components.Render(graphics);
+                }
+            }
+            if (debugrender)
+            {
+                for (var i = 0; i < entities.Count; i++)
+                {
+                    if (entities[i].Tag == RenderTag)
+                    {
+                        entities[i].Components.DebugRender(graphics);
+                    }
+                }
+            }
+            graphics.End();
         }
     }
 }

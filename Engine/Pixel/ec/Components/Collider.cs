@@ -128,6 +128,10 @@ namespace kuujoo.Pixel
             _size = rect.Size.ToVector2();
             Updated?.Invoke(this);
         }
+        public override bool IsVisibleFromCamera(Camera camera)
+        {
+            return camera.Bounds.Intersects(Bounds);
+        }
         public override void DebugRender(Graphics graphics)
         {
             graphics.DrawHollowRect(Bounds, Color.Red);
@@ -183,7 +187,10 @@ namespace kuujoo.Pixel
             }
             return false;
         }
-
+        public override bool IsVisibleFromCamera(Camera camera)
+        {
+            return true;
+        }
         public override void DebugRender(Graphics graphics)
         {
             base.Render(graphics);

@@ -69,6 +69,14 @@ namespace kuujoo.Pixel
 
             graphics.DrawSpriteFrame(Entity.Transform.Position.ToVector2(), Sprite.Pivot, Scale, CurrentFrame, Color.White, FlipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None);  
         }
+        public override bool IsVisibleFromCamera(Camera camera)
+        {
+            var bounds = camera.Bounds;
+            var b = CurrentFrame.Rect;
+            b.Location = Entity.Transform.Position;
+            b.Location -= Sprite.Pivot.ToPoint();
+            return bounds.Intersects(b);
+        }
         public void Play(string name)
         {
             for(var i = 0; i < Sprite.Animations.Count;i++)

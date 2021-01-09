@@ -11,16 +11,24 @@
         }
         public void Render(Graphics gfx)
         {
+            var camera = gfx.Camera;
             for (var i = 0; i < _items.Count; i++)
             {
-                _items[i].Render(gfx);
+                if (_items[i].IsVisibleFromCamera(camera))
+                {
+                    _items[i].Render(gfx);
+                }
             }
         }
         public void DebugRender(Graphics gfx)
         {
+            var camera = gfx.Camera;
             for (var i = 0; i < _items.Count; i++)
             {
-                _items[i].DebugRender(gfx);
+                if (_items[i].IsVisibleFromCamera(camera))
+                {
+                    _items[i].DebugRender(gfx);
+                }
             }
         }
         public void OnGraphicsDeviceReset()
