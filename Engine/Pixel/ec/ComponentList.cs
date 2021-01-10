@@ -47,6 +47,10 @@
             {
                 _items[i].CleanUp();
             }
+            for (var i = 0; i < _itemsToAdd.Count; i++)
+            {
+                _itemsToAdd[i].CleanUp();
+            }
         }
         public void Destroy()
         {
@@ -54,12 +58,21 @@
             {
                 _items[i].Destroy();
             }
+
+            for (var i = 0; i < _itemsToAdd.Count; i++)
+            {
+                _itemsToAdd[i].Destroy();
+            }
         }
         public void RemovedFromEntity()
         {
             for (var i = 0; i < _items.Count; i++)
             {
                 _items[i].RemovedFromEntity();
+            }
+            for (var i = 0; i < _itemsToAdd.Count; i++)
+            {
+                _itemsToAdd[i].RemovedFromEntity();
             }
         }
         public void Reset()

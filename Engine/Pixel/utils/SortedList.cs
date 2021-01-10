@@ -124,7 +124,7 @@ namespace kuujoo.Pixel
             }
             for (var i = 0; i < _itemsToAdd.Count; i++)
             {
-                Remove(_items[i]);
+                Remove(_itemsToAdd[i]);
             }
         }
         public void Clear()
