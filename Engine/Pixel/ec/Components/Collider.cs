@@ -11,13 +11,13 @@ namespace kuujoo.Pixel
         {
             var r = rect;          
             var left = (int)Math.Clamp((float)r.Left / grid.CellWidth, 0, grid.Width);
-            var right = (int)Math.Clamp((float)(r.Right) / grid.CellWidth, 0, grid.Width);
+            var right = (int)Math.Clamp( Math.Ceiling( (float)(r.Right) / grid.CellWidth), 0, grid.Width);
             var up = (int)Math.Clamp((float)r.Top / grid.CellHeight, 0, grid.Height);
-            var down = (int)Math.Clamp((float)(r.Bottom) / grid.CellHeight, 0, grid.Height);
+            var down = (int)Math.Clamp(Math.Ceiling((float)(r.Bottom) / grid.CellHeight), 0, grid.Height);
 
-            for (var i = left; i <= right; i++)
+            for (var i = left; i < right; i++)
             {
-                for (var j = up; j <= down; j++)
+                for (var j = up; j < down; j++)
                 {
                     var v = grid.GetValue(i, j);
                     if (v != 0)
