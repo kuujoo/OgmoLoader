@@ -59,5 +59,16 @@
                 _items[i].RemovedFromEntity();
             }
         }
+        public void Reset()
+        {
+            for (var i = 0; i < _items.Count; i++)
+            {
+                var resettable = _items[i] as IResettable;
+                if(resettable != null)
+                {
+                    resettable.Reset();
+                }
+            }
+        }
     }
 }
