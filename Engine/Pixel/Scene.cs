@@ -91,8 +91,12 @@ namespace kuujoo.Pixel
             }
 
             // Final render
-
-            gfx.Begin(null);
+            FinalRender(gfx);
+         
+        }
+        public virtual void FinalRender(Graphics gfx)
+        {
+            gfx.Begin();
             gfx.Device.Clear(Color.Black);
             gfx.SpriteBatch.Draw(ApplicationSurface.Target, _finalDestinationRect, Color.White);
             gfx.End();

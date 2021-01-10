@@ -13,6 +13,8 @@ namespace kuujoo.Pixel
         public Texture2D Pixel { get; private set; }
         public Camera Camera { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
+        public Stack<Surface> _surfaceStack = new Stack<Surface>();
+        public Stack<Matrix> _matrixStack = new Stack<Matrix>();
         public void SetRenderTargetToBackBuffer()
         {
             Device.SetRenderTarget(null);
@@ -31,25 +33,44 @@ namespace kuujoo.Pixel
                 Pixel.SetData<Color>(colors);
             }
         }
-        public void Begin(Camera camera = null)
+        public void PushSurface(Surface surface)
         {
-            Camera = camera;
-            if (camera != null && camera.Surface != null)
+            _surfaceStack.Push(surface);
+        }
+        public void PushMatrix(Matrix matrix)
+        {
+            _matrixStack.Push(matrix);
+        }
+        public void PopMatrix(Matrix matrix)
+        {
+            var top = _matrixStack.Peek();
+            if (top == matrix)
             {
-                Device.SetRenderTarget(camera.Surface.Target); 
+                _matrixStack.Pop();
+            }
+        }
+        public void PopSurface(Surface surface)
+        {
+            var top = _surfaceStack.Peek();
+            if(top == surface)
+            {
+                _surfaceStack.Pop();
+            }
+        }
+        public void Begin()
+        {
+            if (_surfaceStack.Count > 0)
+            {
+                Device.SetRenderTarget(_surfaceStack.Peek().Target);
             }
             else
             {
                 Device.SetRenderTarget(null);
             }
 
-            if (camera != null && camera.Type == CameraType.Base)
+            if (_matrixStack.Count > 0)
             {
-                Device.Clear(camera.BackgroundColor);
-            }
-            if (camera != null)
-            {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, camera.Matrix);
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, _matrixStack.Peek());
             }
             else
             {

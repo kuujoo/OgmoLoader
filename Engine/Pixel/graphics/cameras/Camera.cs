@@ -125,7 +125,11 @@ namespace kuujoo.Pixel
         }
         public virtual void Render(Graphics graphics, EntityList entities, bool debugrender)
         {
-            graphics.Begin(this);
+            graphics.PushSurface(Surface);
+            graphics.PushMatrix(Matrix);
+            graphics.Begin();
+            graphics.Device.Clear(BackgroundColor);
+            graphics.Camera = this;
             for(var i = 0; i < entities.Count; i++)
             {
                 entities[i].Components.Render(graphics);
@@ -137,6 +141,8 @@ namespace kuujoo.Pixel
                     entities[i].Components.DebugRender(graphics);
                 }
             }
+            graphics.PopMatrix(Matrix);
+            graphics.PopSurface(Surface);
             graphics.End();
         }
     }

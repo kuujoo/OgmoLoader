@@ -9,10 +9,16 @@
         }
         public override void Render(Graphics graphics, EntityList entities, bool debugrender)
         {
-            graphics.Begin(this);
-            for(var i = 0; i< entities.Count; i++)
+
+
+            graphics.PushSurface(Surface);
+            graphics.PushMatrix(Matrix);
+            graphics.Begin();
+            graphics.Device.Clear(BackgroundColor);
+            graphics.Camera = this;
+            for (var i = 0; i < entities.Count; i++)
             {
-                if(entities[i].Tag == RenderTag)
+                if (entities[i].Tag == RenderTag)
                 {
                     entities[i].Components.Render(graphics);
                 }
@@ -27,7 +33,10 @@
                     }
                 }
             }
+            graphics.PopMatrix(Matrix);
+            graphics.PopSurface(Surface);
             graphics.End();
+
         }
     }
 }
