@@ -15,7 +15,8 @@ namespace kuujoo.Pixel
 
             var room = new Scene(384, 216);
             var res = room.AddSceneComponent(new SpriteResources(128,128, "Content/Sprites")) as SpriteResources;
-            room.AddCamera(new Camera(384, 216));
+            var cameraEntity = room.CreateEntity(0);
+            room.AddCamera(cameraEntity.AddComponent(new Camera(384, 216)));
             var sprite = res.GetSprite("sheet");
             var r = room.CreateEntity(0);
             var tilemap = r.AddComponent(new TilemapRenderer(100, 100, new Tileset(16, 16, sprite.DefaultFrame.Texture, sprite.DefaultFrame.Rect)));

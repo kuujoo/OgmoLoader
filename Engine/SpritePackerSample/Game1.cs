@@ -6,6 +6,10 @@ namespace kuujoo.Pixel
 
     public class TexturePagesRenderer : Component
     {
+        public override bool IsVisibleFromCamera(Camera camera)
+        {
+            return true;
+        }
         public override void Render(Graphics graphics)
         {
             base.Render(graphics);
@@ -35,11 +39,13 @@ namespace kuujoo.Pixel
             base.Initialize();
             Screen.SetSize(1920, 1080);
             var room = new Scene(1920, 1080);
-            var resources = room.AddSceneComponent(new SpriteResources(256, 256, "Content/Sprites")) as SpriteResources;
-            room.AddCamera(new Camera(1920, 1080)
+            var resources = room.AddSceneComponent(new SpriteResources(256, 256, "Content/Sprites"));
+            var cameraEntity = room.CreateEntity(0);
+            var camera = cameraEntity.AddComponent(new Camera(1920, 1080)
             {
                 BackgroundColor = Color.Aquamarine
             });
+            room.AddCamera(camera);
             var texturepages_entity = room.CreateEntity(0);
             texturepages_entity.AddComponent(new TexturePagesRenderer());
             texturepages_entity.Transform.SetPosition(12, 12);

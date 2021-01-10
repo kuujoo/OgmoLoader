@@ -10,6 +10,10 @@ namespace kuujoo.Pixel
         {
             _color = color;
         }
+        public override bool IsVisibleFromCamera(Camera camera)
+        {
+            return true;
+        }
         public override void Render(Graphics graphics)
         {
             base.Render(graphics);
@@ -51,17 +55,19 @@ namespace kuujoo.Pixel
 
             InitInputs();
 
-            _camera = new TagCamera(384, 216)
+            var cameraEntity = CreateEntity(0);
+            _camera = cameraEntity.AddComponent(new TagCamera(384, 216)
             {
                 RenderTag = 1,
                 Priority = 0
-            };
+            });
 
-            _camera2 = new TagCamera(384, 216)
+            var cameraEntity2 = CreateEntity(0);
+            _camera2 = cameraEntity2.AddComponent(new TagCamera(384, 216)
             {
                 RenderTag = 2,
                 Priority = 1
-            };
+            });
             _camera.SetCenterOrigin();
             _camera2.SetCenterOrigin();
 
@@ -94,19 +100,19 @@ namespace kuujoo.Pixel
         {
             if(LeftInput.Down)
             {
-                _currentCamera.Translate(-60 * Time.DeltaTime, 0.0f);
+                _currentCamera.Entity.Transform.Translate((int)(-60 * Time.DeltaTime), 0);
             }
             if (RightInput.Down)
             {
-                _currentCamera.Translate(60 * Time.DeltaTime, 0.0f);
+                _currentCamera.Entity.Transform.Translate((int)(60 * Time.DeltaTime), 0);
             }
             if (UpInput.Down)
             {
-                _currentCamera.Translate(0.0f, -60 * Time.DeltaTime);
+                _currentCamera.Entity.Transform.Translate(0, (int)(-60 * Time.DeltaTime));
             }
             if (DownInput.Down)
             {
-                _currentCamera.Translate(0.0f, +60 * Time.DeltaTime);
+                _currentCamera.Entity.Transform.Translate(0, (int)(60 * Time.DeltaTime));
             }
             if (ZoomInInput.Down)
             {

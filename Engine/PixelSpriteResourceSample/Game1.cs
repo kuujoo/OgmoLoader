@@ -24,11 +24,12 @@ namespace kuujoo.Pixel
 
             var room = new Scene(384, 216);
             var resources = room.AddSceneComponent(new SpriteResources(2048, 2048, "Content/Sprites")) as SpriteResources;
-            var w = new System.Diagnostics.Stopwatch();
-            room.AddCamera(new Camera(384, 216)
+            var cameraEntity = room.CreateEntity(0);
+            var camera = cameraEntity.AddComponent(new Camera(384, 216)
             {
                 BackgroundColor = Color.Aquamarine
             });
+            room.AddCamera(camera);
 
             var animated_entity = room.CreateEntity(0);
             animated_entity.Transform.SetPosition(12, 12);

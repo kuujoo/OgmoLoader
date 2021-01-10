@@ -32,7 +32,8 @@ namespace kuujoo.Pixel
         {
             base.Initialize();
             var room = new Scene(384 * 2 , 216);
-            room.AddCamera(new Camera(384 * 2, 216));
+            var cameraEntity = room.CreateEntity(0);
+            room.AddCamera(cameraEntity.AddComponent(new Camera(384 * 2, 216)));
             var resources = room.AddSceneComponent(new SpriteResources(1024, 1024, "Content/Sprites")) as SpriteResources;
             OgmoSceneBuilder builder = new OgmoSceneBuilder(room, "Content/levels/levels");
             var sp = resources.GetSprite("tiles");

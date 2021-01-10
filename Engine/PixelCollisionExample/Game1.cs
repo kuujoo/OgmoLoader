@@ -25,7 +25,7 @@ namespace kuujoo.Pixel
             if (_speed.Y > 0 && Entity.Transform.Position.Y > 216) _speed.Y*= -1;
             if (_speed.Y < 0 && Entity.Transform.Position.Y < 0) _speed.Y *= -1;
 
-            if(_collider.Check( 1<<0, Entity.Transform.Position) != null)
+            if(_collider.Check(CollisionMask.Solid, Point.Zero) != null)
             {
                 _color = Color.Red;
             }
@@ -33,6 +33,10 @@ namespace kuujoo.Pixel
             {
                 _color = Color.White;
             }
+        }
+        public override bool IsVisibleFromCamera(Camera camera)
+        {
+            return true;
         }
         public override void Render(Graphics graphics)
         {
@@ -51,10 +55,13 @@ namespace kuujoo.Pixel
             base.Initialize();
 
             var room = new Scene(384, 216);
-            room.AddCamera(new Camera(384, 216)
+            var cameraEntity = room.CreateEntity(0);
+            var camera = cameraEntity.AddComponent(new Camera(384, 216)
             {
                 BackgroundColor = Color.Aquamarine
             });
+            room.AddCamera(camera);
+            room.DebugRender = true;
             for(var i = 0; i< 10; i++)
             {
                 var e = room.CreateEntity(0);
