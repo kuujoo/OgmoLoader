@@ -42,6 +42,7 @@ namespace kuujoo.Pixel
         public static int Player = 1 << 4;
         public static int Trigger = 1 << 5;
         public static int Enemy = 1 << 6;
+        public static int Death = 1 << 7;
     }
 
     public abstract class Collider : Component
