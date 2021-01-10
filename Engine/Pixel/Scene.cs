@@ -77,6 +77,10 @@ namespace kuujoo.Pixel
         {
             return Entities.FindComponent<T>();
         }
+        public List<T> FindComponents<T>() where T : Component
+        {
+            return Entities.FindComponents<T>();
+        }
         public void Render()
         {
             // FIXME: sort only when needed
