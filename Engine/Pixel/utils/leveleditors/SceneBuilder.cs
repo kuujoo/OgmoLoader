@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace kuujoo.Pixel
 {
+    public interface ITilemapBuilder
+    {
+        TilemapRenderer Build(int width, int height, Tileset tileset);
+    }
+
     public abstract class SceneBuilder
     {
         public List<Rectangle> RoomRects { get; private set; }
@@ -11,6 +16,7 @@ namespace kuujoo.Pixel
         TilemapRenderer _activeTilemap = null;
         Dictionary<string, Tileset> _tilesets = new Dictionary<string, Tileset>();
         Dictionary<string, int> _gridColliders = new Dictionary<string, int>();
+        Dictionary<string, ITilemapBuilder> _tilemapbuilders = new Dictionary<string, ITilemapBuilder>();
         GridCollider _activeGridCollider;
         public SceneBuilder(Scene scene)
         {
@@ -20,6 +26,10 @@ namespace kuujoo.Pixel
         public void AddTileset(string key, Tileset tileset)
         {
             _tilesets[key] = tileset;
+        }
+        public void AddTilemapBuilder(string key, ITilemapBuilder builder)
+        {
+            _tilemapbuilders[key] = builder;
         }
         public void AddGridCollider(string key, int mask)
         {
@@ -31,7 +41,14 @@ namespace kuujoo.Pixel
         {
             var t = _scene.CreateEntity(id);
             t.Transform.SetPosition(offsetx, offsety);
-            _activeTilemap = t.AddComponent(new TilemapRenderer(width, height, tileset));
+            if (_tilemapbuilders.ContainsKey(name))
+            {
+                _activeTilemap = t.AddComponent(_tilemapbuilders[name].Build(width, height, tileset));
+            }
+            else
+            {
+                _activeTilemap = t.AddComponent(new TilemapRenderer(width, height, tileset));
+            }
             int mask;
             if(_gridColliders.TryGetValue(name, out mask))
             {
