@@ -29,9 +29,9 @@ namespace kuujoo.Pixel
         public T AddComponent<T>(T component) where T: Component
         {
             component.Entity = this;
+            Components.Add(component);
             component.AddedToEntity();
             component.Initialize();
-            Components.Add(component);
             return component;
         }
         public T GetComponent<T>() where T : class
