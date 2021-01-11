@@ -88,7 +88,7 @@ namespace kuujoo.Pixel
                         _itemsToAdd.Remove(item);
                     }
                 }
-
+                _itemsToRemove.Clear();
             }
             if(_itemsToAdd.Count > 0)
             {
