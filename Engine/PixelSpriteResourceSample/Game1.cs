@@ -3,15 +3,6 @@ using System.Collections;
 
 namespace kuujoo.Pixel
 {
-    public class TexturePagesRenderer : Component
-    {
-        public override void Render(Graphics graphics)
-        {
-            base.Render(graphics);
-            var resources = Scene.GetSceneComponent<SpriteResources>();
-            graphics.DrawTexture(resources.TexturePages[0].Texture, new Vector2(Entity.Transform.Position.X, Entity.Transform.Position.Y));
-        }
-    }
     public class Game1 : Engine
     {
         public Game1() : base()
@@ -53,10 +44,28 @@ namespace kuujoo.Pixel
             {
                 Sprite = resources.GetSprite("circle")
             });
-           
+
             var e2 = room.CreateEntity(0);
-            e2.Transform.SetPosition(100, 0);
-            e2.AddComponent(new TexturePagesRenderer());
+            e2.Transform.SetPosition(130, 140);
+            e2.AddComponent(new SpriteRenderer()
+            {
+                Sprite = resources.GetSprite("png_sprite")
+            });
+
+            var e3 = room.CreateEntity(0);
+            e3.Transform.SetPosition(130, 12);
+            e3.AddComponent(new SpriteRenderer()
+            {
+                Sprite = resources.GetSprite("jpg_sprite")
+            });
+
+            var e4 = room.CreateEntity(0);
+            e4.Transform.SetPosition(200, 12);
+            e4.AddComponent(new SpriteRenderer()
+            {
+                Sprite = resources.GetSprite("bmp_sprite")
+            });
+
             Scene = room;
         }
     }
