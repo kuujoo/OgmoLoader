@@ -24,7 +24,7 @@ namespace kuujoo.Pixel
             }
             return null;
         }
-        public List<T> FindComponents<T>() where T : Component
+        public List<T> FindComponents<T>() where T : class
         {
             var list = ListPooler<T>.Obtain();
             for (var i = 0; i < _items.Count; i++)

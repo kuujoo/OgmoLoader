@@ -77,7 +77,7 @@ namespace kuujoo.Pixel
         {
             return Entities.FindComponent<T>();
         }
-        public List<T> FindComponents<T>() where T : Component
+        public List<T> FindComponents<T>() where T : class
         {
             return Entities.FindComponents<T>();
         }
