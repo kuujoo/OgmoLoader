@@ -25,10 +25,14 @@ namespace kuujoo.Pixel
         }
         void BuildSprites()
         {
+            BuildAseSprites();
+        }
+        void BuildAseSprites()
+        {
             var files = Directory.GetFiles(_spritedirectory, "*.ase");
             int packid = 0;
             List<SpriteInfo> spriteInfo = new List<SpriteInfo>(files.Length);
-            for(var i = 0; i < files.Length; i++)
+            for (var i = 0; i < files.Length; i++)
             {
                 spriteInfo.Add(new SpriteInfo()
                 {
@@ -37,7 +41,7 @@ namespace kuujoo.Pixel
                     PackId = packid
 
                 });
-                for(var j = 0; j < spriteInfo[i].AseSPrite.FrameCount; j++)
+                for (var j = 0; j < spriteInfo[i].AseSPrite.FrameCount; j++)
                 {
                     _packer.Add(packid, spriteInfo[i].AseSPrite.Width, spriteInfo[i].AseSPrite.Height, spriteInfo[i].AseSPrite.Frames[j].Pixels);
                     packid++;
@@ -49,7 +53,7 @@ namespace kuujoo.Pixel
             for (var i = 0; i < spriteInfo.Count; i++)
             {
                 var sprite = new Sprite();
-                if( spriteInfo[i].AseSPrite.Slices.Count > 0 && spriteInfo[i].AseSPrite.Slices[0].Pivot.HasValue)
+                if (spriteInfo[i].AseSPrite.Slices.Count > 0 && spriteInfo[i].AseSPrite.Slices[0].Pivot.HasValue)
                 {
                     var pivot = spriteInfo[i].AseSPrite.Slices[0].Pivot.Value;
                     sprite.SetPivot(pivot);
