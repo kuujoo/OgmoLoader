@@ -9,9 +9,9 @@ namespace kuujoo.Pixel
 
     public class SortedList<T>
     {
-        protected List<T> _items = new List<T>();
-        protected List<T> _itemsToAdd = new List<T>();
-        List<T> _itemsToRemove = new List<T>();
+        protected List<T> _items = new List<T>(20);
+        protected List<T> _itemsToAdd = new List<T>(20);
+        List<T> _itemsToRemove = new List<T>(20);
         public int Count => _items.Count;
         public T this[int idx] => _items[idx];
         bool _sort;
