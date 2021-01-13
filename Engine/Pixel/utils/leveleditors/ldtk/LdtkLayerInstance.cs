@@ -37,17 +37,33 @@ namespace kuujoo.Pixel
     }
     public class LdtkFieldInstance
     {
+        public string __identifier { get; set; }
+        public string __type { get; set; }
+        public dynamic __value { get; set; }
         public int DefUid { get; set; }
         public LdtkRealEditorvalue[] RealEditorValues { get; set; }
     }
     public class LdtkEntityInstance
     {
+        public string __identifier { get; set; }
+        public int[] _grid { get; set; }
         public int DefUid { get; set; }
         public int[] Px { get; set; }
         public LdtkFieldInstance[] FieldInstances { get; set; }
     }
     public class LdtkLayerInstance
     {
+
+        public string __identifier { get; set; }
+        public string __type { get; set; }
+        public int __cWid { get; set; }
+        public int __cHei { get; set; }
+        public int __gridSize { get; set; }
+        public float __opacity { get; set; }
+        public int __pxTotalOffsetX { get; set; }
+        public int __pxTotalOffsetY { get; set; }
+        public int? __tilesetDefUid { get; set; }
+        public string __tilesetRelPath { get; set; }
         public int LevelId { get; set; }
         public int LayerDefUid { get; set;}
         public int pxOffsetX { get; set; }

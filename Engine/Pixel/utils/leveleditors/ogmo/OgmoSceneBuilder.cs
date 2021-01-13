@@ -34,6 +34,8 @@ namespace kuujoo.Pixel
                 maxx = Math.Max(maxx, levels[i].OffsetX + _levels[i].Width);
                 miny = Math.Min(miny, levels[i].OffsetY);
                 maxy = Math.Max(maxy, levels[i].OffsetY + _levels[i].Height);
+
+                AddRoomBounds(levels[i].OffsetX, levels[i].OffsetY, levels[i].Width, levels[i].Height);
             }
             var w = maxx - minx;
             var h = maxy - miny;
@@ -56,52 +58,67 @@ namespace kuujoo.Pixel
             }
             return true;
         }
+        void BuildRoom(OgmoLevel level)
+        {
+            BeginRoom(level.OffsetX, level.OffsetY, level.Width, level.Height);
+            for (var j = 0; j < level.Layers.Length; j++)
+            {
+                var layer = level.Layers[j];
+                if (layer.Type == OgmoLayerType.Tile)
+                {
+                    var w = _bounds.Width / layer.GridCellWidth;
+                    var h = _bounds.Height / layer.GridCellHeight;
+                    var x = level.OffsetX / layer.GridCellWidth - _bounds.X;
+                    var y = level.OffsetY / layer.GridCellHeight - _bounds.Y;
+                    var tileset = GetTileset(layer.Tileset);
+                    BeginTileLayer(j, layer.Name, w, h, _bounds.X, _bounds.Y, tileset);
+                    for (var t = 0; t < layer.Data.Length; t++)
+                    {
+                        var tile = layer.Data[t];
+                        if (tile > 0)
+                        {
+                            var xx = t % layer.GridCellsX;
+                            var yy = t / layer.GridCellsX;
+                            SetTile(x + xx, y + yy, (byte)tile);
+                        }
+                    }
+                    EndLayer();
+                }
+                else if (layer.Type == OgmoLayerType.Entity)
+                {
+                    BeginEntityLayer(j, layer.Name);
+                    for (var e = 0; e < layer.Entities.Length; e++)
+                    {
+                        var settings = new Settings();
+                        if (settings != null)
+                        {
+                            settings.SetPoint("Position", new Point(level.OffsetX + layer.Entities[e].X, level.OffsetY + layer.Entities[e].Y));
+                            settings.SetPoint("Origin", new Point(layer.Entities[e].OriginX, layer.Entities[e].OriginY));
+                        }
+                        CreateEntity(layer.Entities[e].Name, settings);
+                    }
+                    EndLayer();
+                }
+            }
+            EndRoom();
+        }
         public override void Build()
         {
             if (!VerifyLayers(_levels)) return;
             for (var i = 0; i < _levels.Count; i++)
             {
-                BeginRoom(_levels[i].OffsetX, _levels[i].OffsetY, _levels[i].Width, _levels[i].Height);
-                for (var j = 0; j < _levels[i].Layers.Length; j++)
+                BuildRoom(_levels[i]);
+            }
+        }
+        public override void BuildRoomAt(int x, int y)
+        {
+            for (var i = 0; i < _levels.Count; i++)
+            {
+                var r = new Rectangle(_levels[i].OffsetX, _levels[i].OffsetY, _levels[i].Width, _levels[i].Height);
+                if(r.Contains(x, y))
                 {
-                    var layer = _levels[i].Layers[j];
-                    if (layer.Type == OgmoLayerType.Tile)
-                    {
-                        var w = _bounds.Width / layer.GridCellWidth;
-                        var h = _bounds.Height / layer.GridCellHeight;
-                        var x = _levels[i].OffsetX / layer.GridCellWidth - _bounds.X;
-                        var y = _levels[i].OffsetY / layer.GridCellHeight - _bounds.Y;
-                        var tileset = GetTileset(layer.Tileset);
-                        BeginTileLayer(j, layer.Name, w, h, _bounds.X, _bounds.Y, tileset);
-                        for (var t = 0; t < layer.Data.Length; t++)
-                        {
-                            var tile = layer.Data[t];
-                            if (tile > 0)
-                            {
-                                var xx = t % layer.GridCellsX;
-                                var yy = t / layer.GridCellsX;
-                                SetTile(x + xx, y + yy, (byte)tile);
-                            }
-                        }
-                        EndLayer();
-                    }
-                    else if(layer.Type == OgmoLayerType.Entity)
-                    {
-                        BeginEntityLayer(j, layer.Name);
-                        for (var e = 0; e < layer.Entities.Length; e++)
-                        {
-                            var settings = new OgmoSettingsComponent();
-                            if(settings != null)
-                            {
-                                settings.SetPoint("Position", new Point(_levels[i].OffsetX + layer.Entities[e].X, _levels[i].OffsetY + layer.Entities[e].Y));
-                                settings.SetPoint("Origin", new Point(layer.Entities[e].OriginX, layer.Entities[e].OriginY));
-                            }
-                           CreateEntity(layer.Entities[e].Name, settings);
-                        }
-                        EndLayer();
-                    }
+                    BuildRoom(_levels[i]);
                 }
-                EndRoom();
             }
         }
     }

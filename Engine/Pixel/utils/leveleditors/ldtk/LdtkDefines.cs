@@ -56,11 +56,11 @@
         public int PxHeight { get; set; }
         public int TileGridSize { get; set; }
     }
-    public class ldtkFieldDefine
+    public class LdtkFieldDefine
     {
         public string Identifier { get; set; }
         public int Uid { get; set; }
-     //   public string Type { get; set; }
+        public string Type { get; set; }
         public bool IsArray { get; set; }
         public bool CanBeNull { get; set; }
         public int? ArrayMinLength { get; set; }
@@ -80,8 +80,8 @@
         public string TileRenderMode { get; set; }
         public float PivotX { get; set; }
         public float PivotY { get; set; }
-        public ldtkFieldDefine[] FieldDefs { get; set; }
-        public ldtkFieldDefine GetFieldDefine(int uid)
+        public LdtkFieldDefine[] FieldDefs { get; set; }
+        public LdtkFieldDefine GetFieldDefine(int uid)
         {
             for(var i = 0; i < FieldDefs.Length; i++)
             {

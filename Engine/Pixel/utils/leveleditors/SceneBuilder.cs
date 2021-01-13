@@ -35,7 +35,12 @@ namespace kuujoo.Pixel
         {
             _gridColliders[key] = mask;
         }
+        public void AddRoomBounds(int x, int y, int w, int h)
+        {
+            RoomRects.Add(new Rectangle(x, y, w, h));
+        }
         public abstract void Build();
+        public abstract void BuildRoomAt(int x, int y);
 
         protected void BeginTileLayer(int id, string name, int width, int height, int offsetx, int offsety, Tileset tileset)
         {
@@ -58,7 +63,6 @@ namespace kuujoo.Pixel
         }
         protected void BeginRoom(int x, int y, int width, int height)
         {
-            RoomRects.Add(new Rectangle(x, y, width, height));
         }
         protected void EndRoom()
         {
