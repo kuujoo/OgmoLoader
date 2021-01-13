@@ -9,7 +9,7 @@ namespace kuujoo.Pixel
         {
             base.Render(graphics);
             var resources = Scene.GetSceneComponent<SpriteResources>();
-            graphics.SpriteBatch.Draw(resources.TexturePages[0].Texture, new Vector2(Entity.Transform.Position.X, Entity.Transform.Position.Y), Color.White);
+            graphics.DrawTexture(resources.TexturePages[0].Texture, new Vector2(Entity.Transform.Position.X, Entity.Transform.Position.Y));
         }
     }
     public class Game1 : Engine

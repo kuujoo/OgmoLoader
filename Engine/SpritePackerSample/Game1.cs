@@ -17,15 +17,14 @@ namespace kuujoo.Pixel
             int y = 0;
             int x = 0;
             for (var i = 0; i < resources.TexturePages.Length; i++)
-            {
+            { 
                 x = (i % 4) * 280;
                 if (i != 0 && i % 4 == 0)
                 {
                     y += 280;
                 }
-                graphics.SpriteBatch.Draw(resources.TexturePages[i].Texture, new Vector2(Entity.Transform.Position.X + x, Entity.Transform.Position.Y + y), Color.White);
+                graphics.DrawTexture(resources.TexturePages[i].Texture, new Vector2(Entity.Transform.Position.X + x, Entity.Transform.Position.Y + y));
             }
-
         }
     }
     public class Game1 : Engine

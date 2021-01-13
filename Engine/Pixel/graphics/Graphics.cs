@@ -101,5 +101,9 @@ namespace kuujoo.Pixel
         {
             SpriteBatch.Draw(frame.Texture, at, frame.Rect, color, 0.0f, pivot, scale, effect, 0.0f);
         }
+        public void DrawTexture(Texture2D texture, Vector2 at)
+        {
+            SpriteBatch.Draw(texture, at, Color.White);
+        }
     }
 }
