@@ -75,21 +75,7 @@ namespace kuujoo.Pixel
         }
         public void UpdateLists()
         {
-            if(_itemsToRemove.Count > 0)
-            {
-                for(var i = 0; i < _itemsToRemove.Count; i++)
-                {
-                    var item = _itemsToRemove[i];
-                    if (_items.Contains(item))
-                    {
-                        _items.Remove(item);
-                    } else if(_itemsToAdd.Contains(item))
-                    {
-                        _itemsToAdd.Remove(item);
-                    }
-                }
-                _itemsToRemove.Clear();
-            }
+            UpdateRemoveList();
             if(_itemsToAdd.Count > 0)
             {
                 for (var i = 0; i < _itemsToAdd.Count; i++)
@@ -103,6 +89,25 @@ namespace kuujoo.Pixel
             {
                 _items.Sort();
                 _sort = false;
+            }
+        }
+        public void UpdateRemoveList()
+        {
+            if (_itemsToRemove.Count > 0)
+            {
+                for (var i = 0; i < _itemsToRemove.Count; i++)
+                {
+                    var item = _itemsToRemove[i];
+                    if (_items.Contains(item))
+                    {
+                        _items.Remove(item);
+                    }
+                    else if (_itemsToAdd.Contains(item))
+                    {
+                        _itemsToAdd.Remove(item);
+                    }
+                }
+                _itemsToRemove.Clear();
             }
         }
         public void Add(T item)
