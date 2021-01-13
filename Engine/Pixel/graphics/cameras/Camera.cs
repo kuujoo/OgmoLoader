@@ -145,5 +145,13 @@ namespace kuujoo.Pixel
             graphics.PopSurface(Surface);
             graphics.End();
         }
+        public Vector2 CameraToScreen(Vector2 p)
+        {
+            return Vector2.Transform(p, Matrix);
+        }
+        public Vector2 ScreenToCamera(Vector2 p)
+        {
+            return Vector2.Transform(p, InverseMatrix);
+        }
     }
 }
