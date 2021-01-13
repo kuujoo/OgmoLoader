@@ -22,6 +22,8 @@ namespace kuujoo.Pixel
         Scene _scene;
         Scene _nextScene;
         CoroutineManager _coroutineManager;
+        int _width;
+        int _height;
         public Engine(int width = 1920, int height = 1080, bool fullscreen = false, string title = "Pixel", string contentDirectory = "Content")
         {
             _windowTitle = title;
@@ -47,6 +49,10 @@ namespace kuujoo.Pixel
             Screen.Bind(graphics);
             _coroutineManager = new CoroutineManager();
             Reflection = new Reflection();
+
+            //  Monogame 3.8 bug workaround: Window size does not change to "preferred backbuffer size" if changed inside Game()-constructor. Do change inside Engine::Initialize()
+            _width = width;
+            _height = height;
         }
         public ICoroutine StartCoroutine(IEnumerator enumerator)
         {
@@ -54,8 +60,9 @@ namespace kuujoo.Pixel
         }
         protected override void Initialize()
         {
-            base.Initialize();          
-            Window.ClientSizeChanged += OnClientSizeChanged;      
+            base.Initialize();
+            Screen.SetSize(_width, _height);
+            Window.ClientSizeChanged += OnClientSizeChanged; 
         }
         [Conditional("DEBUG")]
         private void StartDebugUpdate(GameTime gameTime)
