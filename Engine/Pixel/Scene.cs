@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,13 +11,14 @@ namespace kuujoo.Pixel
         public bool DebugRender { get; set; }
         public EntityList Entities { get; private set; }
         public Physics Physics { get; private set; }
+        public Effect FinalEffect { get; set; }
         public Color ClearColor { get; set; }
         public Surface ApplicationSurface { get; set; }
         public RuntimeContentManager Content { get; private set; }
         public bool Paused;
         List<Camera> _cameras = new List<Camera>();
         List<SceneComponent> _sceneComponents = new List<SceneComponent>();
-        Rectangle _finalDestinationRect;
+        protected Rectangle finalDestinationRect;
         public Scene(int game_width, int game_height)
         {
             ClearColor = Color.Aquamarine;
@@ -100,10 +102,18 @@ namespace kuujoo.Pixel
         }
         public virtual void FinalRender(Graphics gfx)
         {
+            if (FinalEffect != null)
+            {
+                gfx.PushEffect(FinalEffect);
+            }
             gfx.Begin();
             gfx.Device.Clear(Color.Black);
-            gfx.SpriteBatch.Draw(ApplicationSurface.Target, _finalDestinationRect, Color.White);
+            gfx.SpriteBatch.Draw(ApplicationSurface.Target, finalDestinationRect, Color.White);
             gfx.End();
+            if (FinalEffect != null)
+            {
+                gfx.PopEffect(FinalEffect);   
+            }
         }
         public T AddSceneComponent<T>(T sceneComponent) where T: SceneComponent
         {
@@ -173,10 +183,10 @@ namespace kuujoo.Pixel
                 scale = sh / surface_h;
             }
 
-            _finalDestinationRect.Width = (int)Math.Ceiling((double)surface_w * scale);
-            _finalDestinationRect.Height = (int)Math.Ceiling((double)surface_h * scale);
-            _finalDestinationRect.X = (sw - _finalDestinationRect.Width) / 2;
-            _finalDestinationRect.Y = (sh - _finalDestinationRect.Height) / 2;
+            finalDestinationRect.Width = (int)Math.Ceiling((double)surface_w * scale);
+            finalDestinationRect.Height = (int)Math.Ceiling((double)surface_h * scale);
+            finalDestinationRect.X = (sw - finalDestinationRect.Width) / 2;
+            finalDestinationRect.Y = (sh - finalDestinationRect.Height) / 2;
         }    
         void Dispose(bool dispose)
         {
