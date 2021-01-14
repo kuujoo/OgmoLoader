@@ -15,12 +15,21 @@ namespace kuujoo.Pixel
         public SpriteBatch SpriteBatch { get; set; }
         public Stack<Surface> _surfaceStack = new Stack<Surface>();
         public Stack<Matrix> _matrixStack = new Stack<Matrix>();
+        public Stack<Effect> _effectStack = new Stack<Effect>();
+        BlendState _nonPreMultipliedBlendState;
         public void SetRenderTargetToBackBuffer()
         {
             Device.SetRenderTarget(null);
         }
         public Graphics()
         {
+            _nonPreMultipliedBlendState = new BlendState
+            {
+                ColorSourceBlend = Blend.SourceAlpha,
+                ColorDestinationBlend = Blend.InverseSourceAlpha,
+                AlphaSourceBlend = Blend.One,
+                AlphaDestinationBlend = Blend.InverseSourceAlpha,
+            };
         }
         internal void Bind(GraphicsDeviceManager graphicDevice)
         {
@@ -57,6 +66,17 @@ namespace kuujoo.Pixel
                 _surfaceStack.Pop();
             }
         }
+        public void PushEffect(Effect effect)
+        {
+            _effectStack.Push(effect);
+        }
+        public void PopEffect(Effect effect)
+        {
+            if (_effectStack.Peek() == effect)
+            {
+                _effectStack.Pop();
+            }
+        }
         public void Begin()
         {
             if (_surfaceStack.Count > 0)
@@ -68,13 +88,14 @@ namespace kuujoo.Pixel
                 Device.SetRenderTarget(null);
             }
 
+            var effect = _effectStack.Count > 0 ? _effectStack.Peek() : null;
             if (_matrixStack.Count > 0)
             {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, _matrixStack.Peek());
+                SpriteBatch.Begin(SpriteSortMode.Deferred, _nonPreMultipliedBlendState, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, effect, _matrixStack.Peek());
             }
             else
             {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
+                SpriteBatch.Begin(SpriteSortMode.Deferred, _nonPreMultipliedBlendState, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, effect);
             }
         }
         public void End()
@@ -83,7 +104,7 @@ namespace kuujoo.Pixel
         }
         public void DrawPoint(Vector2 at, Color color)
         {
-            SpriteBatch.Draw(Pixel, at, new Rectangle(0,0,1,1), color, 0, Microsoft.Xna.Framework.Vector2.Zero, 1f, SpriteEffects.None, 0);
+            SpriteBatch.Draw(Pixel, at, new Rectangle(0,0,1,1), color, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
         public void DrawRect(Rectangle rect, Color color)
         {

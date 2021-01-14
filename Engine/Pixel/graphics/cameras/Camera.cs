@@ -14,6 +14,7 @@ namespace kuujoo.Pixel
     }
     public class Camera : Component, IComparable<Camera>
     {
+        public Effect Effect { get; set; }
         public List<int> IgnoreLayers { get; private set; }
         public Color BackgroundColor { get; set; }
         public CameraType Type { get; set; }
@@ -127,13 +128,20 @@ namespace kuujoo.Pixel
         {
             graphics.PushSurface(Surface);
             graphics.PushMatrix(Matrix);
+            graphics.PushEffect(Effect);
             graphics.Begin();
             graphics.Device.Clear(BackgroundColor);
             graphics.Camera = this;
+            if(Effect != null)
+            {
+                Effect.CurrentTechnique.Passes[0].Apply();
+            }
+
             for(var i = 0; i < entities.Count; i++)
             {
                 entities[i].Components.Render(graphics);
             }
+
             if (debugrender)
             {
                 for (var i = 0; i < entities.Count; i++)
@@ -141,6 +149,7 @@ namespace kuujoo.Pixel
                     entities[i].Components.DebugRender(graphics);
                 }
             }
+            graphics.PopEffect(Effect);
             graphics.PopMatrix(Matrix);
             graphics.PopSurface(Surface);
             graphics.End();
