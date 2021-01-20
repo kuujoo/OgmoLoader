@@ -8,6 +8,11 @@ namespace kuujoo.Pixel
 {
     public class SpriteRenderer : Component
     {
+        public enum PlayMode
+        {
+            Loop,
+            Once,
+        }
         public Vector2 Scale { get; set; }
         public bool FlipX { get; set; }
         public int AnimationIndex { 
@@ -37,6 +42,7 @@ namespace kuujoo.Pixel
         int _frameIndex = 0;
         bool _play = false;
         float _frameTimer = 0.0f;
+        PlayMode _mode;
         public SpriteRenderer()
         {
             Scale = Vector2.One;
@@ -54,6 +60,10 @@ namespace kuujoo.Pixel
                 {
                     FrameIndex += 1;
                     _frameTimer = CurrentFrame.Duration;
+                }
+                if(_mode == PlayMode.Once && FrameIndex >= Sprite.Animations[_animationIndex].Frames.Count - 1)
+                {
+                    Stop();
                 }
             }
         }
@@ -77,9 +87,10 @@ namespace kuujoo.Pixel
             b.Location -= Sprite.Pivot.ToPoint();
             return bounds.Intersects(b);
         }
-        public void Play(string name)
+        public void Play(string name, PlayMode mode = PlayMode.Loop)
         {
-            for(var i = 0; i < Sprite.Animations.Count;i++)
+            _mode = mode;
+            for (var i = 0; i < Sprite.Animations.Count;i++)
             {
                 if(Sprite.Animations[i].Name == name)
                 {
