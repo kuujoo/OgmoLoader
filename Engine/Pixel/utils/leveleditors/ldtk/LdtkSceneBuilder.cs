@@ -55,6 +55,13 @@ namespace kuujoo.Pixel
         {
             var defs = _world.Defs;
             BeginRoom(level.WorldX, level.WorldY, level.PxWid, level.PxHei);
+            BuildTiles(level);
+            BuildEntities(level); 
+            EndRoom();
+        }
+        void BuildTiles(LdtkLevel level)
+        {
+            var defs = _world.Defs;
             for (int i = 0; i < level.LayerInstances.Length; i++)
             {
                 var depth = (level.LayerInstances.Length - 1) - i;
@@ -74,7 +81,16 @@ namespace kuujoo.Pixel
                     }
                     EndLayer();
                 }
-                else if (layer.__type == LdtkLayerTypes.Entities)
+            }
+        }
+        void BuildEntities(LdtkLevel level)
+        {
+            var defs = _world.Defs;
+            for (int i = 0; i < level.LayerInstances.Length; i++)
+            {
+                var depth = (level.LayerInstances.Length - 1) - i;
+                var layer = level.LayerInstances[i];
+                if (layer.__type == LdtkLayerTypes.Entities)
                 {
                     BeginEntityLayer(depth, layer.__identifier);
                     for (var e = 0; e < layer.EntityInstances.Length; e++)
@@ -88,7 +104,7 @@ namespace kuujoo.Pixel
                             settings.SetPoint("Pivot", new Point((int)(entity_define.PivotX * entity_define.Width), (int)(entity_define.PivotY * entity_define.Height)));
                         }
 
-                        for (var ii = 0; ii < entity.FieldInstances.Length;ii++)
+                        for (var ii = 0; ii < entity.FieldInstances.Length; ii++)
                         {
                             var field = entity.FieldInstances[ii];
                             SetField(field.__identifier, field.__type, field.__value, ref settings);
@@ -99,7 +115,6 @@ namespace kuujoo.Pixel
                     EndLayer();
                 }
             }
-            EndRoom();
         }
         public void SetField(string identifier, string type, dynamic value, ref Settings settings)
         {
@@ -131,6 +146,29 @@ namespace kuujoo.Pixel
             {
                 var level = levels[l];
                 BuildRoom(level);
+            }
+        }
+        public override void BuildTiles()
+        {
+            var levels = _world.Levels;
+            for (var l = 0; l < levels.Length; l++)
+            {
+                var level = levels[l];
+                BuildTiles(level);
+            }
+        }
+        public override void BuildEntitiesInRoomAt(int x, int y)
+        {
+            var levels = _world.Levels;
+            for (var l = 0; l < levels.Length; l++)
+            {
+                var level = levels[l];
+                var r = new Rectangle(level.WorldX, level.WorldY, level.PxWid, level.PxHei);
+                if (r.Contains(x, y))
+                {
+                    BuildEntities(level);
+                    return;
+                }
             }
         }
     }

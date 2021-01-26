@@ -61,6 +61,12 @@ namespace kuujoo.Pixel
         void BuildRoom(OgmoLevel level)
         {
             BeginRoom(level.OffsetX, level.OffsetY, level.Width, level.Height);
+            BuildTiles(level);
+            BuildEntities(level);
+            EndRoom();
+        }
+        public void BuildTiles(OgmoLevel level)
+        {
             for (var j = 0; j < level.Layers.Length; j++)
             {
                 var layer = level.Layers[j];
@@ -84,7 +90,14 @@ namespace kuujoo.Pixel
                     }
                     EndLayer();
                 }
-                else if (layer.Type == OgmoLayerType.Entity)
+            }
+        }
+        public void BuildEntities(OgmoLevel level)
+        {
+            for (var j = 0; j < level.Layers.Length; j++)
+            {
+                var layer = level.Layers[j];
+                if (layer.Type == OgmoLayerType.Entity)
                 {
                     BeginEntityLayer(j, layer.Name);
                     for (var e = 0; e < layer.Entities.Length; e++)
@@ -100,7 +113,6 @@ namespace kuujoo.Pixel
                     EndLayer();
                 }
             }
-            EndRoom();
         }
         public override void Build()
         {
@@ -119,6 +131,25 @@ namespace kuujoo.Pixel
                 {
                     BuildRoom(_levels[i]);
                 }
+            }
+        }
+        public override void BuildEntitiesInRoomAt(int x, int y)
+        {
+            for (var i = 0; i < _levels.Count; i++)
+            {
+                var r = new Rectangle(_levels[i].OffsetX, _levels[i].OffsetY, _levels[i].Width, _levels[i].Height);
+                if (r.Contains(x, y))
+                {
+                    BuildEntities(_levels[i]);
+                }
+            }
+        }
+        public override void BuildTiles()
+        {
+            if (!VerifyLayers(_levels)) return;
+            for (var i = 0; i < _levels.Count; i++)
+            {
+                BuildTiles(_levels[i]);
             }
         }
     }

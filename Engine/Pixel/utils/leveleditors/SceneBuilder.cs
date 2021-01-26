@@ -40,7 +40,9 @@ namespace kuujoo.Pixel
             RoomRects.Add(new Rectangle(x, y, w, h));
         }
         public abstract void Build();
+        public abstract void BuildTiles();
         public abstract void BuildRoomAt(int x, int y);
+        public abstract void BuildEntitiesInRoomAt(int x, int y);
 
         protected void BeginTileLayer(int id, string name, int width, int height, int offsetx, int offsety, Tileset tileset)
         {
