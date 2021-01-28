@@ -13,6 +13,7 @@ namespace kuujoo.Pixel
         Dictionary<string, string> _sValues = new Dictionary<string, string>();
         Dictionary<string, string[]> _sArrayValues = new Dictionary<string, string[]>();
         Dictionary<string, Point> _pointValues = new Dictionary<string, Point>();
+        Dictionary<string, Vector2> _vectorValues = new Dictionary<string, Vector2>();
         public void SetBool(string key, bool value)
         {
             _bValues[key] = value;
@@ -40,6 +41,10 @@ namespace kuujoo.Pixel
         {
             _pointValues[key] = point;
         }
+        public void SetVector(string key, Vector2 vector)
+        {
+            _vectorValues[key] = vector;
+        }
         public bool GetBool(string key)
         {
             return _bValues[key];
@@ -50,11 +55,25 @@ namespace kuujoo.Pixel
         }
         public string GetString(string key)
         {
-            return _sValues[key];
+            if (_sValues.ContainsKey(key))
+            {
+                return _sValues[key];
+            }
+            else
+            {
+                return null;
+            }
         }
         public string[] GetArrayString(string key)
         {
-            return _sArrayValues[key];
+            if (_sArrayValues.ContainsKey(key))
+            {
+                return _sArrayValues[key];
+            }
+            else
+            {
+                return null;
+            }
         }
         public Point GetPoint(string key)
         {
