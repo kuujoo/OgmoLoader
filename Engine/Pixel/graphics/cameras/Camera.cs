@@ -124,7 +124,7 @@ namespace kuujoo.Pixel
         {
             return Priority.CompareTo(other.Priority);
         }
-        public virtual void Render(Graphics graphics, EntityList entities, bool debugrender)
+        public void BeginRender(Graphics graphics)
         {
             graphics.PushSurface(Surface);
             graphics.PushMatrix(Matrix);
@@ -132,10 +132,15 @@ namespace kuujoo.Pixel
             graphics.Begin();
             graphics.Device.Clear(BackgroundColor);
             graphics.Camera = this;
-            if(Effect != null)
+            if (Effect != null)
             {
                 Effect.CurrentTechnique.Passes[0].Apply();
             }
+        }
+        public virtual void Render(Graphics graphics, EntityList entities, bool debugrender)
+        {
+
+            BeginRender(graphics);
 
             for(var i = 0; i < entities.Count; i++)
             {
@@ -149,6 +154,10 @@ namespace kuujoo.Pixel
                     entities[i].Components.DebugRender(graphics);
                 }
             }
+            EndRender(graphics);
+        }
+        public void EndRender(Graphics graphics)
+        {
             graphics.PopEffect(Effect);
             graphics.PopMatrix(Matrix);
             graphics.PopSurface(Surface);
