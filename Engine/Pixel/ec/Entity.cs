@@ -21,7 +21,6 @@ namespace kuujoo.Pixel
             Components = new ComponentList();
             Transform = new Transform();
         }
-        public virtual void Initialize() { }
         public void SetEnabled(bool enabled)
         {
             _enabled = enabled;
@@ -30,8 +29,8 @@ namespace kuujoo.Pixel
         {
             component.Entity = this;
             Components.Add(component);
-            component.AddedToEntity();
             component.Initialize();
+            component.AddedToEntity();
             return component;
         }
         public T GetComponent<T>() where T : class

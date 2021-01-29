@@ -150,7 +150,6 @@ namespace kuujoo.Pixel
         {
             entity.Scene = this;
             entity.Depth = depth;
-            entity.Initialize();
             Entities.Add(entity);
             return entity;
         }
