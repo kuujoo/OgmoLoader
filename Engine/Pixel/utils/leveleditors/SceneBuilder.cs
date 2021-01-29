@@ -1,22 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace kuujoo.Pixel
 {
-    public interface ITilemapBuilder
-    {
-        TilemapRenderer Build(int width, int height, Tileset tileset);
-    }
-
     public abstract class SceneBuilder
     {
+        public Action<Entity> EntityBuilt;
         public List<Rectangle> RoomRects { get; private set; }
         protected Scene _scene;
         int _entityDepth = 0;
         TilemapRenderer _activeTilemap = null;
         Dictionary<string, Tileset> _tilesets = new Dictionary<string, Tileset>();
-        Dictionary<string, int> _gridColliders = new Dictionary<string, int>();
-        Dictionary<string, ITilemapBuilder> _tilemapbuilders = new Dictionary<string, ITilemapBuilder>();
+        Dictionary<string, int> _wantedGridColliders = new Dictionary<string, int>();
+
+        Dictionary<string, TilemapRenderer> _tilemaps = new Dictionary<string, TilemapRenderer>();
+        Dictionary<string, GridCollider> _gridColliders = new Dictionary<string, GridCollider>();
         GridCollider _activeGridCollider;
         public SceneBuilder(Scene scene)
         {
@@ -27,13 +26,9 @@ namespace kuujoo.Pixel
         {
             _tilesets[key] = tileset;
         }
-        public void AddTilemapBuilder(string key, ITilemapBuilder builder)
-        {
-            _tilemapbuilders[key] = builder;
-        }
         public void AddGridCollider(string key, int mask)
         {
-            _gridColliders[key] = mask;
+            _wantedGridColliders[key] = mask;
         }
         public void AddRoomBounds(int x, int y, int w, int h)
         {
@@ -46,28 +41,22 @@ namespace kuujoo.Pixel
 
         protected void BeginTileLayer(int id, string name, int width, int height, int offsetx, int offsety, Tileset tileset)
         {
-            var t = _scene.CreateEntity(id);
-            t.Transform.SetPosition(offsetx, offsety);
-            if (_tilemapbuilders.ContainsKey(name))
-            {
-                _activeTilemap = t.AddComponent(_tilemapbuilders[name].Build(width, height, tileset));
+            if(!_tilemaps.TryGetValue(name, out _activeTilemap)) {
+                var t = _scene.CreateEntity(id);
+                t.Transform.SetPosition(offsetx, offsety);
+                _activeTilemap = t.AddComponent(new TilemapRenderer(width, height, tileset));          
+                _tilemaps[name] = _activeTilemap;
             }
-            else
-            {
-                _activeTilemap = t.AddComponent(new TilemapRenderer(width, height, tileset));
-            }
+
             int mask;
-            if(_gridColliders.TryGetValue(name, out mask))
+            if (_wantedGridColliders.TryGetValue(name, out mask))
             {
-                _activeGridCollider = t.AddComponent(new GridCollider(width, height, tileset.TileWidth, tileset.TileHeight));
-                _activeGridCollider.Mask = mask;
+                if (!_gridColliders.TryGetValue(name, out _activeGridCollider))
+                {
+                    _activeGridCollider = _activeTilemap.Entity.AddComponent(new GridCollider(width, height, tileset.TileWidth, tileset.TileHeight));
+                    _activeGridCollider.Mask = mask;
+                }
             }
-        }
-        protected void BeginRoom(int x, int y, int width, int height)
-        {
-        }
-        protected void EndRoom()
-        {
 
         }
         protected Tileset GetTileset(string tileset_name)
@@ -96,6 +85,8 @@ namespace kuujoo.Pixel
             var component = Engine.Instance.Reflection.BuildComponent(entity);
             e.AddComponent(injectsettings);
             e.AddComponent(component);
+
+            EntityBuilt?.Invoke(e);
             return e;
         }
         protected void EndLayer()

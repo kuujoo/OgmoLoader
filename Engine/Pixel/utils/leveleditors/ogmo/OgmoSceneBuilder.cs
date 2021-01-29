@@ -60,10 +60,8 @@ namespace kuujoo.Pixel
         }
         void BuildRoom(OgmoLevel level)
         {
-            BeginRoom(level.OffsetX, level.OffsetY, level.Width, level.Height);
             BuildTiles(level);
             BuildEntities(level);
-            EndRoom();
         }
         public void BuildTiles(OgmoLevel level)
         {

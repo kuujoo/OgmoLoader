@@ -60,11 +60,8 @@ namespace kuujoo.Pixel
         }
         void BuildRoom(ldtk.Level level)
         {
-            var defs = _world.Defs;
-            BeginRoom((int)level.WorldX, (int)level.WorldY, (int)level.PxWid, (int)level.PxHei);
             BuildTiles(level);
             BuildEntities(level); 
-            EndRoom();
         }
         void BuildTiles(ldtk.Level level)
         {
