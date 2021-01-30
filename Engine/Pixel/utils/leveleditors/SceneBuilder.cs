@@ -55,6 +55,7 @@ namespace kuujoo.Pixel
                 {
                     _activeGridCollider = _activeTilemap.Entity.AddComponent(new GridCollider(width, height, tileset.TileWidth, tileset.TileHeight));
                     _activeGridCollider.Mask = mask;
+                    _gridColliders[name] = _activeGridCollider;
                 }
             }
 
