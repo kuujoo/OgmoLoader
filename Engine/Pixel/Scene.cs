@@ -12,7 +12,6 @@ namespace kuujoo.Pixel
         public EntityList Entities { get; private set; }
         public Physics Physics { get; private set; }
         public Effect FinalEffect { get; set; }
-        public Color ClearColor { get; set; }
         public Surface ApplicationSurface { get; set; }
         public RuntimeContentManager Content { get; private set; }
         public bool Paused;
@@ -21,7 +20,6 @@ namespace kuujoo.Pixel
         protected Rectangle finalDestinationRect;
         public Scene(int game_width, int game_height)
         {
-            ClearColor = Color.Aquamarine;
             Content = new RuntimeContentManager();
             Physics = new Physics();
             ApplicationSurface = new Surface(game_width, game_height);
