@@ -4,9 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace kuujoo.Pixel
 {
-    public class Component : IComparable<Component>
+    public class Component : IComparable<Component>, IRenderable
     {
-        public bool Enabled => Entity.Enabled && _enabled;
+        public int Depth => Entity.Depth;
+        public bool Enabled => (Entity == null || Entity.Enabled) && _enabled;
         public Entity Entity {get; set;}
         public Scene Scene => Entity.Scene;
         public int UpdateOrder { get; private set; }

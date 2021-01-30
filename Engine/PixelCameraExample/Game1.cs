@@ -56,16 +56,16 @@ namespace kuujoo.Pixel
             InitInputs();
 
             var cameraEntity = CreateEntity(0);
-            _camera = cameraEntity.AddComponent(new TagCamera(384, 216)
+            _camera = cameraEntity.AddComponent(new LayerCamera(384, 216)
             {
-                RenderTag = 1,
+                RenderLayer= 1,
                 Priority = 0
             });
 
             var cameraEntity2 = CreateEntity(0);
-            _camera2 = cameraEntity2.AddComponent(new TagCamera(384, 216)
+            _camera2 = cameraEntity2.AddComponent(new LayerCamera(384, 216)
             {
-                RenderTag = 2,
+                RenderLayer = 2,
                 Priority = 1
             });
             _camera.SetCenterOrigin();
@@ -81,7 +81,7 @@ namespace kuujoo.Pixel
                     var e = CreateEntity(0);
                     e.AddComponent(new RectangleRenderer(Color.White));
                     e.Transform.SetPosition(i * 12, j * 12);
-                    e.Tag = 1;
+                    e.Depth = 1;
                 }
             }
 
@@ -92,7 +92,7 @@ namespace kuujoo.Pixel
                     var e = CreateEntity(0);
                     e.AddComponent(new RectangleRenderer(Color.Red));
                     e.Transform.SetPosition(i * 12, j * 12);
-                    e.Tag = 2;
+                    e.Depth = 2;
                 }
             }
         }

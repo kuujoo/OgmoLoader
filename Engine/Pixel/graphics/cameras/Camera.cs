@@ -7,6 +7,7 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
+
     public enum CameraType
     {
         Base,
@@ -137,24 +138,18 @@ namespace kuujoo.Pixel
                 Effect.CurrentTechnique.Passes[0].Apply();
             }
         }
-        public virtual void Render(Graphics graphics, EntityList entities, bool debugrender)
+        public virtual void Render(Graphics graphics, IRenderable renderable)
         {
-
-            BeginRender(graphics);
-
-            for(var i = 0; i < entities.Count; i++)
-            {
-                entities[i].Components.Render(graphics);
+            if(renderable.IsVisibleFromCamera(this)) {
+                renderable.Render(graphics);
             }
-
-            if (debugrender)
+        }
+        public void DebugRender(Graphics graphics, IRenderable renderable)
+        {
+            if(renderable.IsVisibleFromCamera(this))
             {
-                for (var i = 0; i < entities.Count; i++)
-                {
-                    entities[i].Components.DebugRender(graphics);
-                }
+                renderable.DebugRender(graphics);
             }
-            EndRender(graphics);
         }
         public void EndRender(Graphics graphics)
         {

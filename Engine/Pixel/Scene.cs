@@ -85,20 +85,31 @@ namespace kuujoo.Pixel
         }
         public void Render()
         {
-            // FIXME: sort only when needed
             _cameras.Sort();
             var gfx = Engine.Instance.Graphics;
             for (var i = 0; i < _cameras.Count; i++)
             {
                 if (_cameras[i].Enabled)
                 {
-                    _cameras[i].Render(gfx, Entities, DebugRender);
+                    _cameras[i].BeginRender(gfx);
+                    for(var e = 0; e < Entities.Count; e++)
+                    {
+                        var entity = Entities[e];
+                        for (var c = 0; c < entity.Components.Count; c++)
+                        {
+                            var renderable = entity.Components[c];
+                            _cameras[i].Render(gfx, renderable);
+                            if (DebugRender)
+                            {
+                                _cameras[i].DebugRender(gfx, renderable);
+                            }
+                        }
+                    }
+                    _cameras[i].EndRender(gfx);
                 }
             }
-
             // Final render
-            FinalRender(gfx);
-         
+            FinalRender(gfx);        
         }
         public virtual void FinalRender(Graphics gfx)
         {
