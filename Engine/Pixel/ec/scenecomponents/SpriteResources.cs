@@ -2,90 +2,43 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.IO;
-using kuujoo.Pixel.StbImageSharp;
 
 namespace kuujoo.Pixel
 {
+
+
     public class SpriteResources : SceneComponent
     {
-        public TexturePage[] TexturePages => _texturePages;
-        TexturePage[] _texturePages;
-        Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>(); 
-        SpritePacker _packer;
+        public TexturePage[] TexturePages { get; private set; }
+        Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>();
+        Dictionary<string, BMFont> _fonts = new Dictionary<string, BMFont>();
         string _spritedirectory;
-        static string[] _wildcards = { "*.png", "*.jpg", "*.jpeg", "*.bmp" };
-        struct SpriteInfo
+        static string[] _imageExtensions = { "*.ase", "*.png", "*.jpg", "*.jpeg", "*.bmp" };
+        public SpriteResources(int texturepagewidth, int texturepageheight, string spritedirectory, string fontDirectory = "")
         {
-            public string Name;
-            public AseSprite AseSprite;
-            public int PackId;
-            public int Width;
-            public int Height;
-        }
-        public SpriteResources(int texturepagewidth, int texturepageheight, string spritedirectory)
-        {
-            _packer = new SpritePacker(texturepagewidth, texturepageheight);
             _spritedirectory = spritedirectory;
+          
             BuildSprites();
         }
         void BuildSprites()
         {
-            int packid = 0;
-            List<SpriteInfo> spriteInfo = new List<SpriteInfo>(20);
-            { // Ase load
-                var files = Directory.GetFiles(_spritedirectory, "*.ase");
-                for (var i = 0; i < files.Length; i++)
+            TexturePagesBuilder builder = new TexturePagesBuilder();
+            List<TextureInfo> spriteInfo;
+            { 
+                for (var w = 0; w < _imageExtensions.Length; w++)
                 {
-                    var ase = new AseSprite(files[i]);
-                    spriteInfo.Add(new SpriteInfo()
-                    {
-                        AseSprite = ase,
-                        Name = Path.GetFileNameWithoutExtension(files[i]),
-                        PackId = packid,
-                        Width = ase.Width,
-                        Height = ase.Height
-
-                    });
-                    for (var j = 0; j < spriteInfo[i].AseSprite.FrameCount; j++)
-                    {
-                        _packer.Add(packid, ase.Width, ase.Height, spriteInfo[i].AseSprite.Frames[j].Pixels);
-                        packid++;
-                    }
-                }
-            }
-            { // PNG load
-                for (var w = 0; w < _wildcards.Length; w++)
-                {
-                    var files = Directory.GetFiles(_spritedirectory, _wildcards[w] );
+                    var files = Directory.GetFiles(_spritedirectory, _imageExtensions[w] );
                     if (files.Length > 0)
                     {
                         for (var i = 0; i < files.Length; i++)
                         {
-                            using (var stream = File.OpenRead(files[i]))
-                            {
-                                ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-                                Color[] pixels = new Color[image.Width * image.Height];
-                                for (var ii = 0; ii < image.Width * image.Height; ii++)
-                                {
-                                    pixels[ii] = new Color(image.Data[ii * 4 + 0], image.Data[ii * 4 + 1], image.Data[ii * 4 + 2], image.Data[ii * 4 + 3]);
-                                }
-                                var info = new SpriteInfo()
-                                {
-                                    Name = Path.GetFileNameWithoutExtension(files[i]),
-                                    PackId = packid,
-                                    Width = image.Width,
-                                    Height = image.Height,
-                                };
-                                spriteInfo.Add(info);
-                                _packer.Add(packid, info.Width, info.Height, pixels);
-                                packid++;
-                            }
+                            builder.Add(files[i]);
                         }
                     }
                 }
             }
 
-            _texturePages = _packer.Pack();
+            TexturePages = builder.Build(out spriteInfo);
 
             {
                 for (var i = 0; i < spriteInfo.Count; i++)
@@ -108,14 +61,14 @@ namespace kuujoo.Pixel
                                 };
                                 for (int f = spriteInfo[i].AseSprite.Tags[t].From; f <= spriteInfo[i].AseSprite.Tags[t].To; f++)
                                 {
-                                    for (var p = 0; p < _texturePages.Length; p++)
+                                    for (var p = 0; p < TexturePages.Length; p++)
                                     {
                                         Rectangle rect;
-                                        if (_texturePages[p].SubTextures.TryGetValue(spriteInfo[i].PackId + f, out rect))
+                                        if (TexturePages[p].SubTextures.TryGetValue(spriteInfo[i].PackId + f, out rect))
                                         {
                                             var frame = new Sprite.Frame()
                                             {
-                                                Texture = _texturePages[p].Texture,
+                                                Texture = TexturePages[p].Texture,
                                                 Rect = rect,
                                                 Duration = spriteInfo[i].AseSprite.Frames[f].Duration / 1000.0f
                                             };
@@ -135,14 +88,14 @@ namespace kuujoo.Pixel
                             };
                             for (int f = 0; f < spriteInfo[i].AseSprite.Frames.Count; f++)
                             {
-                                for (var p = 0; p < _texturePages.Length; p++)
+                                for (var p = 0; p < TexturePages.Length; p++)
                                 {
                                     Rectangle rect;
-                                    if (_texturePages[p].SubTextures.TryGetValue(spriteInfo[i].PackId + f, out rect))
+                                    if (TexturePages[p].SubTextures.TryGetValue(spriteInfo[i].PackId + f, out rect))
                                     {
                                         var frame = new Sprite.Frame()
                                         {
-                                            Texture = _texturePages[p].Texture,
+                                            Texture = TexturePages[p].Texture,
                                             Rect = rect,
                                             Duration = spriteInfo[i].AseSprite.Frames[f].Duration / 1000.0f
                                         };
@@ -158,14 +111,14 @@ namespace kuujoo.Pixel
                     else
                     {
                         var sprite = new Sprite();
-                        for (var p = 0; p < _texturePages.Length; p++)
+                        for (var p = 0; p < TexturePages.Length; p++)
                         {
                             Rectangle rect;
-                            if (_texturePages[p].SubTextures.TryGetValue(spriteInfo[i].PackId, out rect))
+                            if (TexturePages[p].SubTextures.TryGetValue(spriteInfo[i].PackId, out rect))
                             {
                                 var frame = new Sprite.Frame()
                                 {
-                                    Texture = _texturePages[p].Texture,
+                                    Texture = TexturePages[p].Texture,
                                     Rect = rect,
                                     Duration = 0.0f
                                 };
@@ -190,14 +143,14 @@ namespace kuujoo.Pixel
         public override void CleanUp()
         {
             _sprites.Clear();
-            if (_texturePages != null)
+            if (TexturePages != null)
             {
-                for (var i = 0; i < _texturePages.Length; i++)
+                for (var i = 0; i < TexturePages.Length; i++)
                 {
-                    _texturePages[i].Dispose();
+                    TexturePages[i].Dispose();
                 }
             }
-            _texturePages = null;
+            TexturePages = null;
         }
     }
 }

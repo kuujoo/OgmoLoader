@@ -3,6 +3,22 @@ using System.Collections;
 
 namespace kuujoo.Pixel
 {
+    public class TextComponent : Component
+    {
+        public BMFont Font { get; set; }
+        public override void Initialize()
+        {
+        }
+        public override bool IsVisibleFromCamera(Camera camera)
+        {
+            return true;
+        }
+        public override void Render(Graphics graphics)
+        {
+            base.Render(graphics);
+            graphics.DrawText(Font, "Hello World", Entity.Transform.Position.ToVector2(), Color.White);
+        }
+    }
     public class Game1 : Engine
     {
         public Game1() : base()
@@ -14,7 +30,8 @@ namespace kuujoo.Pixel
             base.Initialize();
 
             var room = new Scene(384, 216);
-            var resources = room.AddSceneComponent(new SpriteResources(2048, 2048, "Content/Sprites")) as SpriteResources;
+            var spriteResources = room.AddSceneComponent(new SpriteResources(2048, 2048, "Content/Sprites"));
+            var fontResources = room.AddSceneComponent(new FontResources(2048, 2048, "Content/Fonts"));
             var cameraEntity = room.CreateEntity(0);
             var camera = cameraEntity.AddComponent(new Camera(384, 216)
             {
@@ -26,7 +43,7 @@ namespace kuujoo.Pixel
             animated_entity.Transform.SetPosition(12, 12);
             var sprite = animated_entity.AddComponent(new SpriteRenderer()
             {
-                Sprite = resources.GetSprite("animation")
+                Sprite = spriteResources.GetSprite("animation")
             });
             sprite.Play("ColorBox");
 
@@ -35,37 +52,43 @@ namespace kuujoo.Pixel
             e0.Transform.SetPosition(200, 100);
             e0.AddComponent(new SpriteRenderer()
             {
-                Sprite = resources.GetSprite("checker")
+                Sprite = spriteResources.GetSprite("checker")
             });
 
             var e1 = room.CreateEntity(0);
             e1.Transform.SetPosition(100, 100);
             e1.AddComponent(new SpriteRenderer()
             {
-                Sprite = resources.GetSprite("circle")
+                Sprite = spriteResources.GetSprite("circle")
             });
 
             var e2 = room.CreateEntity(0);
             e2.Transform.SetPosition(130, 140);
             e2.AddComponent(new SpriteRenderer()
             {
-                Sprite = resources.GetSprite("png_sprite")
+                Sprite = spriteResources.GetSprite("png_sprite")
             });
 
             var e3 = room.CreateEntity(0);
             e3.Transform.SetPosition(130, 12);
             e3.AddComponent(new SpriteRenderer()
             {
-                Sprite = resources.GetSprite("jpg_sprite")
+                Sprite = spriteResources.GetSprite("jpg_sprite")
             });
 
             var e4 = room.CreateEntity(0);
             e4.Transform.SetPosition(200, 12);
             e4.AddComponent(new SpriteRenderer()
             {
-                Sprite = resources.GetSprite("bmp_sprite")
+                Sprite = spriteResources.GetSprite("bmp_sprite")
             });
 
+            var e5 = room.CreateEntity(0);
+            e0.Transform.SetPosition(10, 120);
+            e0.AddComponent(new TextComponent()
+            {
+                Font = fontResources.GetFont("fnt")
+            });
             Scene = room;
         }
     }

@@ -126,5 +126,15 @@ namespace kuujoo.Pixel
         {
             SpriteBatch.Draw(texture, at, Color.White);
         }
+        public void DrawText(BMFont font, string text, Vector2 position, Color color)
+        {
+            font.ProcessChars(text, (actual, drawPos, data, previous) => {
+                var sourceRectangle = new Rectangle(data.X, data.Y, data.Width, data.Height);
+                var destRectangle = new Rectangle((int)(position.X + drawPos.X), (int)(position.Y + drawPos.Y),
+                    (int)(data.Width), (int)(data.Height));
+
+                SpriteBatch.Draw(font.Texture, destRectangle, sourceRectangle, color);
+            }, null);
+        }
     }
 }
