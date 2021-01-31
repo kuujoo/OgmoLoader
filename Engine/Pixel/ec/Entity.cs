@@ -6,11 +6,10 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
-    public class Entity : IComparable<Entity>
+    public class Entity
     {
         public Transform Transform { get; private set; }
         public bool Enabled => _enabled;
-        public int Depth { get; set; }
         public string Name { get; set; }
         public int Tag { get; set; }
         public ComponentList Components { get; private set; }
@@ -40,19 +39,6 @@ namespace kuujoo.Pixel
         public List<T> GetComponents<T>() where T : class
         {
             return Components.GetItemsOfType<T>();
-        }
-        public void SetDepth(int depth)
-        {
-            if(Depth != depth)
-            {
-                Depth = depth;
-                Scene.Entities.MarkListUnsorted();
-            }
-        }
-        public int CompareTo(Entity other)
-        {
-            var compare = Depth.CompareTo(other.Depth);
-            return compare;
         }
         public ICoroutine StartCoroutine(IEnumerator enumerator)
         {

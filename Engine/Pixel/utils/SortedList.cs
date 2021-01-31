@@ -2,11 +2,6 @@
 
 namespace kuujoo.Pixel
 {
-    public interface ISortedListVisitor<T>
-    {
-        public void Visit(T item);
-    }
-
     public class SortedList<T>
     {
         protected List<T> _items = new List<T>(20);
@@ -14,25 +9,6 @@ namespace kuujoo.Pixel
         List<T> _itemsToRemove = new List<T>(20);
         public int Count => _items.Count;
         public T this[int idx] => _items[idx];
-        bool _sort;
-        public void MarkListUnsorted()
-        {
-            _sort = true;
-        }
-        public void AcceptVisitor(ISortedListVisitor<T> visitor, bool visit_to_be_added_items)
-        {
-            for(var i = 0; i < _items.Count; i++)
-            {
-                visitor.Visit(_items[i]);
-            }
-            if (visit_to_be_added_items)
-            {
-                for (var i = 0; i < _itemsToAdd.Count; i++)
-                {
-                    visitor.Visit(_itemsToAdd[i]);
-                }
-            }
-        }
         public I GetItemOfType<I>() where I : class
         {
             for(var i = 0; i < _items.Count; i++)
@@ -83,12 +59,6 @@ namespace kuujoo.Pixel
                     _items.Add(_itemsToAdd[i]);
                 }
                 _itemsToAdd.Clear();
-                MarkListUnsorted();
-            }
-            if(_sort)
-            {
-                _items.Sort();
-                _sort = false;
             }
         }
         public void UpdateRemoveList()

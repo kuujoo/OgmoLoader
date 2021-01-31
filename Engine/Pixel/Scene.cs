@@ -8,9 +8,9 @@ namespace kuujoo.Pixel
 {
     public class Scene : IDisposable
     {
+        public Tracker Tracker { get; private set; }
         public bool DebugRender { get; set; }
         public EntityList Entities { get; private set; }
-        public Physics Physics { get; private set; }
         public Effect FinalEffect { get; set; }
         public Surface ApplicationSurface { get; set; }
         public RuntimeContentManager Content { get; private set; }
@@ -21,12 +21,12 @@ namespace kuujoo.Pixel
         public Scene(int game_width, int game_height)
         {
             Content = new RuntimeContentManager();
-            Physics = new Physics();
             ApplicationSurface = new Surface(game_width, game_height);
             Entities = new EntityList();
+            DebugRender = false;
+            Tracker = new Tracker();
             UpdateDrawRect();
             Initialize();
-            DebugRender = false;
         }
         public virtual void Initialize()
         {
@@ -56,13 +56,19 @@ namespace kuujoo.Pixel
             {
                 _sceneComponents[i].Update();
             }
-
             Entities.UpdateLists();
-
             for (var i = 0; i < Entities.Count; i++)
             {
                 Entities[i].Components.UpdateLists();
-                Entities[i].Components.Update();
+            }
+
+            var updateables = Tracker.GetUpdateables();
+            for(var i = 0; i < updateables.Count; i++)
+            {
+                if (updateables[i].Enabled)
+                {
+                    updateables[i].Update();
+                }
             }
         }
         public void OnGraphicsDeviceReset()
@@ -85,17 +91,17 @@ namespace kuujoo.Pixel
         {
             _cameras.Sort();
             var gfx = Engine.Instance.Graphics;
+            var renderables = Tracker.GetRenderables();
             for (var i = 0; i < _cameras.Count; i++)
             {
                 if (_cameras[i].Enabled)
                 {
                     _cameras[i].BeginRender(gfx);
-                    for(var e = 0; e < Entities.Count; e++)
+                    for(var r = 0; r < renderables.Count; r++)
                     {
-                        var entity = Entities[e];
-                        for (var c = 0; c < entity.Components.Count; c++)
+                        var renderable = renderables[r];
+                        if(renderable.Enabled)
                         {
-                            var renderable = entity.Components[c];
                             _cameras[i].Render(gfx, renderable);
                             if (DebugRender)
                             {
@@ -151,14 +157,13 @@ namespace kuujoo.Pixel
             _cameras.Add(camera);
             return camera;
         }
-        public Entity CreateEntity(int depth)
+        public Entity CreateEntity()
         {
-            return AddEntity(new Entity(), depth);
+            return AddEntity(new Entity());
         }
-        public Entity AddEntity(Entity entity, int depth)
+        public Entity AddEntity(Entity entity)
         {
             entity.Scene = this;
-            entity.Depth = depth;
             Entities.Add(entity);
             return entity;
         }

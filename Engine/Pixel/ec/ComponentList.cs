@@ -2,38 +2,6 @@
 {
     public class ComponentList : SortedList<Component>
     {
-        public void Update()
-        {
-            for(var i = 0; i < _items.Count; i++)
-            {
-                if (_items[i].Enabled == true)
-                {
-                    _items[i].Update();
-                }
-            }
-        }
-        public void Render(Graphics gfx)
-        {
-            var camera = gfx.Camera;
-            for (var i = 0; i < _items.Count; i++)
-            {
-                if (_items[i].Enabled && _items[i].IsVisibleFromCamera(camera))
-                {
-                    _items[i].Render(gfx);
-                }
-            }
-        }
-        public void DebugRender(Graphics gfx)
-        {
-            var camera = gfx.Camera;
-            for (var i = 0; i < _items.Count; i++)
-            {
-                if (_items[i].Enabled && _items[i].IsVisibleFromCamera(camera))
-                {
-                    _items[i].DebugRender(gfx);
-                }
-            }
-        }
         public void OnGraphicsDeviceReset()
         {
             for (var i = 0; i < _items.Count; i++)

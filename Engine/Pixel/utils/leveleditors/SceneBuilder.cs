@@ -42,9 +42,10 @@ namespace kuujoo.Pixel
         protected void BeginTileLayer(int id, string name, int width, int height, int offsetx, int offsety, Tileset tileset)
         {
             if(!_tilemaps.TryGetValue(name, out _activeTilemap)) {
-                var t = _scene.CreateEntity(id);
+                var t = _scene.CreateEntity();
                 t.Transform.SetPosition(offsetx, offsety);
-                _activeTilemap = t.AddComponent(new TilemapRenderer(width, height, tileset));          
+                _activeTilemap = t.AddComponent(new TilemapRenderer(width, height, tileset));
+                _activeTilemap.Layer = id;
                 _tilemaps[name] = _activeTilemap;
             }
 
@@ -82,7 +83,8 @@ namespace kuujoo.Pixel
         }
         protected Entity CreateEntity(string entity, Settings injectsettings)
         {
-            var e = _scene.CreateEntity(_entityDepth);
+            injectsettings.Layer = _entityDepth;
+            var e = _scene.CreateEntity();
             var component = Engine.Instance.Reflection.BuildComponent(entity);
             e.AddComponent(injectsettings);
             e.AddComponent(component);

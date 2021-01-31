@@ -6,6 +6,7 @@ namespace kuujoo.Pixel
 {
     public class Settings : Component
     {
+        public int Layer { get; set; }
         public Action<string, int> IntChanged;
         public Action<string, bool> BoolChanged;
         Dictionary<string, int> _iValues = new Dictionary<string, int>();

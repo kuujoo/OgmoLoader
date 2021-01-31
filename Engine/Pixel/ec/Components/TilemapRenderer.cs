@@ -16,8 +16,9 @@ namespace kuujoo.Pixel
         void SetValue(int x, int y, byte value);
         void SetValueByIndex(int index, byte value);
     }
-    public class TilemapRenderer : Component, IGrid
+    public class TilemapRenderer : Component, IGrid, IRenderable
     {
+        public int Layer { get; set; }
         public int CellWidth => Tileset.TileWidth;
         public int CellHeight => Tileset.TileHeight;
         public static byte EmptyTile = 0;
@@ -50,11 +51,11 @@ namespace kuujoo.Pixel
         public override void OnGraphicsDeviceReset()
         {
         }
-        public override bool IsVisibleFromCamera(Camera camera)
+        public bool IsVisibleFromCamera(Camera camera)
         {
             return true;
         }
-        public override void Render(Graphics graphics)
+        public void Render(Graphics graphics)
         {
             if (Tileset == null) return;
             var gfx = Engine.Instance.Graphics;
@@ -77,6 +78,10 @@ namespace kuujoo.Pixel
                 }
             }
         }
+        public void DebugRender(Graphics graphics)
+        {
+
+        }
         public void SetValue(int x, int y, byte value)
         {
             var idx = y * _width_in_tiles + x;
@@ -85,9 +90,6 @@ namespace kuujoo.Pixel
         public void SetValueByIndex(int index, byte value)
         {
             _grid[index] = value;
-        }
-        public override void Update()
-        {
         }
     }
 }

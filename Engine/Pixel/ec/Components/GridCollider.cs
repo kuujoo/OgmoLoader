@@ -3,8 +3,9 @@ using System;
 
 namespace kuujoo.Pixel
 {
-    public class GridCollider : Collider, IGrid
+    public class GridCollider : Collider, IGrid, IRenderable
     {
+        public int Layer { get; set; }
         public int CellWidth => _cellW;
         public int CellHeight => _cellH;
         public override Rectangle Bounds => new Rectangle((Entity.Transform.Position), new Point(Width * _cellW, Height * _cellH));
@@ -53,13 +54,15 @@ namespace kuujoo.Pixel
             }
             return false;
         }
-        public override bool IsVisibleFromCamera(Camera camera)
+        public bool IsVisibleFromCamera(Camera camera)
         {
             return true;
         }
-        public override void DebugRender(Graphics graphics)
+        public void Render(Graphics graphics)
         {
-            base.Render(graphics);
+        }
+        public void DebugRender(Graphics graphics)
+        {
             var bounds = graphics.Camera.Bounds;
             bounds.Location -= Entity.Transform.Position;
             int left = Math.Clamp((int)Math.Floor((float)bounds.Left / _cellW), 0, Width);

@@ -10,7 +10,7 @@
 
         public override void Render(Graphics graphics, IRenderable renderable)
         {
-            if (renderable.Depth == RenderLayer)
+            if (renderable.Layer == RenderLayer)
             {
                 base.Render(graphics, renderable);
             }

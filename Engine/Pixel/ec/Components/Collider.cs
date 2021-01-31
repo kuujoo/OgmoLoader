@@ -44,6 +44,8 @@ namespace kuujoo.Pixel
         public static int Enemy = 1 << 6;
         public static int Death = 1 << 7;
         public static int Interactable = 1 << 8;
+        public static int Breakable = 1 << 9;
+        public static int Landable = 1 << 10;
     }
 
     public abstract class Collider : Component
@@ -57,16 +59,6 @@ namespace kuujoo.Pixel
         {
             Mask = 0;
         }
-        public override void Initialize()
-        {
-            base.Initialize();
-            Entity.Scene.Physics.RegisterCollider(this);
-        }
-        public override void CleanUp()
-        {
-            base.CleanUp();
-            Entity.Scene.Physics.UnregisterCollider(this);
-        }
         public override void TransformChanged(Transform transform)
         {
             Updated?.Invoke(this);
@@ -75,7 +67,7 @@ namespace kuujoo.Pixel
         {
             var bounds = Bounds;
             bounds.Location += offset;
-            var colliders = Entity.Scene.Physics.Check(ref bounds, mask);
+            var colliders = Entity.Scene.Tracker.GetNearestColliders(ref bounds, mask);
             for(var i = 0; i < colliders.Count; i++)
             {
                 var c = colliders[i];

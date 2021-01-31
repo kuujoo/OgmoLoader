@@ -2,8 +2,9 @@
 
 namespace kuujoo.Pixel
 {
-    public class BoxCollider : Collider
+    public class BoxCollider : Collider, IRenderable
     {
+        public int Layer => 0;
         public override Rectangle Bounds => new Rectangle((Entity.Transform.Position + _position), _size.ToPoint());
         Point _position;
         Vector2 _size;
@@ -43,13 +44,16 @@ namespace kuujoo.Pixel
             _size = rect.Size.ToVector2();
             Updated?.Invoke(this);
         }
-        public override bool IsVisibleFromCamera(Camera camera)
+        public bool IsVisibleFromCamera(Camera camera)
         {
             return camera.Bounds.Intersects(Bounds);
         }
-        public override void DebugRender(Graphics graphics)
+        public void DebugRender(Graphics graphics)
         {
             graphics.DrawHollowRect(Bounds, Color.Red);
+        }
+        public void Render(Graphics graphics)
+        {
         }
     }
 }

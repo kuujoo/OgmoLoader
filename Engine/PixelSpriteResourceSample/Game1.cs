@@ -16,7 +16,7 @@ namespace kuujoo.Pixel
         public override void Render(Graphics graphics)
         {
             base.Render(graphics);
-            graphics.DrawText(Font, "Hello World", Entity.Transform.Position.ToVector2(), Color.White);
+            graphics.DrawText(Font, "Hello World\nthis is text", Entity.Transform.Position.ToVector2(), Color.White);
         }
     }
     public class Game1 : Engine
@@ -84,8 +84,8 @@ namespace kuujoo.Pixel
             });
 
             var e5 = room.CreateEntity(0);
-            e0.Transform.SetPosition(10, 120);
-            e0.AddComponent(new TextComponent()
+            e5.Transform.SetPosition(10, 80);
+            e5.AddComponent(new TextComponent()
             {
                 Font = fontResources.GetFont("fnt")
             });

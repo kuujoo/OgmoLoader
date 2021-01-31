@@ -6,8 +6,9 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
-    public class SpriteRenderer : Component
+    public class SpriteRenderer : Component, IRenderable, kuujoo.Pixel.IUpdateable
     {
+        public int Layer { get; set; }
         public enum PlayMode
         {
             Loop,
@@ -49,7 +50,7 @@ namespace kuujoo.Pixel
             Frame = 0;
             FlipX = false;
         }
-        public override void Update()
+        public void Update()
         {
             if (Sprite == null) return;
 
@@ -67,19 +68,17 @@ namespace kuujoo.Pixel
                 }
             }
         }
-        public override void DebugRender(Graphics graphics)
+        public void DebugRender(Graphics graphics)
         {
-            base.DebugRender(graphics);
             graphics.DrawPoint(Entity.Transform.Position.ToVector2(), Color.Pink);
         }
-        public override void Render(Graphics graphics)
+        public void Render(Graphics graphics)
         {
-            base.Render(graphics);
             if (Sprite == null) return;
 
             graphics.DrawSpriteFrame(Entity.Transform.Position.ToVector2(), Sprite.Pivot, Scale, CurrentFrame, Color.White, FlipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None);  
         }
-        public override bool IsVisibleFromCamera(Camera camera)
+        public bool IsVisibleFromCamera(Camera camera)
         {
             var bounds = camera.Bounds;
             var b = CurrentFrame.Rect;
