@@ -48,6 +48,10 @@ namespace kuujoo.Pixel
         {
             return _keyboard.IsKeyReleased(key);
         }
+        public void Vibration(float strength, float time)
+        {
+            _gamePads[0].SetVibration(strength, strength, time);
+        }
         public override void Update()
         {
             _keyboard.Update();
