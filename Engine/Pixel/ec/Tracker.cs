@@ -72,6 +72,7 @@ namespace kuujoo.Pixel
             if (component is Collider)
             {
                 var collider = component as Collider;
+                _hash.Unregister(collider);
                 collider.Updated -= UpdateCollider;
             }
             _components[type].Remove(component);
