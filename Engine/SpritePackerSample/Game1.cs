@@ -4,15 +4,15 @@ using System.Collections;
 namespace kuujoo.Pixel
 {
 
-    public class TexturePagesRenderer : Component
+    public class TexturePagesRenderer : Component, IRenderable
     {
-        public override bool IsVisibleFromCamera(Camera camera)
+        public int Layer { get; set; }
+        public bool IsVisibleFromCamera(Camera camera)
         {
             return true;
         }
-        public override void Render(Graphics graphics)
+        public void Render(Graphics graphics)
         {
-            base.Render(graphics);
             var resources = Scene.GetSceneComponent<SpriteResources>();
             int y = 0;
             int x = 0;
@@ -25,6 +25,10 @@ namespace kuujoo.Pixel
                 }
                 graphics.DrawTexture(resources.TexturePages[i].Texture, new Vector2(Entity.Transform.Position.X + x, Entity.Transform.Position.Y + y));
             }
+        }
+        public void DebugRender(Graphics graphics)
+        {
+
         }
     }
     public class Game1 : Engine
@@ -39,16 +43,16 @@ namespace kuujoo.Pixel
             Screen.SetSize(1920, 1080);
             var room = new Scene(1920, 1080);
             var resources = room.AddSceneComponent(new SpriteResources(256, 256, "Content/Sprites"));
-            var cameraEntity = room.CreateEntity(0);
+            var cameraEntity = room.CreateEntity();
             var camera = cameraEntity.AddComponent(new Camera(1920, 1080)
             {
                 BackgroundColor = Color.Aquamarine
             });
             room.AddCamera(camera);
-            var texturepages_entity = room.CreateEntity(0);
+            var texturepages_entity = room.CreateEntity();
             texturepages_entity.AddComponent(new TexturePagesRenderer());
             texturepages_entity.Transform.SetPosition(12, 12);
-            room.AddEntity(texturepages_entity, 0);
+            room.AddEntity(texturepages_entity);
             Scene = room;
         }
     }

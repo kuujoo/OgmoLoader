@@ -3,21 +3,24 @@ using Microsoft.Xna.Framework.Input;
 
 namespace kuujoo.Pixel
 {
-    public class RectangleRenderer : Component
+    public class RectangleRenderer : Component, IRenderable
     {
+        public int Layer { get; set; }
         Color _color;
         public RectangleRenderer(Color color)
         {
             _color = color;
         }
-        public override bool IsVisibleFromCamera(Camera camera)
+        public bool IsVisibleFromCamera(Camera camera)
         {
             return true;
         }
-        public override void Render(Graphics graphics)
+        public void Render(Graphics graphics)
         {
-            base.Render(graphics);
             graphics.DrawRect(new Rectangle(Entity.Transform.Position, new Point(10, 10)), _color);
+        }
+        public void DebugRender(Graphics graphics)
+        {
         }
     }
 
@@ -55,14 +58,14 @@ namespace kuujoo.Pixel
 
             InitInputs();
 
-            var cameraEntity = CreateEntity(0);
+            var cameraEntity = CreateEntity();
             _camera = cameraEntity.AddComponent(new LayerCamera(384, 216)
             {
                 RenderLayer= 1,
                 Priority = 0
             });
 
-            var cameraEntity2 = CreateEntity(0);
+            var cameraEntity2 = CreateEntity();
             _camera2 = cameraEntity2.AddComponent(new LayerCamera(384, 216)
             {
                 RenderLayer = 2,
@@ -78,10 +81,9 @@ namespace kuujoo.Pixel
             {
                 for (var j = 0; j < 216 / 12; j++)
                 {
-                    var e = CreateEntity(0);
-                    e.AddComponent(new RectangleRenderer(Color.White));
+                    var e = CreateEntity();
+                    e.AddComponent(new RectangleRenderer(Color.White)).Layer = 1;
                     e.Transform.SetPosition(i * 12, j * 12);
-                    e.Depth = 1;
                 }
             }
 
@@ -89,10 +91,9 @@ namespace kuujoo.Pixel
             {
                 for (var j = 0; j < 216 / 12; j++)
                 {
-                    var e = CreateEntity(0);
-                    e.AddComponent(new RectangleRenderer(Color.Red));
+                    var e = CreateEntity();
+                    e.AddComponent(new RectangleRenderer(Color.Red)).Layer = 2;
                     e.Transform.SetPosition(i * 12, j * 12);
-                    e.Depth = 2;
                 }
             }
         }

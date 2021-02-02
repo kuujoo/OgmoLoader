@@ -15,7 +15,7 @@ namespace kuujoo.Pixel
         {
             base.Initialize();
             var room = new Scene(384, 216);
-            var cameraEntity = room.CreateEntity(0);
+            var cameraEntity = room.CreateEntity();
             var camera = cameraEntity.AddComponent(new Camera(384, 216));
             camera.BackgroundColor = Color.Aquamarine;
             room.AddCamera(camera);

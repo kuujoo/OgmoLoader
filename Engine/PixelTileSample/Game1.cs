@@ -15,10 +15,10 @@ namespace kuujoo.Pixel
 
             var room = new Scene(384, 216);
             var res = room.AddSceneComponent(new SpriteResources(128,128, "Content/Sprites")) as SpriteResources;
-            var cameraEntity = room.CreateEntity(0);
+            var cameraEntity = room.CreateEntity();
             room.AddCamera(cameraEntity.AddComponent(new Camera(384, 216)));
             var sprite = res.GetSprite("sheet");
-            var r = room.CreateEntity(0);
+            var r = room.CreateEntity();
             var tilemap = r.AddComponent(new TilemapRenderer(100, 100, new Tileset(16, 16, sprite.DefaultFrame.Texture, sprite.DefaultFrame.Rect)));
             for(var i = 0; i < 100 * 100; i++)
             {

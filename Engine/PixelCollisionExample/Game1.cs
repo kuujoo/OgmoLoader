@@ -3,8 +3,9 @@ using System.Collections;
 
 namespace kuujoo.Pixel
 {
-    public class Test : Component
+    public class Test : Component, IRenderable, IUpdateable
     {
+        public int Layer { get; set; }
         Vector2 _speed;
         BoxCollider _collider;
         Color _color = Color.White;
@@ -16,16 +17,16 @@ namespace kuujoo.Pixel
             _collider = Entity.GetComponent<BoxCollider>();
             _collider.Mask = CollisionMask.Solid;
         }
-        public override void Update()
+        public void Update()
         {
             Entity.Transform.Translate((int)(_speed.X * Time.DeltaTime), (int)(_speed.Y * Time.DeltaTime));
             if (_speed.X > 0 && Entity.Transform.Position.X > 384) _speed.X *= -1;
             if (_speed.X < 0 && Entity.Transform.Position.X < 0) _speed.X *= -1;
 
-            if (_speed.Y > 0 && Entity.Transform.Position.Y > 216) _speed.Y*= -1;
+            if (_speed.Y > 0 && Entity.Transform.Position.Y > 216) _speed.Y *= -1;
             if (_speed.Y < 0 && Entity.Transform.Position.Y < 0) _speed.Y *= -1;
 
-            if(_collider.Check(CollisionMask.Solid, Point.Zero) != null)
+            if (_collider.Check(CollisionMask.Solid, Point.Zero) != null)
             {
                 _color = Color.Red;
             }
@@ -34,14 +35,16 @@ namespace kuujoo.Pixel
                 _color = Color.White;
             }
         }
-        public override bool IsVisibleFromCamera(Camera camera)
+        public bool IsVisibleFromCamera(Camera camera)
         {
             return true;
         }
-        public override void Render(Graphics graphics)
+        public void Render(Graphics graphics)
         {
-            base.Render(graphics);
             graphics.DrawRect(_collider.Bounds, _color);
+        }
+        public void DebugRender(Graphics graphics)
+        {
         }
     }
     public class Game1 : Engine
@@ -55,7 +58,7 @@ namespace kuujoo.Pixel
             base.Initialize();
 
             var room = new Scene(384, 216);
-            var cameraEntity = room.CreateEntity(0);
+            var cameraEntity = room.CreateEntity();
             var camera = cameraEntity.AddComponent(new Camera(384, 216)
             {
                 BackgroundColor = Color.Aquamarine
@@ -64,7 +67,7 @@ namespace kuujoo.Pixel
             room.DebugRender = true;
             for(var i = 0; i< 10; i++)
             {
-                var e = room.CreateEntity(0);
+                var e = room.CreateEntity();
                 e.AddComponent(new Test());
                 e.Transform.SetPosition(Random.Range(0, 384), Random.Range(0, 216));
             }
