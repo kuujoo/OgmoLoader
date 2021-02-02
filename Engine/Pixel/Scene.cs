@@ -204,7 +204,6 @@ namespace kuujoo.Pixel
             if (dispose)
             {
                 ApplicationSurface.Dispose();
-                Content.Dispose();
             }
         }
         public void Dispose()
