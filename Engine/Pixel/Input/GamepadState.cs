@@ -23,7 +23,7 @@ namespace kuujoo.Pixel
 			_currentState = GamePad.GetState(_playerIndex, DeadZone);
 			if (_rumbleTime > 0f)
 			{
-				_rumbleTime = MathExt.Approach(_rumbleTime, 0.0f, Time.DeltaTime);
+				_rumbleTime = MathExt.Approach(_rumbleTime, 0.0f, Time.UnscaledDeltaTime);
 				if (_rumbleTime <= 0f)
 				{
 					GamePad.SetVibration(_playerIndex, 0, 0);
