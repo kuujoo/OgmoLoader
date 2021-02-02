@@ -13,14 +13,12 @@ namespace kuujoo.Pixel
         public EntityList Entities { get; private set; }
         public Effect FinalEffect { get; set; }
         public Surface ApplicationSurface { get; set; }
-        public RuntimeContentManager Content { get; private set; }
         public bool Paused;
         List<Camera> _cameras = new List<Camera>();
         List<SceneComponent> _sceneComponents = new List<SceneComponent>();
         protected Rectangle finalDestinationRect;
         public Scene(int game_width, int game_height)
         {
-            Content = new RuntimeContentManager();
             ApplicationSurface = new Surface(game_width, game_height);
             Entities = new EntityList();
             DebugRender = false;
