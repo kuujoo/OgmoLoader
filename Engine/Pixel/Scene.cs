@@ -84,7 +84,14 @@ namespace kuujoo.Pixel
                         if(renderable.Enabled)
                         {
                             _cameras[i].Render(gfx, renderable);
-                            if (DebugRender)
+                        }
+                    }
+                    if (DebugRender)
+                    { 
+                        for (var r = 0; r < renderables.Count; r++)
+                        {
+                            var renderable = renderables[r];
+                            if (renderable.Enabled)
                             {
                                 _cameras[i].DebugRender(gfx, renderable);
                             }
