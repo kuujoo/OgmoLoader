@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace kuujoo.Pixel
 {
@@ -91,22 +92,26 @@ namespace kuujoo.Pixel
                 _itemsToRemove.Add(item);
             }  
         }
-        public void RemoveAll()
+       public  bool Contains(T item)
         {
-            for (var i = 0; i < _items.Count; i++)
-            {
-                Remove(_items[i]);
-            }
-            for (var i = 0; i < _itemsToAdd.Count; i++)
-            {
-                Remove(_itemsToAdd[i]);
-            }
+            return _itemsToAdd.Contains(item) || _items.Contains(item);
         }
         public void Clear()
         {
             _itemsToRemove.Clear();
             _items.Clear();
             _itemsToRemove.Clear();
+        }
+        public void ForEach(Action<T> action)
+        {
+            for (var i = 0; i < _itemsToAdd.Count; i++)
+            {
+                action?.Invoke(_itemsToAdd[i]);
+            }
+            for (var i = 0; i < _items.Count; i++)
+            {
+                action?.Invoke(_items[i]);
+            }
         }
     } 
 }

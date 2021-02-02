@@ -93,7 +93,6 @@ namespace kuujoo.Pixel
                     _scene = _nextScene;
                     if(_scene != null)
                     {
-                        _scene.BeginScene();
                         GC.Collect();
                     }
                     _nextScene = null;

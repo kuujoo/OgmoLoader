@@ -30,19 +30,29 @@ namespace kuujoo.Pixel
             Components.Add(component);
             component.Initialize();
             component.AddedToEntity();
+            Scene.Tracker.AddComponent(component);
             return component;
+        }
+        public void RemoveComponent(Component component)
+        {
+            if(Components.Contains(component))
+            {
+                Scene.Tracker.RemoveComponent(component);
+                component.CleanUp();
+                component.RemovedFromEntity();
+                Components.Remove(component);
+            }
+        }
+        public void RemoveComponents()
+        {
+            Components.ForEach((Component component) =>
+            {
+                RemoveComponent(component);
+            });        
         }
         public T GetComponent<T>() where T : class
         {
             return Components.GetItemOfType<T>();
-        }
-        public List<T> GetComponents<T>() where T : class
-        {
-            return Components.GetItemsOfType<T>();
-        }
-        public ICoroutine StartCoroutine(IEnumerator enumerator)
-        {
-            return Engine.Instance.StartCoroutine(enumerator);
         }
     }
 }

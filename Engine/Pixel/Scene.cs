@@ -13,7 +13,6 @@ namespace kuujoo.Pixel
         public EntityList Entities { get; private set; }
         public Effect FinalEffect { get; set; }
         public Surface ApplicationSurface { get; set; }
-        public bool Paused;
         List<Camera> _cameras = new List<Camera>();
         List<SceneComponent> _sceneComponents = new List<SceneComponent>();
         protected Rectangle finalDestinationRect;
@@ -30,9 +29,6 @@ namespace kuujoo.Pixel
         {
 
         }
-        public void BeginScene()
-        {
-        }
         public void EndScene()
         {
             for (var i = 0; i < _sceneComponents.Count; i++)
@@ -44,12 +40,11 @@ namespace kuujoo.Pixel
 
             for (var i = 0; i < Entities.Count; i++)
             {
-                Entities[i].Components.CleanUp();
+                DestroyEntity(Entities[i]);
             }
         }
         public virtual void Update()
         {
-            if (Paused) return;
             for (var i = 0; i < _sceneComponents.Count; i++)
             {
                 _sceneComponents[i].Update();
@@ -71,19 +66,7 @@ namespace kuujoo.Pixel
         }
         public void OnGraphicsDeviceReset()
         {
-            for(var i = 0; i < Entities.Count; i++)
-            {
-                Entities[i].Components.OnGraphicsDeviceReset();
-            }
             UpdateDrawRect();
-        }
-        public T FindComponent<T>() where T: Component
-        {
-            return Entities.FindComponent<T>();
-        }
-        public List<T> FindComponents<T>() where T : class
-        {
-            return Entities.FindComponents<T>();
         }
         public void Render()
         {
@@ -167,11 +150,11 @@ namespace kuujoo.Pixel
         }
         public void DestroyEntity(Entity entity)
         {
-            entity.Components.Destroy();
-            entity.Components.CleanUp();
-            entity.Components.RemovedFromEntity();
-            entity.Components.RemoveAll();
-            Entities.Remove(entity);
+            if (Entities.Contains(entity))
+            {
+                entity.RemoveComponents();
+                Entities.Remove(entity);
+            }
         }
         void UpdateDrawRect()
         {

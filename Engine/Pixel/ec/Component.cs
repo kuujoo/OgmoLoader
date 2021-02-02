@@ -18,7 +18,7 @@ namespace kuujoo.Pixel
         public void AddedToEntity()
         {
             Entity.Transform.Changed += TransformChanged;
-            Scene.Tracker.AddComponent(this);
+
         }
         public void RemovedFromEntity()
         {
@@ -31,11 +31,8 @@ namespace kuujoo.Pixel
         }
         public virtual void Initialize() {
         }
-        public virtual void Destroy() { }
         public virtual void CleanUp() {
         }
-        public virtual void OnGraphicsDeviceReset() { }
-
         public int CompareTo(Component other)
         {
             return UpdateOrder.CompareTo(other.UpdateOrder);

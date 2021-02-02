@@ -92,11 +92,22 @@ namespace kuujoo.Pixel
             _hash.Unregister(collider);
             _hash.Register(collider);
         }
+        public T FindComponent<T>() where T : Component
+        {
+            var type = typeof(T);
+            if(_components.ContainsKey(type) == true)
+            {
+                return _components[type][0] as T;
+            }
+            else
+            {
+                return null;
+            }
+        }
         public List<Collider> GetNearestColliders(ref Rectangle rect, int mask)
         {
             return _hash.Check(ref rect, mask);
         }
-
         int RenderableSorter(IRenderable r0, IRenderable r1)
         {
             return r0.Layer.CompareTo(r1.Layer);
