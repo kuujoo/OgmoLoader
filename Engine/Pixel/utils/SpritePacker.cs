@@ -31,13 +31,13 @@ namespace kuujoo.Pixel
     }
     public class SpritePacker
     {
-        public class SpritePixelData : BinaryPackerRect
+        class PackerEntry : BinaryPackerRect
         {
             public int Id { get; set; }
             public override int Width { get; set; }
             public override int Height { get; set; }
             public Color[] Pixels;
-            public SpritePixelData(int id, int width, int height, Color[] pixels)
+            public PackerEntry(int id, int width, int height, Color[] pixels)
             {
                 Id = id;
                 Width = width;
@@ -45,7 +45,7 @@ namespace kuujoo.Pixel
                 Pixels = pixels;
             }
         }
-        List<SpritePixelData> _packBuffer = new List<SpritePixelData>();
+        List<PackerEntry> _packBuffer = new List<PackerEntry>();
         List<TexturePage> _texturePages = new List<TexturePage>();
         int _pageWidth;
         int _pageHeight;
@@ -56,7 +56,7 @@ namespace kuujoo.Pixel
         }
         public void Add(int packid, int width, int height, Color[] pixels)
         {
-            _packBuffer.Add(new SpritePixelData(packid, width, height, pixels));
+            _packBuffer.Add(new PackerEntry(packid, width, height, pixels));
         }
         TexturePage CreateTexturePage()
         {
