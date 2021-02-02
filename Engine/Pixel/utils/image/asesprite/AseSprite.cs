@@ -7,7 +7,146 @@ using Microsoft.Xna.Framework;
 
 namespace kuujoo.Pixel
 {
-    public partial class AseSprite
+    public static class AseBlends
+    {
+        public static void Blend(int blendmode, ref Color dest, Color src, byte opacity)
+        {
+            if (blendmode == 0)
+            {
+                Normal(ref dest, src, opacity);
+            }
+        }
+        // Copied from Aseprite's source code:
+        // https://github.com/aseprite/aseprite/blob/master/src/doc/blend_funcs.cpp
+        private static void Normal(ref Color dest, Color src, byte opacity)
+        {
+            if (src.A != 0)
+            {
+                int r, g, b, a;
+
+                if (dest.A == 0)
+                {
+                    r = src.R;
+                    g = src.G;
+                    b = src.B;
+                }
+                else if (src.A == 0)
+                {
+                    r = dest.R;
+                    g = dest.G;
+                    b = dest.B;
+                }
+                else
+                {
+                    r = (dest.R + MUL_UN8((src.R - dest.R), opacity));
+                    g = (dest.G + MUL_UN8((src.G - dest.G), opacity));
+                    b = (dest.B + MUL_UN8((src.B - dest.B), opacity));
+                }
+
+                a = (dest.A + MUL_UN8((src.A - dest.A), opacity));
+                if (a == 0)
+                {
+                    r = g = b = 0;
+                }
+
+                dest.R = (byte)r;
+                dest.G = (byte)g;
+                dest.B = (byte)b;
+                dest.A = (byte)a;
+            }
+        }
+        private static int MUL_UN8(int a, int b)
+        {
+            var t = (a * b) + 0x80;
+            return (((t >> 8) + t) >> 8);
+        }
+    }
+    public class AseTag
+    {
+        public enum LoopDirections
+        {
+            Forward = 0,
+            Reverse = 1,
+            PingPong = 2
+        }
+
+        public string Name;
+        public LoopDirections LoopDirection;
+        public int From;
+        public int To;
+        public Color Color;
+    }
+    public interface IAseUserData
+    {
+        string UserDataText { get; set; }
+        Color UserDataColor { get; set; }
+    }
+    public class AseSlice : IAseUserData
+    {
+        public string UserDataText { get; set; }
+        public Color UserDataColor { get; set; }
+        public int Frame;
+        public string Name;
+        public int OriginX;
+        public int OriginY;
+        public int Width;
+        public int Height;
+        public Vector2? Pivot;
+    }
+    public class AseLayer : IAseUserData
+    {
+        [Flags]
+        public enum Flags
+        {
+            Visible = 1,
+            Editable = 2,
+            LockMovement = 4,
+            Background = 8,
+            PreferLinkedCels = 16,
+            Collapsed = 32,
+            Reference = 64
+        }
+
+        public enum Types
+        {
+            Normal = 0,
+            Group = 1
+        }
+        public string UserDataText { get; set; }
+        public Color UserDataColor { get; set; }
+        public Flags Flag;
+        public Types Type;
+        public string Name;
+        public int ChildLevel;
+        public int BlendMode;
+        public float Alpha;
+    }
+    public class AseCel : IAseUserData
+    {
+        public string UserDataText { get; set; }
+        public Color UserDataColor { get; set; }
+        public AseLayer Layer;
+        public Color[] Pixels;
+        public int X;
+        public int Y;
+        public int Width;
+        public int Height;
+        public float Alpha;
+    }
+    public class AseFrame
+    {
+        public AseSprite Sprite;
+        public int Duration;
+        public Color[] Pixels;
+        public List<AseCel> Cels;
+        public AseFrame(AseSprite sprite)
+        {
+            Sprite = sprite;
+            Cels = new List<AseCel>();
+        }
+    }
+
+    public class AseSprite
     {
 
         public enum Modes
