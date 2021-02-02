@@ -3,14 +3,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace kuujoo.Pixel
 {
-	public class GamePadData
+	public class GamepadState
 	{
 		public GamePadDeadZone DeadZone = GamePadDeadZone.IndependentAxes;
 		PlayerIndex _playerIndex;
 		GamePadState _previousState;
 		GamePadState _currentState;
 		float _rumbleTime;
-		internal GamePadData(PlayerIndex playerIndex)
+		internal GamepadState(PlayerIndex playerIndex)
 		{
 			_playerIndex = playerIndex;
 			_previousState = new GamePadState();

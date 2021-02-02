@@ -2,13 +2,13 @@
 
 namespace kuujoo.Pixel
 {
-    public class KeyboardData
+    public class KeyboardState
     {
-        KeyboardState _previousKeyboardState;
-        KeyboardState _currentKeyboardState;
-        public KeyboardData()
+        Microsoft.Xna.Framework.Input.KeyboardState _previousKeyboardState;
+        Microsoft.Xna.Framework.Input.KeyboardState _currentKeyboardState;
+        public KeyboardState()
         {
-            _previousKeyboardState = new KeyboardState();
+            _previousKeyboardState = new Microsoft.Xna.Framework.Input.KeyboardState();
             _currentKeyboardState = Keyboard.GetState();
         }
         public bool IsKeyPressed(Keys key)

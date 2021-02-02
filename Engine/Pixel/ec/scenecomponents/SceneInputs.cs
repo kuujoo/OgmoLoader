@@ -8,14 +8,14 @@ namespace kuujoo.Pixel
     public class SceneInputs : SceneComponent, IInputState
     {
         List<Input> _inputs = new List<Input>();
-        KeyboardData _keyboard = new KeyboardData();
-        GamePadData[] _gamePads;
+        KeyboardState _keyboard = new KeyboardState();
+        GamepadState[] _gamePads;
         public SceneInputs()
         {
-            _gamePads = new GamePadData[GamePad.MaximumGamePadCount];
+            _gamePads = new GamepadState[GamePad.MaximumGamePadCount];
             for (var i = 0; i < GamePad.MaximumGamePadCount; i++)
             {
-                _gamePads[i] = new GamePadData((PlayerIndex)i);
+                _gamePads[i] = new GamepadState((PlayerIndex)i);
             }
         }
         public Input CreateInput(float buffer = 0.0f)
