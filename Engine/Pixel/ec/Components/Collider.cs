@@ -46,6 +46,7 @@ namespace kuujoo.Pixel
         public static int Interactable = 1 << 8;
         public static int Breakable = 1 << 9;
         public static int Landable = 1 << 10;
+        public static int PlayerDetector = 1 << 11;
     }
 
     public abstract class Collider : Component
