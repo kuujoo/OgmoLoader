@@ -28,7 +28,8 @@ namespace kuujoo.Pixel
             }
             else if (other is GridCollider)
             {
-                return CollisionChecks.RectAndGrid(Bounds, other as IGrid);
+                var grid = other as GridCollider;
+                return CollisionChecks.RectAndGrid(Bounds, grid, grid.CellWidth, grid.CellHeight);
             }
             return false;
         }

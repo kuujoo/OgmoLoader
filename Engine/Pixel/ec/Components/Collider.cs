@@ -7,13 +7,13 @@ namespace kuujoo.Pixel
 {
     public static class CollisionChecks
     {
-        public static bool RectAndGrid(Rectangle rect, IGrid grid)
+        public static bool RectAndGrid(Rectangle rect, IGrid grid, int cellwidth, int cellheight)
         {
             var r = rect;          
-            var left = (int)Math.Clamp((float)r.Left / grid.CellWidth, 0, grid.Width);
-            var right = (int)Math.Clamp( Math.Ceiling( (float)(r.Right) / grid.CellWidth), 0, grid.Width);
-            var up = (int)Math.Clamp((float)r.Top / grid.CellHeight, 0, grid.Height);
-            var down = (int)Math.Clamp(Math.Ceiling((float)(r.Bottom) / grid.CellHeight), 0, grid.Height);
+            var left = (int)Math.Clamp((float)r.Left / cellwidth, 0, grid.Width);
+            var right = (int)Math.Clamp( Math.Ceiling( (float)(r.Right) / cellwidth), 0, grid.Width);
+            var up = (int)Math.Clamp((float)r.Top / cellheight, 0, grid.Height);
+            var down = (int)Math.Clamp(Math.Ceiling((float)(r.Bottom) / cellheight), 0, grid.Height);
 
             for (var i = left; i < right; i++)
             {

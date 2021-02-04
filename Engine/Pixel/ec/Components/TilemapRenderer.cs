@@ -5,34 +5,19 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
-    public interface IGrid
-    {
-        public int CellWidth { get; }
-        public int CellHeight { get;}
-        public int Width { get; }
-        public int Height { get; }
-        byte GetValue(int x, int y);
-        byte GetValueByIndex(int idx);
-        void SetValue(int x, int y, byte value);
-        void SetValueByIndex(int index, byte value);
-    }
     public class TilemapRenderer : Component, IGrid, IRenderable
     {
         public int Layer { get; set; }
         public int CellWidth => Tileset.TileWidth;
         public int CellHeight => Tileset.TileHeight;
         public static byte EmptyTile = 0;
-        public int Width => _width_in_tiles;
-        public int Height => _height_in_tiles;
+        public int Width => _grid.Width;
+        public int Height => _grid.Height;
         public Tileset Tileset { get; set; }
-        byte[] _grid;
-        int _width_in_tiles;
-        int _height_in_tiles;
+        ByteGrid _grid;
         public TilemapRenderer(int wtiles, int htiles, Tileset tileset)
         {
-            _width_in_tiles = wtiles;
-            _height_in_tiles = htiles;
-            _grid = new byte[_width_in_tiles * _height_in_tiles];
+            _grid = new ByteGrid(wtiles, htiles, tileset.TileWidth, tileset.TileHeight);
             Tileset = tileset;
         }
         public override void CleanUp()
@@ -40,13 +25,11 @@ namespace kuujoo.Pixel
         }
         public byte GetValue(int x, int y)
         {
-            var idx = y * _width_in_tiles + x;
-            return GetValueByIndex(idx);
+            return _grid.GetValue(x, y);
         }
         public byte GetValueByIndex(int idx)
         {
-            if (idx >= _grid.Length || idx < 0) return 0;
-            return _grid[idx];
+            return _grid.GetValueByIndex(idx);
         }
         public bool IsVisibleFromCamera(Camera camera)
         {
@@ -58,15 +41,15 @@ namespace kuujoo.Pixel
             var gfx = Engine.Instance.Graphics;
             var bounds = graphics.Camera.Bounds;
             bounds.Location -= Entity.Transform.Position;
-            int left = Math.Clamp( (int)Math.Floor((float)bounds.Left / Tileset.TileWidth), 0, Width);
-            int right = Math.Clamp( (int)Math.Floor((float)bounds.Right / Tileset.TileWidth), 0, Width);
-            int top = Math.Clamp((int)Math.Floor((float)bounds.Top / Tileset.TileHeight), 0, Height);
-            int bottom = Math.Clamp((int)Math.Floor((float)bounds.Bottom / Tileset.TileHeight), 0, Height);
+            int left = Math.Clamp( (int)Math.Floor((float)bounds.Left / Tileset.TileWidth), 0, Width - 1);
+            int right = Math.Clamp( (int)Math.Floor((float)bounds.Right / Tileset.TileWidth), 0, Width - 1);
+            int top = Math.Clamp((int)Math.Floor((float)bounds.Top / Tileset.TileHeight), 0, Height - 1);
+            int bottom = Math.Clamp((int)Math.Floor((float)bounds.Bottom / Tileset.TileHeight), 0, Height - 1);
             for (var j = top; j <= bottom; j++)
             {
                 for (var i = left; i <= right; i++)
                 {
-                    var tile_id = GetValue(i, j);
+                    var tile_id = _grid.GetValue(i, j);
                     if (tile_id != EmptyTile)
                     {
                         var tile = Tileset.GetTile(tile_id);
@@ -77,16 +60,14 @@ namespace kuujoo.Pixel
         }
         public void DebugRender(Graphics graphics)
         {
-
         }
         public void SetValue(int x, int y, byte value)
         {
-            var idx = y * _width_in_tiles + x;
-            SetValueByIndex(idx, value);
+            _grid.SetValue(x, y, value);
         }
         public void SetValueByIndex(int index, byte value)
         {
-            _grid[index] = value;
+            _grid.SetValueByIndex(index, value);
         }
     }
 }

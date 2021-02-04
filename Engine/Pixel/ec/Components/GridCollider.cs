@@ -6,20 +6,18 @@ namespace kuujoo.Pixel
     public class GridCollider : Collider, IGrid, IRenderable
     {
         public int Layer { get; set; }
-        public int CellWidth => _cellW;
-        public int CellHeight => _cellH;
-        public override Rectangle Bounds => new Rectangle((Entity.Transform.Position), new Point(Width * _cellW, Height * _cellH));
+        public int CellWidth { get; private set; }
+        public int CellHeight { get; private set; }
+        public override Rectangle Bounds => new Rectangle((Entity.Transform.Position), new Point(Width * CellWidth, Height * CellHeight));
         public int Width { get; private set; }
         public int Height { get; private set; }
         byte[] _grid;
-        int _cellW;
-        int _cellH;
         public GridCollider(int width, int height, int cellw, int cellh)
         {
             Width = width;
             Height = height;
-            _cellW = cellw;
-            _cellH = cellh;
+            CellWidth = cellw;
+            CellHeight = cellh;
             _grid = new byte[Width * Height];
         }
 
@@ -50,7 +48,7 @@ namespace kuujoo.Pixel
                 var r = other.Bounds;
                 r.Location -= Entity.Transform.Position;
                 r.Location += offset;
-                return CollisionChecks.RectAndGrid(r, this);            
+                return CollisionChecks.RectAndGrid(r, this, CellWidth, CellHeight);            
             }
             return false;
         }
@@ -65,17 +63,17 @@ namespace kuujoo.Pixel
         {
             var bounds = graphics.Camera.Bounds;
             bounds.Location -= Entity.Transform.Position;
-            int left = Math.Clamp((int)Math.Floor((float)bounds.Left / _cellW), 0, Width);
-            int right = Math.Clamp((int)Math.Floor((float)bounds.Right / _cellW), 0, Width);
-            int top = Math.Clamp((int)Math.Floor((float)bounds.Top / _cellH), 0, Height);
-            int bottom = Math.Clamp((int)Math.Floor((float)bounds.Bottom / _cellH), 0, Height);
+            int left = Math.Clamp((int)Math.Floor((float)bounds.Left / CellWidth), 0, Width);
+            int right = Math.Clamp((int)Math.Floor((float)bounds.Right / CellWidth), 0, Width);
+            int top = Math.Clamp((int)Math.Floor((float)bounds.Top / CellHeight), 0, Height);
+            int bottom = Math.Clamp((int)Math.Floor((float)bounds.Bottom / CellHeight), 0, Height);
             for (var j = top; j <= bottom; j++)
             {
                 for (var i = left; i <= right; i++)
                 {
                     if(GetValue(i, j) != 0)
                     {
-                        graphics.DrawHollowRect(new Rectangle(Entity.Transform.Position.X + i * _cellW, Entity.Transform.Position.Y + j * _cellH, _cellW, _cellH), Color.Red);
+                        graphics.DrawHollowRect(new Rectangle(Entity.Transform.Position.X + i * CellWidth, Entity.Transform.Position.Y + j * CellHeight, CellWidth, CellHeight), Color.Red);
                     }
                 }
             }
