@@ -68,7 +68,7 @@ namespace kuujoo.Pixel
         {
             var bounds = Bounds;
             bounds.Location += offset;
-            var colliders = Entity.Scene.Tracker.GetNearestColliders(ref bounds, mask);
+            var colliders = Entity.Scene.GetSceneComponent<Tracker>().GetNearestColliders(ref bounds, mask);
             for(var i = 0; i < colliders.Count; i++)
             {
                 var c = colliders[i];

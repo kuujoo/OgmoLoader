@@ -19,6 +19,12 @@ namespace kuujoo.Pixel
             _position.Y = y;
             Changed?.Invoke(this);
         }
+        public void SetPosition(Vector2 position)
+        {
+            _position.X = (int)position.X;
+            _position.Y = (int)position.Y;
+            Changed?.Invoke(this);
+        }
         public void TranslateX(int amount)
         {
             _position.X += amount;

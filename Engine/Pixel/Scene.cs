@@ -8,7 +8,6 @@ namespace kuujoo.Pixel
 {
     public class Scene : IDisposable
     {
-        public Tracker Tracker { get; private set; }
         public bool DebugRender { get; set; }
         public EntityList Entities { get; private set; }
         public Effect FinalEffect { get; set; }
@@ -16,18 +15,18 @@ namespace kuujoo.Pixel
         List<Camera> _cameras = new List<Camera>();
         List<SceneComponent> _sceneComponents = new List<SceneComponent>();
         protected Rectangle finalDestinationRect;
+        Tracker _tracker;
         public Scene(int game_width, int game_height)
         {
             ApplicationSurface = new Surface(game_width, game_height);
             Entities = new EntityList();
             DebugRender = false;
-            Tracker = new Tracker();
             UpdateDrawRect();
             Initialize();
         }
         public virtual void Initialize()
         {
-
+            _tracker = AddSceneComponent(new Tracker());
         }
         public void EndScene()
         {
@@ -55,7 +54,7 @@ namespace kuujoo.Pixel
                 Entities[i].Components.UpdateLists();
             }
 
-            var updateables = Tracker.GetUpdateables();
+            var updateables = _tracker.GetUpdateables();
             for(var i = 0; i < updateables.Count; i++)
             {
                 if (updateables[i].Enabled)
@@ -72,7 +71,7 @@ namespace kuujoo.Pixel
         {
             _cameras.Sort();
             var gfx = Engine.Instance.Graphics;
-            var renderables = Tracker.GetRenderables();
+            var renderables = _tracker.GetRenderables();
             for (var i = 0; i < _cameras.Count; i++)
             {
                 if (_cameras[i].Enabled)

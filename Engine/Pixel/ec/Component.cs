@@ -23,7 +23,7 @@ namespace kuujoo.Pixel
         public void RemovedFromEntity()
         {
             Entity.Transform.Changed -= TransformChanged;
-            Scene.Tracker.RemoveComponent(this);
+            Scene.GetSceneComponent<Tracker>().RemoveComponent(this);
         }
         public virtual void TransformChanged(Transform transform)
         {

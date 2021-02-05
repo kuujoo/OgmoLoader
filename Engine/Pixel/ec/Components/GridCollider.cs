@@ -6,19 +6,19 @@ namespace kuujoo.Pixel
     public class GridCollider : Collider, IGrid, IRenderable
     {
         public int Layer { get; set; }
-        public int CellWidth { get; private set; }
-        public int CellHeight { get; private set; }
+        public int CellWidth => _grid.CellWidth;
+        public int CellHeight => _grid.CellHeight;
         public override Rectangle Bounds => new Rectangle((Entity.Transform.Position), new Point(Width * CellWidth, Height * CellHeight));
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        byte[] _grid;
+        public int Width => _grid.Width;
+        public int Height => _grid.Height;
+        ByteGrid _grid;
         public GridCollider(int width, int height, int cellw, int cellh)
         {
-            Width = width;
-            Height = height;
-            CellWidth = cellw;
-            CellHeight = cellh;
-            _grid = new byte[Width * Height];
+            _grid = new ByteGrid(width, height, cellw, cellh);
+        }
+        public GridCollider(ByteGrid grid)
+        {
+            _grid = grid;
         }
 
         public byte GetValue(int x, int y)
@@ -28,18 +28,17 @@ namespace kuujoo.Pixel
 
         public byte GetValueByIndex(int idx)
         {
-            if (idx >= _grid.Length || idx < 0) return 0;
-            return _grid[idx];
+            return _grid.GetValueByIndex(idx);
         }
 
         public void SetValue(int x, int y, byte value)
         {
-            SetValueByIndex(y * Width + x, value);
+            _grid.SetValue(x, y, value);
         }
 
         public void SetValueByIndex(int index, byte value)
         {
-            _grid[index] = value;
+            _grid.SetValueByIndex(index, value);
         }
         public override bool Collides(Collider other, Point offset)
         {
@@ -63,10 +62,10 @@ namespace kuujoo.Pixel
         {
             var bounds = graphics.Camera.Bounds;
             bounds.Location -= Entity.Transform.Position;
-            int left = Math.Clamp((int)Math.Floor((float)bounds.Left / CellWidth), 0, Width);
-            int right = Math.Clamp((int)Math.Floor((float)bounds.Right / CellWidth), 0, Width);
-            int top = Math.Clamp((int)Math.Floor((float)bounds.Top / CellHeight), 0, Height);
-            int bottom = Math.Clamp((int)Math.Floor((float)bounds.Bottom / CellHeight), 0, Height);
+            int left = Math.Clamp((int)Math.Floor((float)bounds.Left / CellWidth), 0, Width - 1);
+            int right = Math.Clamp((int)Math.Floor((float)bounds.Right / CellWidth), 0, Width - 1);
+            int top = Math.Clamp((int)Math.Floor((float)bounds.Top / CellHeight), 0, Height - 1);
+            int bottom = Math.Clamp((int)Math.Floor((float)bounds.Bottom / CellHeight), 0, Height - 1);
             for (var j = top; j <= bottom; j++)
             {
                 for (var i = left; i <= right; i++)

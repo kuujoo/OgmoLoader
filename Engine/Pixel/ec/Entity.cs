@@ -30,14 +30,14 @@ namespace kuujoo.Pixel
             Components.Add(component);
             component.Initialize();
             component.AddedToEntity();
-            Scene.Tracker.AddComponent(component);
+            Scene.GetSceneComponent<Tracker>().AddComponent(component);
             return component;
         }
         public void RemoveComponent(Component component)
         {
             if(Components.Contains(component))
             {
-                Scene.Tracker.RemoveComponent(component);
+                Scene.GetSceneComponent<Tracker>().RemoveComponent(component);
                 component.CleanUp();
                 component.RemovedFromEntity();
                 Components.Remove(component);

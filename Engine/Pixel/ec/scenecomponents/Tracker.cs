@@ -18,7 +18,7 @@ namespace kuujoo.Pixel
         int UpdateOrder { get; }
         void Update();
     }
-    public class Tracker
+    public class Tracker : SceneComponent
     {
         SpatialHash _hash = new SpatialHash();
 
@@ -103,6 +103,17 @@ namespace kuujoo.Pixel
             {
                 return null;
             }
+        }
+        public List<T> GetComponents<T>() where T : Component
+        {
+            var type = typeof(T);
+            var pooledList = ListPooler<T>.Obtain();
+            var list = _components[type];
+            for(var i = 0; i < list.Count; i++)
+            {
+                pooledList.Add(list[i] as T);
+            }
+            return pooledList;
         }
         public List<Collider> GetNearestColliders(ref Rectangle rect, int mask)
         {
