@@ -14,7 +14,6 @@ namespace kuujoo.Pixel
         public Graphics Graphics { get; set; }
         public Scene Scene { get { return _scene; } set { _nextScene = value; } }
         public bool PauseOnFocusLost { get; set; }
-        public Reflection Reflection { get; set; }
         FpsCounter _frameCounter = new FpsCounter();
         internal static Engine _instance;
         bool _resizing = false;
@@ -48,7 +47,6 @@ namespace kuujoo.Pixel
             Graphics.Bind(graphics);
             Screen.Bind(graphics);
             _coroutineManager = new CoroutineManager();
-            Reflection = new Reflection();
 
             //  Monogame 3.8 bug workaround: Window size does not change to "preferred backbuffer size" if changed inside Game()-constructor. Do change inside Engine::Initialize()
             _width = width;
