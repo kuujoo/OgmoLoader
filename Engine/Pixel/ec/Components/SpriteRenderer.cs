@@ -42,6 +42,7 @@ namespace kuujoo.Pixel
         int _animationIndex = 0;
         int _frameIndex = 0;
         bool _play = false;
+        bool _paused = false;
         float _frameTimer = 0.0f;
         PlayMode _mode;
         public SpriteRenderer()
@@ -52,7 +53,7 @@ namespace kuujoo.Pixel
         }
         public void Update()
         {
-            if (Sprite == null) return;
+            if (Sprite == null || _paused) return;
 
             if(_play)
             {
@@ -102,6 +103,14 @@ namespace kuujoo.Pixel
                     break;
                 }
             }
+        }
+        public void Pause()
+        {
+            _paused = true;
+        }
+        public void UnPause()
+        {
+            _paused = false;
         }
         public void Stop()
         {
