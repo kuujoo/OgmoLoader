@@ -20,6 +20,11 @@ namespace kuujoo.Pixel
             _grid = new ByteGrid(wtiles, htiles, tileset.TileWidth, tileset.TileHeight);
             Tileset = tileset;
         }
+        public TilemapRenderer(ByteGrid grid, Tileset tileset)
+        {
+            _grid = grid;
+            Tileset = tileset;
+        }
         public override void CleanUp()
         {
         }
