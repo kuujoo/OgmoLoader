@@ -1,4 +1,6 @@
-﻿namespace kuujoo.Pixel
+﻿using System;
+
+namespace kuujoo.Pixel
 {
     public interface IGrid
     {
@@ -10,6 +12,7 @@
         void SetValueByIndex(int index, byte value);
     }
 
+    [Serializable]
     public class ByteGrid : IGrid
     {
         byte[] _grid;
