@@ -16,7 +16,8 @@ namespace kuujoo.Pixel
     public class Camera : Component, IComparable<Camera>
     {
         public Effect Effect { get; set; }
-        public List<int> IgnoreLayers { get; private set; }
+        public List<int> ExcludeLayers { get; private set; }
+        public List<int> IncludeLayers { get; private set; }
         public Color BackgroundColor { get; set; }
         public CameraType Type { get; set; }
         public int Priority { get; set; }
@@ -97,7 +98,8 @@ namespace kuujoo.Pixel
             Type = type;
             Priority = 0;
             BackgroundColor = Color.Black;
-            IgnoreLayers = new List<int>();
+            ExcludeLayers = new List<int>();
+            IncludeLayers = new List<int>();
         }
         public override void TransformChanged(Transform transform)
         {
@@ -131,7 +133,10 @@ namespace kuujoo.Pixel
             graphics.PushMatrix(Matrix);
             graphics.PushEffect(Effect);
             graphics.Begin();
-            graphics.Device.Clear(BackgroundColor);
+            if (Type == CameraType.Base)
+            {
+                graphics.Device.Clear(BackgroundColor);
+            }
             graphics.Camera = this;
             if (Effect != null)
             {
@@ -140,7 +145,10 @@ namespace kuujoo.Pixel
         }
         public virtual void Render(Graphics graphics, IRenderable renderable)
         {
-            if(renderable.IsVisibleFromCamera(this)) {
+            if (ExcludeLayers.Contains(renderable.Layer)) return;
+            if (IncludeLayers.Count > 0 && !IncludeLayers.Contains(renderable.Layer)) return;
+
+            if (renderable.IsVisibleFromCamera(this)) {
                 renderable.Render(graphics);
             }
         }
