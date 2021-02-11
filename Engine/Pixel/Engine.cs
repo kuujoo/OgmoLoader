@@ -9,6 +9,7 @@ namespace kuujoo.Pixel
 
     public class Engine : Game
     {
+        public Screen Screen { get; private set; }
         public Color ClearColor = Color.Black;
         public static Engine Instance => _instance;
         public Graphics Graphics { get; set; }
@@ -38,14 +39,14 @@ namespace kuujoo.Pixel
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             graphics.DeviceReset += OnGraphicsDeviceReset;
             graphics.DeviceCreated += OnGraphicsCreate;
-            graphics.ApplyChanges();            
+            graphics.ApplyChanges();
             IsMouseVisible = true;
             IsFixedTimeStep = true;
             PauseOnFocusLost = true;
             Window.AllowUserResizing = true;
             Graphics = new Graphics();
             Graphics.Bind(graphics);
-            Screen.Bind(graphics);
+            Screen = new Screen(graphics);
             _coroutineManager = new CoroutineManager();
 
             //  Monogame 3.8 bug workaround: Window size does not change to "preferred backbuffer size" if changed inside Game()-constructor. Do change inside Engine::Initialize()

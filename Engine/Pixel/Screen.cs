@@ -3,19 +3,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace kuujoo.Pixel
 {
-    public static class Screen
+    public class Screen
     {
-        internal static GraphicsDeviceManager _graphics;
-        public static int ViewWidth { get; private set; }
-        public static int ViewHeight { get; private set; }
-        public static int Width => _graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
-        public static int Height => _graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
-        public static void Bind(GraphicsDeviceManager graphicsManager)
+        GraphicsDeviceManager _graphics;
+        public int ViewWidth { get; private set; }
+        public int ViewHeight { get; private set; }
+        public int Width => _graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
+        public int Height => _graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
+        public Screen(GraphicsDeviceManager graphics)
         {
-            _graphics = graphicsManager;
-
+            _graphics = graphics;
         }
-        public static void SetSize(int width, int height)
+        public  void SetSize(int width, int height)
         {
             _graphics.PreferredBackBufferWidth = width;
             _graphics.PreferredBackBufferHeight = height;

@@ -165,8 +165,8 @@ namespace kuujoo.Pixel
         void UpdateDrawRect()
         {
 
-            var sw = Screen.Width;
-            var sh = Screen.Height;
+            var sw = Engine.Instance.Screen.Width;
+            var sh = Engine.Instance.Screen.Height;
             var saspect = sw / (float)sh;
 
             var surface_w = ApplicationSurface.Target.Width;
