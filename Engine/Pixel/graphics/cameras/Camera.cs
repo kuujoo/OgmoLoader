@@ -154,7 +154,10 @@ namespace kuujoo.Pixel
         }
         public void DebugRender(Graphics graphics, IRenderable renderable)
         {
-            if(renderable.IsVisibleFromCamera(this))
+            if (ExcludeLayers.Contains(renderable.Layer)) return;
+            if (IncludeLayers.Count > 0 && !IncludeLayers.Contains(renderable.Layer)) return;
+
+            if (renderable.IsVisibleFromCamera(this))
             {
                 renderable.DebugRender(graphics);
             }
