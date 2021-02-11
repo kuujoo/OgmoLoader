@@ -87,7 +87,7 @@ namespace kuujoo.Pixel
 
 		List<CoroutineImpl> _unblockedCoroutines = new List<CoroutineImpl>();
 		List<CoroutineImpl> _shouldRunNextFrame = new List<CoroutineImpl>();
-
+		Pool<CoroutineImpl> _coroutinePool = new Pool<CoroutineImpl>();
 		/// <summary>
 		/// adds the IEnumerator to the CoroutineManager. Coroutines get ticked before Update is called each frame.
 		/// </summary>
@@ -96,7 +96,7 @@ namespace kuujoo.Pixel
 		public ICoroutine StartCoroutine(IEnumerator enumerator)
 		{
 			// find or create a CoroutineImpl
-			var coroutine = Pooler<CoroutineImpl>.Obtain();
+			var coroutine = _coroutinePool.Obtain();
 			coroutine.PrepareForReuse();
 
 			// setup the coroutine and add it
@@ -125,7 +125,7 @@ namespace kuujoo.Pixel
 				// check for stopped coroutines
 				if (coroutine.IsDone)
 				{
-					Pooler<CoroutineImpl>.Free(coroutine);
+					_coroutinePool.Free(coroutine);
 					continue;
 				}
 
@@ -174,7 +174,7 @@ namespace kuujoo.Pixel
 			// This coroutine has finished
 			if (!coroutine.Enumerator.MoveNext() || coroutine.IsDone)
 			{
-				Pooler<CoroutineImpl>.Free(coroutine);
+				_coroutinePool.Free(coroutine);
 				return false;
 			}
 
