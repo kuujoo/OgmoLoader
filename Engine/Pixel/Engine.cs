@@ -44,11 +44,9 @@ namespace kuujoo.Pixel
             IsFixedTimeStep = true;
             PauseOnFocusLost = true;
             Window.AllowUserResizing = true;
-            Graphics = new Graphics();
-            Graphics.Bind(graphics);
+            Graphics = new Graphics(graphics);
             Screen = new Screen(graphics);
             _coroutineManager = new CoroutineManager();
-
             //  Monogame 3.8 bug workaround: Window size does not change to "preferred backbuffer size" if changed inside Game()-constructor. Do change inside Engine::Initialize()
             _width = width;
             _height = height;

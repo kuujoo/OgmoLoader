@@ -17,11 +17,7 @@ namespace kuujoo.Pixel
         public Stack<Matrix> _matrixStack = new Stack<Matrix>();
         public Stack<Effect> _effectStack = new Stack<Effect>();
         BlendState _nonPreMultipliedBlendState;
-        public void SetRenderTargetToBackBuffer()
-        {
-            Device.SetRenderTarget(null);
-        }
-        public Graphics()
+        public Graphics(GraphicsDeviceManager devicemanager)
         {
             _nonPreMultipliedBlendState = new BlendState
             {
@@ -30,17 +26,18 @@ namespace kuujoo.Pixel
                 AlphaSourceBlend = Blend.One,
                 AlphaDestinationBlend = Blend.InverseSourceAlpha,
             };
-        }
-        internal void Bind(GraphicsDeviceManager graphicDevice)
-        {
-            DeviceManager = graphicDevice;
+            DeviceManager = devicemanager;
             SpriteBatch = new SpriteBatch(Device);
-            if(Pixel == null)
+            if (Pixel == null)
             {
                 Pixel = new Texture2D(Device, 1, 1);
                 Color[] colors = { Color.White };
                 Pixel.SetData<Color>(colors);
             }
+        }
+        public void SetRenderTargetToBackBuffer()
+        {
+            Device.SetRenderTarget(null);
         }
         public void PushSurface(Surface surface)
         {
