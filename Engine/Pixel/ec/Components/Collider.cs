@@ -48,6 +48,7 @@ namespace kuujoo.Pixel
         public static int Landable = 1 << 10;
         public static int PlayerDetector = 1 << 11;
         public static int Checkpoint = 1 << 12;
+        public static int Blocker = 1 << 13;
     }
 
     public abstract class Collider : Component
@@ -69,7 +70,7 @@ namespace kuujoo.Pixel
         {
             var bounds = Bounds;
             bounds.Location += offset;
-            var colliders = Entity.Scene.GetSceneComponent<Tracker>().GetNearestColliders(ref bounds, mask);
+            var colliders = Entity.Scene.GetSceneComponent<Tracker>().Near(ref bounds, mask);
             for(var i = 0; i < colliders.Count; i++)
             {
                 var c = colliders[i];

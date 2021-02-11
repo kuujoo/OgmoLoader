@@ -104,20 +104,22 @@ namespace kuujoo.Pixel
                 return null;
             }
         }
-        public List<T> GetComponents<T>() where T : Component
+        public void GetComponents<T>(ref List<T> components) where T : Component
         {
             var type = typeof(T);
-            var pooledList = ListPooler<T>.Obtain();
             var list = _components[type];
             for(var i = 0; i < list.Count; i++)
             {
-                pooledList.Add(list[i] as T);
+                components.Add(list[i] as T);
             }
-            return pooledList;
         }
-        public List<Collider> GetNearestColliders(ref Rectangle rect, int mask)
+        public List<Collider> Check(ref Rectangle rect, int mask)
         {
             return _hash.Check(ref rect, mask);
+        }
+        public List<Collider> Near(ref Rectangle rect, int mask)
+        {
+            return _hash.Near(ref rect, mask);
         }
         int RenderableSorter(IRenderable r0, IRenderable r1)
         {

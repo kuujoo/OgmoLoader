@@ -168,7 +168,38 @@ namespace kuujoo.Pixel
                         {
                             continue;
                         }
-                        if (bounds.Intersects(collider.Bounds))
+                        if (bounds.Intersects(collider.Bounds) && !_tmpList.Contains(collider))
+                        {
+                            _tmpList.Add(collider);
+                        }
+                    }
+                }
+            }
+            return _tmpList;
+        }
+        public List<Collider> Near(ref Rectangle bounds, int mask)
+        {
+            _tmpList.Clear();
+            var p1 = CellAt(bounds.X, bounds.Y);
+            var p2 = CellAt(bounds.Right, bounds.Bottom);
+            for (var x = p1.X; x <= p2.X; x++)
+            {
+                for (var y = p1.Y; y <= p2.Y; y++)
+                {
+                    var cell = CellAtPosition(x, y);
+                    if (cell == null)
+                    {
+                        continue;
+                    }
+
+                    for (var i = 0; i < cell.Count; i++)
+                    {
+                        var collider = cell[i];
+                        if (!collider.Enabled || (collider.Mask & mask) == 0)
+                        {
+                            continue;
+                        }
+                        if (!_tmpList.Contains(collider))
                         {
                             _tmpList.Add(collider);
                         }
