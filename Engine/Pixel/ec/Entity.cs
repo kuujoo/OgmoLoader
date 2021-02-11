@@ -11,7 +11,6 @@ namespace kuujoo.Pixel
         public Transform Transform { get; private set; }
         public bool Enabled => _enabled;
         public string Name { get; set; }
-        public int Tag { get; set; }
         public ComponentList Components { get; private set; }
         public Scene Scene { get; set; }
         bool _enabled = true;
