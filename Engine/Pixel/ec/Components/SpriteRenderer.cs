@@ -36,6 +36,7 @@ namespace kuujoo.Pixel
                 _frameIndex = value % Sprite.Animations[AnimationIndex].Frames.Count;
             }
         }
+        public Color Color { get; set; }
         public Sprite.Frame CurrentFrame => Sprite.Animations[_animationIndex].Frames[_frameIndex];
         public int Frame { get; set; }
         public Sprite Sprite { get; set; }
@@ -50,6 +51,7 @@ namespace kuujoo.Pixel
             Scale = Vector2.One;
             Frame = 0;
             FlipX = false;
+            Color = Color.White;
         }
         public void Update()
         {
@@ -77,7 +79,7 @@ namespace kuujoo.Pixel
         {
             if (Sprite == null) return;
 
-            graphics.DrawSpriteFrame(Entity.Transform.Position.ToVector2(), Sprite.Pivot, Scale, CurrentFrame, Color.White, FlipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None);  
+            graphics.DrawSpriteFrame(Entity.Transform.Position.ToVector2(), Sprite.Pivot, Scale, CurrentFrame, Color, FlipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None);  
         }
         public bool IsVisibleFromCamera(Camera camera)
         {
