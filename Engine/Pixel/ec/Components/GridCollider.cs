@@ -6,36 +6,36 @@ namespace kuujoo.Pixel
     public class GridCollider : Collider, IGrid, IRenderable
     {
         public int Layer { get; set; }
-        public int CellWidth => _grid.CellWidth;
-        public int CellHeight => _grid.CellHeight;
+        public int CellWidth { get; private set; }
+        public int CellHeight { get; private set; }
         public override Rectangle Bounds => new Rectangle((Entity.Transform.Position), new Point(Width * CellWidth, Height * CellHeight));
         public int Width => _grid.Width;
         public int Height => _grid.Height;
         ByteGrid _grid;
         public GridCollider(int width, int height, int cellw, int cellh)
         {
-            _grid = new ByteGrid(width, height, cellw, cellh);
+            CellWidth = cellw;
+            CellHeight = cellh;
+            _grid = new ByteGrid(width, height);
         }
-        public GridCollider(ByteGrid grid)
+        public GridCollider(ByteGrid grid, int cellw, int cellh)
         {
             _grid = grid;
+            CellWidth = cellw;
+            CellHeight = cellh;
         }
-
         public byte GetValue(int x, int y)
         {
             return GetValueByIndex(y * Width + x);
         }
-
         public byte GetValueByIndex(int idx)
         {
             return _grid.GetValueByIndex(idx);
         }
-
         public void SetValue(int x, int y, byte value)
         {
             _grid.SetValue(x, y, value);
         }
-
         public void SetValueByIndex(int index, byte value)
         {
             _grid.SetValueByIndex(index, value);

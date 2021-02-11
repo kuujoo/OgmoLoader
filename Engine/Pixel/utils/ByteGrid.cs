@@ -16,16 +16,12 @@ namespace kuujoo.Pixel
     public class ByteGrid : IGrid
     {
         byte[] _grid;
-        public int CellWidth { get; private set; }
-        public int CellHeight { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public ByteGrid(int width, int height, int cellw, int cellh)
+        public ByteGrid(int width, int height)
         {
             Width = width;
             Height = height;
-            CellWidth = cellw;
-            CellHeight = cellh;
             _grid = new byte[Width * Height];
         }
         public byte GetValue(int x, int y)

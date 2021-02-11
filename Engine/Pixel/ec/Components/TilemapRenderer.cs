@@ -8,8 +8,6 @@ namespace kuujoo.Pixel
     public class TilemapRenderer : Component, IGrid, IRenderable
     {
         public int Layer { get; set; }
-        public int CellWidth => Tileset.TileWidth;
-        public int CellHeight => Tileset.TileHeight;
         public static byte EmptyTile = 0;
         public int Width => _grid.Width;
         public int Height => _grid.Height;
@@ -17,7 +15,7 @@ namespace kuujoo.Pixel
         ByteGrid _grid;
         public TilemapRenderer(int wtiles, int htiles, Tileset tileset)
         {
-            _grid = new ByteGrid(wtiles, htiles, tileset.TileWidth, tileset.TileHeight);
+            _grid = new ByteGrid(wtiles, htiles);
             Tileset = tileset;
         }
         public TilemapRenderer(ByteGrid grid, Tileset tileset)
