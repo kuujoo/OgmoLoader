@@ -46,7 +46,7 @@ namespace kuujoo.Pixel
                                         for (var p = 0; p < TexturePages.Length; p++)
                                         {
                                             Rectangle rect;
-                                            if (TexturePages[i].SubTextures.TryGetValue(textureInfo[ti].PackId, out rect))
+                                            if (TexturePages[p].SubTextures.TryGetValue(textureInfo[ti].PackId, out rect))
                                             {
                                                 using (var stream = TitleContainer.OpenStream(files[i]))
                                                 {
@@ -57,7 +57,7 @@ namespace kuujoo.Pixel
                                                         data.X += rect.X;
                                                         data.Y += rect.Y;
                                                     }
-                                                    var font = new BMFont(TexturePages[i].Texture, fontDesc);
+                                                    var font = new BMFont(TexturePages[p].Texture, fontDesc);
                                                     _fonts[Path.GetFileNameWithoutExtension(files[i])] = font;
                                                 }
                                             }
