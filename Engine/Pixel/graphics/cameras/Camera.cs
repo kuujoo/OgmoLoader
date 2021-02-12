@@ -164,10 +164,10 @@ namespace kuujoo.Pixel
         }
         public void EndRender(Graphics graphics)
         {
+            graphics.End();
             graphics.PopEffect(Effect);
             graphics.PopMatrix(Matrix);
             graphics.PopSurface(Surface);
-            graphics.End();
         }
         public Vector2 CameraToScreen(Vector2 p)
         {
