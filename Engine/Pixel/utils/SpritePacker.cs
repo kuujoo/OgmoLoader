@@ -64,6 +64,12 @@ namespace kuujoo.Pixel
             {
                 Texture = new Texture2D(Engine.Instance.GraphicsDevice, _pageWidth, _pageHeight)
             };
+            var initialData = new Color[_pageWidth * _pageHeight];
+            for(var i = 0; i < _pageWidth * _pageHeight; i++)
+            {
+                initialData[i] = new Color(0, 0, 0, 0);
+            }
+            texturepage.Texture.SetData<Color>(initialData);
             _texturePages.Add(texturepage);
             return texturepage;
         }
