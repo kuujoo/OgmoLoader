@@ -22,25 +22,25 @@ namespace kuujoo.Pixel
             Entities = new EntityList();
             DebugRender = false;
             UpdateDrawRect();
+            _tracker = AddSceneComponent(new Tracker());
             Initialize();
         }
         public virtual void Initialize()
         {
-            _tracker = AddSceneComponent(new Tracker());
+          
         }
         public void EndScene()
         {
+            for (var i = 0; i < Entities.Count; i++)
+            {
+                DestroyEntity(Entities[i]);
+            }
+
             for (var i = 0; i < _sceneComponents.Count; i++)
             {
                 _sceneComponents[i].CleanUp();
             }
             _sceneComponents.Clear();
-
-
-            for (var i = 0; i < Entities.Count; i++)
-            {
-                DestroyEntity(Entities[i]);
-            }
         }
         public virtual void Update()
         {
