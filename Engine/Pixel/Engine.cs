@@ -126,8 +126,6 @@ namespace kuujoo.Pixel
             if (PauseOnFocusLost && !IsActive) return;
             StartDebugDraw(gameTime);
             {
-                GraphicsDevice.SetRenderTarget(null);
-                GraphicsDevice.Clear(ClearColor);
                 if(_scene != null)
                 {
                     _scene.Render();
