@@ -45,7 +45,7 @@ namespace kuujoo.Pixel
         {
             return Entity.Scene.GetSceneComponent<T>();
         }
-        public T GetComponent<T>() where T : Component
+        public T GetComponent<T>() where T : class
         {
             return Entity.GetComponent<T>();
         }
