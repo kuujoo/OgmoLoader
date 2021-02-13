@@ -17,15 +17,13 @@ namespace kuujoo.Pixel
     }
     public class TextRenderer : Component, IRenderable
     {
-        public Rectangle Bounds => new Rectangle(GetTextPosition().ToPoint(), _textDimensions.ToPoint());
+        public Vector2 TextDimensions { get; private set; }
         public Color Color { get; set; }
         public BMFont Font { get; set; }
         public string Text { get; private set; }
         public int Layer { get; set; }
         public HorizontalTextAlign HorizontalAlign { get; set; }
         public VerticalTextAlign VerticalAlign { get; set; }
-
-        Vector2 _textDimensions;
         public TextRenderer()
         {
             Layer = 0;
@@ -40,7 +38,7 @@ namespace kuujoo.Pixel
         }
         public void SetText(string text)
         {
-            _textDimensions = Font.MeasureString(text);
+            TextDimensions = Font.MeasureString(text);
             Text = text;
         }
 
@@ -55,7 +53,7 @@ namespace kuujoo.Pixel
                 return true;
             }
         }
-        int GetHorizontalPosition()
+        public int GetHorizontalPosition()
         {
             switch (HorizontalAlign)
             {
@@ -65,16 +63,16 @@ namespace kuujoo.Pixel
                     }
                 case HorizontalTextAlign.Right:
                     {
-                        return (int)(Entity.Transform.Position.X - _textDimensions.X);
+                        return (int)(Entity.Transform.Position.X - TextDimensions.X);
                     }
                 case HorizontalTextAlign.Center:
                     {
-                        return (int)(Entity.Transform.Position.X - _textDimensions.X / 2.0f);
+                        return (int)(Entity.Transform.Position.X - TextDimensions.X / 2.0f);
                     }
             }
             return 0;
         }
-        int GetVerticalPosition()
+        public int GetVerticalPosition()
         {
             switch (VerticalAlign)
             {
@@ -84,20 +82,20 @@ namespace kuujoo.Pixel
                     }
                 case VerticalTextAlign.Bottom:
                     {
-                        return (int)(Entity.Transform.Position.Y - _textDimensions.Y);
+                        return (int)(Entity.Transform.Position.Y - TextDimensions.Y);
                     }
                 case VerticalTextAlign.Center:
                     {
-                        return (int)(Entity.Transform.Position.Y - _textDimensions.Y / 2.0f);
+                        return (int)(Entity.Transform.Position.Y - TextDimensions.Y / 2.0f);
                     }
             }
             return 0;
         }
-        Vector2 GetTextPosition()
+        public Vector2 GetTextPosition()
         {
             return new Vector2(GetHorizontalPosition(), GetVerticalPosition());
         }
-        public void Render(Graphics graphics)
+        public virtual void Render(Graphics graphics)
         {
             graphics.DrawText(Font, Text, GetTextPosition(), Color);
         }
