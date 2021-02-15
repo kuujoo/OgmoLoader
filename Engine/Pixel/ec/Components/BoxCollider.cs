@@ -20,16 +20,18 @@ namespace kuujoo.Pixel
         }
         public override bool Collides(Collider other, Point offset)
         {
+            var mybounds = Bounds;
+            mybounds.Location += offset;
             if (other is BoxCollider)
             {
                 var otherbounds = (other as BoxCollider).Bounds;
-                otherbounds.Location += offset;
-                return CollisionChecks.RectAndRect(otherbounds, Bounds);
+                return CollisionChecks.RectAndRect(otherbounds, mybounds);
             }
             else if (other is GridCollider)
             {
                 var grid = other as GridCollider;
-                return CollisionChecks.RectAndGrid(Bounds, grid, grid.CellWidth, grid.CellHeight);
+                mybounds.Location -= other.Entity.Transform.Position;
+                return CollisionChecks.RectAndGrid(mybounds, grid, grid.CellWidth, grid.CellHeight);
             }
             return false;
         }

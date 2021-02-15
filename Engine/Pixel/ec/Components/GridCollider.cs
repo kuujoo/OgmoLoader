@@ -45,8 +45,7 @@ namespace kuujoo.Pixel
             if (other is BoxCollider)
             {
                 var r = other.Bounds;
-                r.Location -= Entity.Transform.Position;
-                r.Location += offset;
+                r.Location -= (Entity.Transform.Position + offset);
                 return CollisionChecks.RectAndGrid(r, this, CellWidth, CellHeight);            
             }
             return false;

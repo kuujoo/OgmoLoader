@@ -76,7 +76,7 @@ namespace kuujoo.Pixel
                 var c = colliders[i];
                 if (c == this || !c.Enabled || (c.Mask & mask) == 0) continue;
 
-                if( c.Collides(this, offset) )
+                if( Collides(c, offset) )
                 {
                     return c;
                 }
