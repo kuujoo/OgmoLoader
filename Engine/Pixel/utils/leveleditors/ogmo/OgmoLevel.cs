@@ -12,6 +12,7 @@ namespace kuujoo.Pixel
         public int OffsetX { get; set; }
         public int OffsetY { get; set; }
         public OgmoLayer[] Layers { get; set; }
+        public Dictionary<string, object> Values { get; set; }
         public static OgmoLevel LoadLevel(string path)
         {
             var data = File.ReadAllText(path);
