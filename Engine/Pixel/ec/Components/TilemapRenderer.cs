@@ -5,7 +5,7 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
-    public class TilemapRenderer : Component, IGrid, IRenderable
+    public class TilemapRenderer : Component, IRenderable
     {
         public int Layer { get; set; }
         public static byte EmptyTile = 0;
