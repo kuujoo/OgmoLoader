@@ -3,8 +3,16 @@ using System.Collections.Generic;
 
 namespace kuujoo.Pixel
 {
+    public static class InputTag
+    {
+        public static int Default = 0;
+        public static int Player = 1;
+        public static int Menu = 2;
+    }
+
     public class Input
     {
+        public int Tag { get; set; }
         public bool Down { get; private set; }
         public bool Pressed { get; private set; }
         public bool Released { get; private set; }
@@ -16,6 +24,13 @@ namespace kuujoo.Pixel
         {
             _buffer_time = buffer_time;
         }
+        public void Reset()
+        {
+            Pressed = false;
+            Down = false;
+            Released = false;
+            _buffer_timer = 0.0f;
+        }
         public Input SetKey(Keys key)
         {
             _nodes.Add(new KeyboardInput(key));
@@ -24,6 +39,11 @@ namespace kuujoo.Pixel
         public Input SetButton(int _gamepad, Buttons button)
         {
             _nodes.Add(new GamepadInput(0, button));
+            return this;
+        }
+        public Input SetTag(int tag)
+        {
+            Tag = tag;
             return this;
         }
         public void ConsumeBuffer()
