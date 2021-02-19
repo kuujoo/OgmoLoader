@@ -2,7 +2,7 @@
 
 namespace kuujoo.Pixel
 {
-    public class TextWithBackgroundRenderer : TextRenderer
+    public class TextWithBackgroundRenderer : Label
     {
         public Color BackgroundColor { get; set; }
         public int Margin { get; set; }
@@ -13,8 +13,8 @@ namespace kuujoo.Pixel
         }
         public override void Render(Graphics graphics)
         {
-            var textDims = TextDimensions;
-            var tp = GetTextPosition();
+            var textDims = Size;
+            var tp = GetRenderPosition();
             graphics.DrawRect(new Rectangle((int)tp.X - Margin, (int)tp.Y - Margin, (int)textDims.X + Margin * 2, (int)textDims.Y + Margin * 2), BackgroundColor);
             graphics.DrawText(Font, Text, tp, Color);
         }
