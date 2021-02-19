@@ -76,5 +76,10 @@ namespace kuujoo.Pixel
                 }
             }
         }
+
+        public void SetFrom(IGrid grid, int x, int y)
+        {
+            _grid.SetFrom(grid, x, y);
+        }
     }
 }
