@@ -108,6 +108,7 @@ namespace kuujoo.Pixel
             {
                 gfx.PushEffect(FinalEffect);
             }
+            gfx.PushSamplerState(SamplerState.PointClamp);
             gfx.Begin();
             gfx.Device.Clear(Color.Black);
             gfx.SpriteBatch.Draw(ApplicationSurface.Target, finalDestinationRect, Color.White);
@@ -116,6 +117,7 @@ namespace kuujoo.Pixel
             {
                 gfx.PopEffect(FinalEffect);   
             }
+            gfx.PopSamplerState();
         }
         public T AddSceneComponent<T>(T sceneComponent) where T: SceneComponent
         {

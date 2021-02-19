@@ -16,6 +16,7 @@ namespace kuujoo.Pixel
         public Stack<Surface> _surfaceStack = new Stack<Surface>();
         public Stack<Matrix> _matrixStack = new Stack<Matrix>();
         public Stack<Effect> _effectStack = new Stack<Effect>();
+        public Stack<SamplerState> _samplerStates = new Stack<SamplerState>();
         BlendState _nonPreMultipliedBlendState;
         public Graphics(GraphicsDeviceManager devicemanager)
         {
@@ -42,6 +43,14 @@ namespace kuujoo.Pixel
         public void PushSurface(Surface surface)
         {
             _surfaceStack.Push(surface);
+        }
+        public void PushSamplerState(SamplerState state)
+        {
+            _samplerStates.Push(state);
+        }
+        public void PopSamplerState()
+        {
+            _samplerStates.Pop();
         }
         public void PushMatrix(Matrix matrix)
         {
@@ -86,13 +95,14 @@ namespace kuujoo.Pixel
             }
 
             var effect = _effectStack.Count > 0 ? _effectStack.Peek() : null;
+            var samplerState = _samplerStates.Peek();
             if (_matrixStack.Count > 0)
             {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, _nonPreMultipliedBlendState, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, effect, _matrixStack.Peek());
+                SpriteBatch.Begin(SpriteSortMode.Deferred, _nonPreMultipliedBlendState, samplerState, DepthStencilState.None, RasterizerState.CullNone, effect, _matrixStack.Peek());
             }
             else
             {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, _nonPreMultipliedBlendState, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, effect);
+                SpriteBatch.Begin(SpriteSortMode.Deferred, _nonPreMultipliedBlendState, samplerState, DepthStencilState.None, RasterizerState.CullNone, effect);
             }
         }
         public void End()
