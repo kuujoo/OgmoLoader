@@ -15,13 +15,17 @@ namespace kuujoo.Pixel
         public Graphics Graphics { get; set; }
         public Scene Scene { get { return _scene; } set { _nextScene = value; } }
         public bool PauseOnFocusLost { get; set; }
-        FpsCounter _frameCounter = new FpsCounter();
+        public PerformanceTimer UpdateTimer { get; private set; }
+        public PerformanceTimer RenderTimer { get; private set; }
+        public int RenderFps { get; private set; }
+        public int UpdateFps { get; private set; }
         internal static Engine _instance;
         bool _resizing = false;
         string _windowTitle;
         Scene _scene;
         Scene _nextScene;
         CoroutineManager _coroutineManager;
+        Stopwatch _stopwatch = new Stopwatch();
         int _width;
         int _height;
         public Engine(int width = 1920, int height = 1080, bool fullscreen = false, string title = "Pixel", string contentDirectory = "Content")
@@ -50,6 +54,9 @@ namespace kuujoo.Pixel
             //  Monogame 3.8 bug workaround: Window size does not change to "preferred backbuffer size" if changed inside Game()-constructor. Do change inside Engine::Initialize()
             _width = width;
             _height = height;
+
+            UpdateTimer = new PerformanceTimer();
+            RenderTimer = new PerformanceTimer();
         }
         public ICoroutine StartCoroutine(IEnumerator enumerator)
         {
@@ -61,14 +68,6 @@ namespace kuujoo.Pixel
             Screen.SetSize(_width, _height);
             Window.ClientSizeChanged += OnClientSizeChanged; 
         }
-        [Conditional("DEBUG")]
-        private void StartDebugUpdate(GameTime gameTime)
-        {
-        }
-        [Conditional("DEBUG")]
-        private void EndDebugUpdate(GameTime gameTime)
-        {
-        }
         protected override void Update(GameTime gameTime)
         {    
             if (PauseOnFocusLost && !IsActive)
@@ -76,8 +75,10 @@ namespace kuujoo.Pixel
                 SuppressDraw();
                 return;
             }
-            StartDebugUpdate(gameTime);
             {
+#if DEBUG
+                UpdateTimer.Start();
+#endif
                 Time.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                 _coroutineManager.Update();
                 if (_nextScene != null)
@@ -98,42 +99,31 @@ namespace kuujoo.Pixel
                 {
                     _scene.Update();
                 }
+#if DEBUG
+                UpdateTimer.Stop();
+                UpdateFps = (int)Math.Ceiling(1.0 / gameTime.ElapsedGameTime.TotalSeconds);
+#endif
                 base.Update(gameTime);
-            }
-            EndDebugUpdate(gameTime);
-         
-        }
-        Stopwatch _stopwatch = new Stopwatch();
-        [Conditional("DEBUG")]
-        private void StartDebugDraw(GameTime gametime)
-        {
-            _stopwatch.Start();
-        }
-        [Conditional("DEBUG")]
-        private void EndDebugDraw(GameTime gameTime)
-        {
-            if (_frameCounter.Update(gameTime.ElapsedGameTime))
-            {
-                
-                Window.Title = $"{_windowTitle} - {_frameCounter.Fps} fps";
-            }
-            var elapsed = _stopwatch.Elapsed;
-           // Console.WriteLine(elapsed.TotalMilliseconds);
-            _stopwatch.Reset();
+            }      
         }
         protected override void Draw(GameTime gameTime)
         {       
             if (PauseOnFocusLost && !IsActive) return;
-            StartDebugDraw(gameTime);
+#if DEBUG
+            RenderTimer.Start();
+#endif
+            if(_scene != null)
             {
-                if(_scene != null)
-                {
-                    _scene.Render();
-                }
-                base.Draw(gameTime);
+                _scene.Render();
             }
-            EndDebugDraw(gameTime);
-         
+#if DEBUG
+            RenderTimer.Stop();
+            RenderFps = (int)Math.Ceiling(1.0 / gameTime.ElapsedGameTime.TotalSeconds);
+            Window.Title = $"Render ms: {RenderTimer.Average} Render FPS: {RenderFps} Update MS: {UpdateTimer.Average} Update FPS: {UpdateFps}";
+#endif
+            base.Draw(gameTime);
+
+
         }
         protected override void OnExiting(object sender, EventArgs args)
         {
