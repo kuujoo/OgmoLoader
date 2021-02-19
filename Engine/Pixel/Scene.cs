@@ -85,6 +85,7 @@ namespace kuujoo.Pixel
                             _cameras[i].Render(gfx, renderable);
                         }
                     }
+#if DEBUG
                     if (DebugRender)
                     { 
                         for (var r = 0; r < renderables.Count; r++)
@@ -96,6 +97,7 @@ namespace kuujoo.Pixel
                             }
                         }
                     }
+#endif
                     _cameras[i].EndRender(gfx);
                 }
             }
