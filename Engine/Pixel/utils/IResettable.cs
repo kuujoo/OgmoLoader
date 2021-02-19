@@ -1,4 +1,5 @@
-﻿namespace kuujoo.Pixel
+
+namespace kuujoo.Pixel
 {
     public interface IResettable
 	{
