@@ -5,7 +5,12 @@ using Microsoft.Xna.Framework;
 
 namespace kuujoo.Pixel
 {
-    public class SpriteResources : SceneComponent
+    public interface ISpriteLibrary
+    {
+        public Sprite GetSprite(string name);
+    }
+
+    public class RuntimeSpriteLibrary : SceneComponent, ISpriteLibrary
     {
         public TexturePage[] TexturePages { get; private set; }
         Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>();
@@ -14,7 +19,7 @@ namespace kuujoo.Pixel
         static string[] _imageExtensions = { "*.ase", "*.png", "*.jpg", "*.jpeg", "*.bmp" };
         int _texturepagewidth;
         int _texturepageheight;
-        public SpriteResources(int texturepagewidth, int texturepageheight, string[] spritedirectory)
+        public RuntimeSpriteLibrary(int texturepagewidth, int texturepageheight, string[] spritedirectory)
         {
             _spritedirectory = spritedirectory;
             _texturepagewidth = texturepagewidth;

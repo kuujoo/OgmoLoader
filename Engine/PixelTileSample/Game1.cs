@@ -15,7 +15,7 @@ namespace kuujoo.Pixel
 
             var room = new Scene(384, 216);
             string[] sprites = { "Content/Sprites" };
-            var res = room.AddSceneComponent(new SpriteResources(128,128, sprites)) as SpriteResources;
+            var res = room.AddSceneComponent(new RuntimeSpriteLibrary(128,128, sprites)) as RuntimeSpriteLibrary;
             var cameraEntity = room.CreateEntity();
             room.AddCamera(cameraEntity.AddComponent(new Camera(384, 216)));
             var sprite = res.GetSprite("sheet");

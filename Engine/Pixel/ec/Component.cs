@@ -45,7 +45,7 @@ namespace kuujoo.Pixel
         {
             return Engine.Instance.StartCoroutine(enumerator);
         }
-        protected T GetSceneComponent<T>() where T: SceneComponent
+        protected T GetSceneComponent<T>() where T: class
         {
             return Entity.Scene.GetSceneComponent<T>();
         }

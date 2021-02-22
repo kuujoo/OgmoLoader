@@ -34,9 +34,9 @@ namespace kuujoo.Pixel
 
             var room = new Scene(384, 216);
             string[] sprites = { "Content/Sprites" };
-            var spriteResources = room.AddSceneComponent(new SpriteResources(2048, 2048, sprites));
+            var spriteResources = room.AddSceneComponent(new RuntimeSpriteLibrary(2048, 2048, sprites));
             string[] fonts = { "Content/Fonts" };
-            var fontResources = room.AddSceneComponent(new FontResources(2048, 2048, fonts));
+            var fontResources = room.AddSceneComponent(new RuntimeFontLibrary(2048, 2048, fonts));
             var cameraEntity = room.CreateEntity();
             var camera = cameraEntity.AddComponent(new Camera(384, 216)
             {

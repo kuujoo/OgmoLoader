@@ -13,7 +13,7 @@ namespace kuujoo.Pixel
         }
         public void Render(Graphics graphics)
         {
-            var resources = Scene.GetSceneComponent<SpriteResources>();
+            var resources = Scene.GetSceneComponent<RuntimeSpriteLibrary>();
             int y = 0;
             int x = 0;
             for (var i = 0; i < resources.TexturePages.Length; i++)
@@ -43,7 +43,7 @@ namespace kuujoo.Pixel
             Screen.SetSize(1920, 1080);
             var room = new Scene(1920, 1080);
             string[] sprites = { "Content/Sprites" };
-            var resources = room.AddSceneComponent(new SpriteResources(256, 256, sprites));
+            var resources = room.AddSceneComponent(new RuntimeSpriteLibrary(256, 256, sprites));
             var cameraEntity = room.CreateEntity();
             var camera = cameraEntity.AddComponent(new Camera(1920, 1080)
             {

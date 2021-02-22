@@ -133,7 +133,7 @@ namespace kuujoo.Pixel
             _sceneComponents.Add(sceneComponent);
             return sceneComponent;
         }
-        public T GetSceneComponent<T>() where T : SceneComponent
+        public T GetSceneComponent<T>() where T : class
         {
             for (var i = 0; i < _sceneComponents.Count; i++)
             {

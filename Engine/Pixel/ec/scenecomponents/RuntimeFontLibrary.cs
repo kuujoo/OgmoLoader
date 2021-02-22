@@ -5,7 +5,12 @@ using kuujoo.Pixel.Packer;
 
 namespace kuujoo.Pixel
 {
-    public class FontResources : SceneComponent
+    public interface IFontLibrary
+    {
+        public BMFont GetFont(string name);
+    }
+
+    public class RuntimeFontLibrary : SceneComponent, IFontLibrary
     {
         public TexturePage[] TexturePages { get; private set; }
         Dictionary<string, BMFont> _fonts = new Dictionary<string, BMFont>();
@@ -13,7 +18,7 @@ namespace kuujoo.Pixel
         string[] _fontdirectory;
         int _texturepagewidth;
         int _texturepageheight;
-        public FontResources(int texturepagewidth, int texturepageheight, string[] fontDirectories)
+        public RuntimeFontLibrary(int texturepagewidth, int texturepageheight, string[] fontDirectories)
         {
             _texturepagewidth = texturepagewidth;
             _texturepageheight = texturepageheight;
