@@ -1091,6 +1091,7 @@ namespace ldtk
     public partial class LdtkJson
     {
         public static LdtkJson FromJson(string json) => JsonConvert.DeserializeObject<LdtkJson>(json, ldtk.Converter.Settings);
+        public static Level LevelFromJson(string json) => JsonConvert.DeserializeObject<Level>(json, ldtk.Converter.Settings);
     }
 
     public static class Serialize
