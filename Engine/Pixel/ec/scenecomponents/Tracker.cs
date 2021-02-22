@@ -120,10 +120,13 @@ namespace kuujoo.Pixel
         public void GetComponents<T>(ref List<T> components) where T : Component
         {
             var type = typeof(T);
-            var list = _components[type];
-            for(var i = 0; i < list.Count; i++)
+            List<Component> cs = null;
+            if (_components.TryGetValue(type, out cs))
             {
-                components.Add(list[i] as T);
+                for (var i = 0; i < cs.Count; i++)
+                {
+                    components.Add(cs[i] as T);
+                }
             }
         }
         public List<Collider> Check(ref Rectangle rect, int mask)
