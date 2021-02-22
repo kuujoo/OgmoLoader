@@ -41,5 +41,15 @@ namespace kuujoo.Pixel
             _position.Y += y;
             Changed?.Invoke(this);
         }
+        public void SetPositionY(int y)
+        {
+            _position.Y = y;
+            Changed?.Invoke(this);
+        }
+        public void SetPositionX(int x)
+        {
+            _position.X = x;
+            Changed?.Invoke(this);
+        }
     }
 }
