@@ -4,9 +4,9 @@ Simple 2D game engine made in C# .NET Core.
 
 ### Features
 * Scene Entity Component architecture
-* Fast Collision detection based on grids and rectangles
+* Collision detection based on grids and rectangles
 * Support for multiple image formats: .png, .jpeg, .bmp
-* Support for AseSprite files: load images & animations directly.
+* Support for Aseprite files: load images & animations directly.
 * Runtime sprite atlas generation
 * Level Editor support. ( [LDTK](https://ldtk.io/) & [Ogmo Editor 3](https://ogmo-editor-3.github.io/) )
 
