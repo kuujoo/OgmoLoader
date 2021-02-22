@@ -17,16 +17,8 @@ namespace kuujoo.Pixel
         public Stack<Matrix> _matrixStack = new Stack<Matrix>();
         public Stack<Effect> _effectStack = new Stack<Effect>();
         public Stack<SamplerState> _samplerStates = new Stack<SamplerState>();
-        BlendState _nonPreMultipliedBlendState;
         public Graphics(GraphicsDeviceManager devicemanager)
         {
-            _nonPreMultipliedBlendState = new BlendState
-            {
-                ColorSourceBlend = Blend.SourceAlpha,
-                ColorDestinationBlend = Blend.InverseSourceAlpha,
-                AlphaSourceBlend = Blend.One,
-                AlphaDestinationBlend = Blend.InverseSourceAlpha,
-            };
             DeviceManager = devicemanager;
             SpriteBatch = new SpriteBatch(Device);
             if (Pixel == null)
@@ -98,11 +90,11 @@ namespace kuujoo.Pixel
             var samplerState = _samplerStates.Peek();
             if (_matrixStack.Count > 0)
             {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, _nonPreMultipliedBlendState, samplerState, DepthStencilState.None, RasterizerState.CullNone, effect, _matrixStack.Peek());
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, samplerState, DepthStencilState.None, RasterizerState.CullNone, effect, _matrixStack.Peek());
             }
             else
             {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, _nonPreMultipliedBlendState, samplerState, DepthStencilState.None, RasterizerState.CullNone, effect);
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, samplerState, DepthStencilState.None, RasterizerState.CullNone, effect);
             }
         }
         public void End()

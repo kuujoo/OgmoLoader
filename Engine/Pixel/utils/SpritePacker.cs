@@ -11,12 +11,18 @@ namespace kuujoo.Pixel
         public Texture2D Texture { get; set; }
         public List<Atlas.SubImage> SubTextures { get; private set; }
 
-        public static TexturePage FromAtlas(GraphicsDevice graphicesDevice ,Atlas atlas)
+        public static TexturePage FromAtlas(GraphicsDevice graphicesDevice, Atlas atlas)
         {
             var page = new TexturePage();
             page.SubTextures = atlas.Subimages;
+
+            kuujoo.Pixel.Packer.Color[] preMultiply = new kuujoo.Pixel.Packer.Color[atlas.Width * atlas.Height];
+            for(var i = 0; i < atlas.Pixels.Length; i++)
+            {
+                preMultiply[i] = atlas.Pixels[i].ToPreMultiplied();
+            }
             page.Texture = new Texture2D(graphicesDevice, atlas.Width, atlas.Height);
-            page.Texture.SetData<kuujoo.Pixel.Packer.Color>(atlas.Pixels);
+            page.Texture.SetData<kuujoo.Pixel.Packer.Color>(preMultiply);
             return page;
         }
         public TexturePage()
