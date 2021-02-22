@@ -1,5 +1,5 @@
 ## Pixel
-Simple 2D game framework made in C# .NET Core.  
+Simple 2D game engine made in C# .NET Core.  
 **Project is a work in progress. Breaking changes are expected**
 
 ### Features
