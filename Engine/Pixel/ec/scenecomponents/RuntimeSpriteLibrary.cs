@@ -5,16 +5,11 @@ using Microsoft.Xna.Framework;
 
 namespace kuujoo.Pixel
 {
-    public interface ISpriteLibrary
-    {
-        public Sprite GetSprite(string name);
-    }
 
     public class RuntimeSpriteLibrary : SceneComponent, ISpriteLibrary
     {
         public TexturePage[] TexturePages { get; private set; }
         Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>();
-        Dictionary<string, BMFont> _fonts = new Dictionary<string, BMFont>();
         string[] _spritedirectory;
         static string[] _imageExtensions = { "*.ase", "*.png", "*.jpg", "*.jpeg", "*.bmp" };
         int _texturepagewidth;

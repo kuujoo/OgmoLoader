@@ -5,11 +5,6 @@ using kuujoo.Pixel.Packer;
 
 namespace kuujoo.Pixel
 {
-    public interface IFontLibrary
-    {
-        public BMFont GetFont(string name);
-    }
-
     public class RuntimeFontLibrary : SceneComponent, IFontLibrary
     {
         public TexturePage[] TexturePages { get; private set; }
