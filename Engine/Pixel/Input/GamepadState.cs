@@ -5,6 +5,7 @@ namespace kuujoo.Pixel
 {
 	public class GamepadState
 	{
+		public bool Used { get; private set; }
 		public GamePadDeadZone DeadZone = GamePadDeadZone.IndependentAxes;
 		PlayerIndex _playerIndex;
 		GamePadState _previousState;
@@ -16,11 +17,13 @@ namespace kuujoo.Pixel
 			_previousState = new GamePadState();
 			_currentState = GamePad.GetState(_playerIndex);
 			_rumbleTime = 0.0f;
+			Used = false;
 		}
 		public void Update()
 		{
 			_previousState = _currentState;
 			_currentState = GamePad.GetState(_playerIndex, DeadZone);
+			Used = (_currentState.Buttons != _previousState.Buttons || _currentState.DPad != _previousState.DPad);
 			if (_rumbleTime > 0f)
 			{
 				_rumbleTime = MathExt.Approach(_rumbleTime, 0.0f, Time.UnscaledDeltaTime);
