@@ -29,6 +29,10 @@ namespace kuujoo.Pixel
             }
             return null;
         }
+        public List<T> GetItemsToAdd()
+        {
+            return _itemsToAdd;
+        }
         public void UpdateLists()
         {
             UpdateRemoveList();
