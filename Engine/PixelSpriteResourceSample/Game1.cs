@@ -33,8 +33,10 @@ namespace kuujoo.Pixel
             base.Initialize();
 
             var room = new Scene(384, 216);
-            var spriteResources = room.AddSceneComponent(new SpriteResources(2048, 2048, "Content/Sprites"));
-            var fontResources = room.AddSceneComponent(new FontResources(2048, 2048, "Content/Fonts"));
+            string[] sprites = { "Content/Sprites" };
+            var spriteResources = room.AddSceneComponent(new SpriteResources(2048, 2048, sprites));
+            string[] fonts = { "Content/Fonts" };
+            var fontResources = room.AddSceneComponent(new FontResources(2048, 2048, fonts));
             var cameraEntity = room.CreateEntity();
             var camera = cameraEntity.AddComponent(new Camera(384, 216)
             {

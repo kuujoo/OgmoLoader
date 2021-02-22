@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;
+using kuujoo.Pixel.Packer;
 
 namespace kuujoo.Pixel
 {
@@ -9,61 +10,64 @@ namespace kuujoo.Pixel
         public TexturePage[] TexturePages { get; private set; }
         Dictionary<string, BMFont> _fonts = new Dictionary<string, BMFont>();
         static string[] _fontExtensions = { "*.fnt" };
-        string _fontdirectory;
-        public FontResources(int texturepagewidth, int texturepageheight, string fontDirectory = "")
+        string[] _fontdirectory;
+        int _texturepagewidth;
+        int _texturepageheight;
+        public FontResources(int texturepagewidth, int texturepageheight, string[] fontDirectories)
         {
-            _fontdirectory = fontDirectory;
+            _texturepagewidth = texturepagewidth;
+            _texturepageheight = texturepageheight;
+            _fontdirectory = fontDirectories;
             BuildFonts();
         }
         void BuildFonts()
         {
-            List<TextureInfo> textureInfo;
-            TexturePagesBuilder builder = new TexturePagesBuilder();
+            SpritePacker packer = new SpritePacker(_texturepagewidth, _texturepageheight);
+            Dictionary<string, string> fontToSubimage = new Dictionary<string, string>();
+            for (var d = 0; d < _fontdirectory.Length; d++)
             {
-                if (_fontdirectory != "")
+                for (var i = 0; i < _fontExtensions.Length; i++)
                 {
-                    for (var w = 0; w < _fontExtensions.Length; w++)
+                    var files = Directory.GetFiles(_fontdirectory[d], _fontExtensions[i], SearchOption.AllDirectories);
+
+                    for (var f = 0; f < files.Length; f++)
                     {
-                        var files = Directory.GetFiles(_fontdirectory, _fontExtensions[w]);
-                        if (files.Length > 0)
+                        var textureFile = FontData.GetTextureNameForFont(files[i]);
+                        packer.Add(textureFile);
+                        fontToSubimage[files[i]] = Path.GetFileNameWithoutExtension(textureFile);
+                    }
+                }
+            }
+            var atlasses = packer.Pack();
+            TexturePages = new TexturePage[atlasses.Count];
+            for (var a = 0; a < atlasses.Count; a++)
+            {
+                TexturePages[a] = TexturePage.FromAtlas(Engine.Instance.Graphics.Device, atlasses[a]);
+            }
+
+            foreach (var ft in fontToSubimage)
+            {
+                var fntFile = ft.Key;
+                var subtextureName = ft.Value;
+                for (var p = 0; p < TexturePages.Length; p++)
+                {
+                    var sub = TexturePages[p].SubTextures;
+                    for (var s = 0; s < sub.Count; s++)
+                    {
+                        var info = sub[s];
+                        if (info.Name == subtextureName)
                         {
-                            for (var i = 0; i < files.Length; i++)
+                            using (var stream = TitleContainer.OpenStream(fntFile))
                             {
-                                var textureFile = FontData.GetTextureNameForFont(files[i]);
-                                builder.Add(textureFile);
-                            }
-
-                            TexturePages = builder.Build(out textureInfo);
-
-                            for (var i = 0; i < files.Length; i++)
-                            {
-                                var textureName = Path.GetFileNameWithoutExtension( FontData.GetTextureNameForFont(files[i]) );
-                                for(var ti = 0; ti < textureInfo.Count; ti++)
+                                var fontDesc = FontData.Load(stream);
+                                for (var f = 0; f < fontDesc.Chars.Count; f++)
                                 {
-                                    if(textureInfo[ti].Name == textureName)
-                                    {
-
-                                        for (var p = 0; p < TexturePages.Length; p++)
-                                        {
-                                            Rectangle rect;
-                                            if (TexturePages[p].SubTextures.TryGetValue(textureInfo[ti].PackId, out rect))
-                                            {
-                                                using (var stream = TitleContainer.OpenStream(files[i]))
-                                                {
-                                                    var fontDesc = FontData.Load(stream);
-                                                    for (var f = 0; f < fontDesc.Chars.Count; f++)
-                                                    {
-                                                        var data = fontDesc.Chars[f];
-                                                        data.X += rect.X;
-                                                        data.Y += rect.Y;
-                                                    }
-                                                    var font = new BMFont(TexturePages[p].Texture, fontDesc);
-                                                    _fonts[Path.GetFileNameWithoutExtension(files[i])] = font;
-                                                }
-                                            }
-                                        }
-                                    }
+                                    var data = fontDesc.Chars[f];
+                                    data.X += info.X;
+                                    data.Y += info.Y;
                                 }
+                                var font = new BMFont(TexturePages[p].Texture, fontDesc);
+                                _fonts[Path.GetFileNameWithoutExtension(fntFile)] = font;
                             }
                         }
                     }

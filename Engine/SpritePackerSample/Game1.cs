@@ -42,7 +42,8 @@ namespace kuujoo.Pixel
             base.Initialize();
             Screen.SetSize(1920, 1080);
             var room = new Scene(1920, 1080);
-            var resources = room.AddSceneComponent(new SpriteResources(256, 256, "Content/Sprites"));
+            string[] sprites = { "Content/Sprites" };
+            var resources = room.AddSceneComponent(new SpriteResources(256, 256, sprites));
             var cameraEntity = room.CreateEntity();
             var camera = cameraEntity.AddComponent(new Camera(1920, 1080)
             {
