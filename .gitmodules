@@ -1,0 +1,3 @@
+[submodule "PixelPacker"]
+	path = PixelPacker
+	url = https://github.com/kuujoo/PixelPacker
