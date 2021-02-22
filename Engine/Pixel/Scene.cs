@@ -51,6 +51,11 @@ namespace kuujoo.Pixel
             Entities.UpdateLists();
             for (var i = 0; i < Entities.Count; i++)
             {
+                var itemsToBeAddded = Entities[i].Components.GetItemsToAdd();
+                for(var j = 0; j < itemsToBeAddded.Count; j++)
+                {
+                    itemsToBeAddded[j].StartUp();
+                }
                 Entities[i].Components.UpdateLists();
             }
 

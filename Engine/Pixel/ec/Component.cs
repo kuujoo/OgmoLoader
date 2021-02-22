@@ -25,6 +25,10 @@ namespace kuujoo.Pixel
             Entity.Transform.Changed -= TransformChanged;
             Scene.GetSceneComponent<Tracker>().RemoveComponent(this);
         }
+        public virtual void StartUp()
+        {
+
+        }
         public virtual void TransformChanged(Transform transform)
         {
 
