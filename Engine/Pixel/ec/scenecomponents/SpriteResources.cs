@@ -12,9 +12,9 @@ namespace kuujoo.Pixel
         public TexturePage[] TexturePages { get; private set; }
         Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>();
         Dictionary<string, BMFont> _fonts = new Dictionary<string, BMFont>();
-        string _spritedirectory;
+        string[] _spritedirectory;
         static string[] _imageExtensions = { "*.ase", "*.png", "*.jpg", "*.jpeg", "*.bmp" };
-        public SpriteResources(int texturepagewidth, int texturepageheight, string spritedirectory, string fontDirectory = "")
+        public SpriteResources(int texturepagewidth, int texturepageheight, string[] spritedirectory)
         {
             _spritedirectory = spritedirectory;
           
@@ -27,12 +27,15 @@ namespace kuujoo.Pixel
             { 
                 for (var w = 0; w < _imageExtensions.Length; w++)
                 {
-                    var files = Directory.GetFiles(_spritedirectory, _imageExtensions[w] );
-                    if (files.Length > 0)
+                    for (var f = 0; f < _spritedirectory.Length; f++)
                     {
-                        for (var i = 0; i < files.Length; i++)
+                        var files = Directory.GetFiles(_spritedirectory[f], _imageExtensions[w]);
+                        if (files.Length > 0)
                         {
-                            builder.Add(files[i]);
+                            for (var i = 0; i < files.Length; i++)
+                            {
+                                builder.Add(files[i]);
+                            }
                         }
                     }
                 }
