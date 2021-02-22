@@ -10,6 +10,7 @@ namespace kuujoo.Pixel
         KeyboardState _keyboard = new KeyboardState();
         GamepadState[] _gamePads;
         List<int> _disabledInputs = new List<int>();
+        bool _gamepadActive = false;
         public SceneInputs()
         {
             _gamePads = new GamepadState[GamePad.MaximumGamePadCount];
@@ -60,16 +61,20 @@ namespace kuujoo.Pixel
         }
         public void Vibration(float strength, float time)
         {
-            _gamePads[0].SetVibration(strength, strength, time);
+            if (_gamepadActive)
+            {
+                _gamePads[0].SetVibration(strength, strength, time);
+            }
         }
         public override void Update()
         {
+            bool gamePadUsed = false;
             _keyboard.Update();
             for(var i = 0; i < _gamePads.Length; i++)
             {
                 _gamePads[i].Update();
+                gamePadUsed |= _gamePads[i].Used;
             }
-
             for(var i = 0; i < _inputs.Count; i++)
             {
                 if (_disabledInputs.Contains(_inputs[i].Tag))
@@ -79,6 +84,17 @@ namespace kuujoo.Pixel
                 }
 
                 _inputs[i].Update(this);
+                if(_inputs[i].Pressed)
+                {
+                    if(gamePadUsed)
+                    {
+                        _gamepadActive = true;
+                    }
+                    else
+                    {
+                        _gamepadActive = false;
+                    }
+                }
             }
         }
     }
