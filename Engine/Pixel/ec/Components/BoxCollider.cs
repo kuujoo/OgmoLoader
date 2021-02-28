@@ -39,7 +39,7 @@ namespace kuujoo.Pixel
             {
                 var grid = other as GridCollider;
                 mybounds.Location -= other.Entity.Transform.Position;
-                return CollisionChecks.RectAndGrid(mybounds, grid, grid.CellWidth, grid.CellHeight);
+                return CollisionChecks.RectAndGrid(mybounds, grid.Grid, grid.CellWidth, grid.CellHeight);
             }
             return false;
         }

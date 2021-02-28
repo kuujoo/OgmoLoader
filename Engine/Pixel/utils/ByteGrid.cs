@@ -4,59 +4,61 @@ using System.Collections.Generic;
 
 namespace kuujoo.Pixel
 {
-    public interface IGrid
-    {
-        public int Width { get; }
-        public int Height { get; }
-        byte GetValue(int x, int y);
-        byte GetValueByIndex(int idx);
-        void SetValue(int x, int y, byte value);
-        void SetValueByIndex(int index, byte value);
-        void SetFrom(IGrid grid, int x, int y);
-    }
 
-    [Serializable]
-    public class ByteGrid : IGrid
+    public class Grid<T>
     {
-        byte[] _grid;
+        T[] _grid;
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public ByteGrid(int width, int height)
+        public Grid(int width, int height)
         {
             Width = width;
             Height = height;
-            _grid = new byte[Width * Height];
+            _grid = new T[Width * Height];
         }
-        public byte GetValue(int x, int y)
+        public T GetValue(int x, int y)
         {
-            if (x < 0 || y < 0 || x > Width - 1 || y > Height - 1) return 0;
             return GetValueByIndex(y * Width + x);
         }
-        public byte GetValueByIndex(int idx)
+        public T GetValueByIndex(int idx)
         {
             return _grid[idx];
         }
-        public void SetValue(int x, int y, byte value)
+        public void SetValue(int x, int y, T value)
         {
             SetValueByIndex(y * Width + x, value);
         }
-        public void SetValueByIndex(int index, byte value)
+        public void SetValueByIndex(int index, T value)
         {
             _grid[index] = value;
         }
-        public void SetFrom(IGrid grid, int x, int y)
+        public void SetFrom(Grid<T> grid, int x, int y)
         {
-            for(var i = 0; i < grid.Width; i++)
+            for (var i = 0; i < grid.Width; i++)
             {
-                for(var j = 0; j < grid.Height; j++)
+                for (var j = 0; j < grid.Height; j++)
                 {
                     SetValue(i + x, j + y, grid.GetValue(i, j));
                 }
             }
         }
-        public void SetValueByRange(Point p0, Point size, byte value)
+        public void SetValues(T value)
         {
-            for(var i = p0.X; i < p0.X + size.X; i++)
+            SetValueByRect(new Rectangle(0, 0, Width, Height), value);
+        }
+        public void SetValueByRect(Rectangle rect, T value)
+        {
+            for (var i = rect.X; i < rect.X + rect.Width; i++)
+            {
+                for (var j = rect.Y; j < rect.Y + rect.Height; j++)
+                {
+                    SetValue(i, j, value);
+                }
+            }
+        }
+        public void SetValueByRange(Point p0, Point size, T value)
+        {
+            for (var i = p0.X; i < p0.X + size.X; i++)
             {
                 for (var j = p0.Y; j < p0.Y + size.Y; j++)
                 {
@@ -64,17 +66,17 @@ namespace kuujoo.Pixel
                 }
             }
         }
-        public void SetReverseFrom(IGrid grid, int x, int y)
+        public void SetReverseFrom(Grid<T> grid, int x, int y)
         {
             for (var i = 0; i < grid.Width; i++)
             {
                 for (var j = 0; j < grid.Height; j++)
                 {
-                    SetValue(i + x, j + y, grid.GetValue( (grid.Width-1) - i, j));
+                    SetValue(i + x, j + y, grid.GetValue((grid.Width - 1) - i, j));
                 }
             }
         }
-        public void SetBorders(byte value)
+        public void SetBorders(T value)
         {
             for (var i = 0; i < Width; i++)
             {
@@ -86,6 +88,38 @@ namespace kuujoo.Pixel
                 SetValue(0, i, value);
                 SetValue(Width - 1, i, value);
             }
+        }
+    }
+
+    [Serializable]
+    public class ByteGrid : Grid<byte>
+    {
+        public ByteGrid(int width, int height) : base(width, height)
+        {
+
+        }
+    }
+    public class FloatGrid : Grid<float>
+    {
+        public FloatGrid(int width, int height) : base(width, height)
+        {
+
+        }
+    }
+
+    public class IntGrid : Grid<int>
+    {
+        public IntGrid(int width, int height) : base(width, height)
+        {
+
+        }
+    }
+
+    public class ColorGrid : Grid<Color>
+    {
+        public ColorGrid(int width, int height) : base(width, height)
+        {
+
         }
     }
 }

@@ -36,11 +36,16 @@ namespace kuujoo.Pixel
         }
         public bool IsVisibleFromCamera(Camera camera)
         {
-            return true;
+            return _grid != null && Tileset != null;
+        }
+        public void SetGrid(ByteGrid grid)
+        {
+            _grid = grid;
         }
         public void Render(Graphics graphics)
         {
             if (Tileset == null) return;
+            if (_grid == null) return;
             var gfx = Engine.Instance.Graphics;
             var bounds = graphics.Camera.Bounds;
             bounds.Location -= Entity.Transform.Position;

@@ -3,14 +3,15 @@ using System;
 
 namespace kuujoo.Pixel
 {
-    public class GridCollider : Collider, IGrid, IRenderable
+    public class GridCollider : Collider, IRenderable
     {
+        public ByteGrid Grid => _grid;
         public int Layer { get; set; }
         public int CellWidth { get; private set; }
         public int CellHeight { get; private set; }
         public override Rectangle Bounds => new Rectangle((Entity.Transform.Position), new Point(Width * CellWidth, Height * CellHeight));
-        public int Width => _grid.Width;
-        public int Height => _grid.Height;
+        public int Width => _grid == null ? 0 : _grid.Width;
+        public int Height => _grid == null ? 0 : _grid.Height;
         ByteGrid _grid;
         public GridCollider(int width, int height, int cellw, int cellh)
         {
@@ -23,6 +24,11 @@ namespace kuujoo.Pixel
             _grid = grid;
             CellWidth = cellw;
             CellHeight = cellh;
+        }
+        public void SetGrid(ByteGrid grid)
+        {
+            _grid = grid;
+            Updated?.Invoke(this);
         }
         public byte GetValue(int x, int y)
         {
@@ -42,11 +48,13 @@ namespace kuujoo.Pixel
         }
         public override bool Collides(Collider other, Point offset)
         {
+            if (_grid == null) return false;
+
             if (other is BoxCollider)
             {
                 var r = other.Bounds;
                 r.Location -= (Entity.Transform.Position + offset);
-                return CollisionChecks.RectAndGrid(r, this, CellWidth, CellHeight);            
+                return CollisionChecks.RectAndGrid(r, _grid, CellWidth, CellHeight);            
             }
             return false;
         }
@@ -59,6 +67,8 @@ namespace kuujoo.Pixel
         }
         public void DebugRender(Graphics graphics)
         {
+            if (_grid == null) return;
+
             var bounds = graphics.Camera.Bounds;
             bounds.Location -= Entity.Transform.Position;
             int left = Math.Clamp((int)Math.Floor((float)bounds.Left / CellWidth), 0, Width - 1);
@@ -75,11 +85,6 @@ namespace kuujoo.Pixel
                     }
                 }
             }
-        }
-
-        public void SetFrom(IGrid grid, int x, int y)
-        {
-            _grid.SetFrom(grid, x, y);
         }
     }
 }

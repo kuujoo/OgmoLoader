@@ -7,7 +7,7 @@ namespace kuujoo.Pixel
 {
     public static class CollisionChecks
     {
-        public static bool RectAndGrid(Rectangle rect, IGrid grid, int cellwidth, int cellheight)
+        public static bool RectAndGrid(Rectangle rect, ByteGrid grid, int cellwidth, int cellheight)
         {
             var r = rect;          
             var left = (int)Math.Clamp((float)r.Left / cellwidth, 0, grid.Width);
