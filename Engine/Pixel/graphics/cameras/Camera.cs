@@ -177,11 +177,11 @@ namespace kuujoo.Pixel
             graphics.PopMatrix(Matrix);
             graphics.PopSurface(Surface);
         }
-        public Vector2 CameraToScreen(Vector2 p)
+        public Vector2 WorldToScreen(Vector2 p)
         {
             return Vector2.Transform(p, Matrix);
         }
-        public Vector2 ScreenToCamera(Vector2 p)
+        public Vector2 ScreenToWorld(Vector2 p)
         {
             return Vector2.Transform(p, InverseMatrix);
         }
