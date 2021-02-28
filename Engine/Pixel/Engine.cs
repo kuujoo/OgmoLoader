@@ -119,7 +119,7 @@ namespace kuujoo.Pixel
 #if DEBUG
             RenderTimer.Stop();
             RenderFps = (int)Math.Ceiling(1.0 / gameTime.ElapsedGameTime.TotalSeconds);
-            Window.Title = $"Render ms: {RenderTimer.Average} Render FPS: {RenderFps} Update MS: {UpdateTimer.Average} Update FPS: {UpdateFps}";
+            Window.Title = $"Render ms: {RenderTimer.Max} Render FPS: {RenderFps} Update MS: {UpdateTimer.Max} Update FPS: {UpdateFps}";
 #endif
             base.Draw(gameTime);
 
