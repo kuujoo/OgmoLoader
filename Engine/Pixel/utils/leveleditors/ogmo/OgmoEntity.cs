@@ -1,4 +1,6 @@
-﻿namespace kuujoo.Pixel
+﻿using System.Collections.Generic;
+
+namespace kuujoo.Pixel
 {
     public class OgmoEntity
     {
@@ -13,5 +15,6 @@
         public int OriginY { get; set; }
         public bool FlippedX { get; set; }
         public bool FlippedY { get; set; }
+        public Dictionary<string, object> Values {get;set;}
     }
 }
