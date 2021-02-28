@@ -14,11 +14,12 @@ namespace kuujoo.Pixel
         public Surface ApplicationSurface { get; set; }
         List<Camera> _cameras = new List<Camera>();
         List<SceneComponent> _sceneComponents = new List<SceneComponent>();
+        List<PostProcessor> _postProcessors = new List<PostProcessor>();
         protected Rectangle finalDestinationRect;
         Tracker _tracker;
         public Scene(int game_width, int game_height)
         {
-            ApplicationSurface = new Surface(game_width, game_height);
+            ApplicationSurface = new Surface(game_width, game_height, Color.Black);
             Entities = new EntityList();
             DebugRender = false;
             UpdateDrawRect();
@@ -41,6 +42,17 @@ namespace kuujoo.Pixel
                 _sceneComponents[i].CleanUp();
             }
             _sceneComponents.Clear();
+            CleanUp();
+        }
+        public virtual void CleanUp()
+        {
+
+        }
+        public void AddPostProcessor(PostProcessor processor)
+        {
+            processor.Scene = this;
+            processor.Initialize();
+            _postProcessors.Add(processor);
         }
         public virtual void Update()
         {
@@ -109,21 +121,43 @@ namespace kuujoo.Pixel
             // Final render
             FinalRender(gfx);        
         }
+        Surface PostProcessSurface(Surface surface)
+        {
+            if (_postProcessors.Count == 0) return surface;
+            var gfx = Engine.Instance.Graphics;
+            Surface tmp = null;
+            for(var i = 0; i < _postProcessors.Count; i++)
+            {
+                if(tmp == null)
+                {
+                    tmp = _postProcessors[i].Process(gfx, surface);
+                }
+                else
+                {
+                    tmp = _postProcessors[i].Process(gfx, tmp);
+                }
+            }
+            return tmp;
+        }
         public virtual void FinalRender(Graphics gfx)
         {
+            var resultSurface = PostProcessSurface(ApplicationSurface);
+
             if (FinalEffect != null)
             {
                 gfx.PushEffect(FinalEffect);
             }
             gfx.PushSamplerState(SamplerState.PointClamp);
+            gfx.PushBlendState(BlendState.AlphaBlend);
             gfx.Begin();
             gfx.Device.Clear(Color.Black);
-            gfx.SpriteBatch.Draw(ApplicationSurface.Target, finalDestinationRect, Color.White);
+            gfx.SpriteBatch.Draw(resultSurface.Target, finalDestinationRect, Color.White);
             gfx.End();
             if (FinalEffect != null)
             {
                 gfx.PopEffect(FinalEffect);   
             }
+            gfx.PopBLendState();
             gfx.PopSamplerState();
         }
         public T AddSceneComponent<T>(T sceneComponent) where T: SceneComponent
