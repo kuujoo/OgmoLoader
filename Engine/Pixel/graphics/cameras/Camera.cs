@@ -20,6 +20,7 @@ namespace kuujoo.Pixel
         public List<int> IncludeLayers { get; private set; }
         public Color BackgroundColor { get; set; }
         public SamplerState SamplerState { get; set; }
+        public BlendState BlendState { get; set; }
         public CameraType Type { get; set; }
         public int Priority { get; set; }
         public Surface Surface { get; set; }
@@ -102,6 +103,7 @@ namespace kuujoo.Pixel
             ExcludeLayers = new List<int>();
             IncludeLayers = new List<int>();
             SamplerState = SamplerState.PointClamp;
+            BlendState = BlendState.AlphaBlend;
         }
         public override void TransformChanged(Transform transform)
         {
@@ -135,6 +137,7 @@ namespace kuujoo.Pixel
             graphics.PushMatrix(Matrix);
             graphics.PushEffect(Effect);
             graphics.PushSamplerState(SamplerState);
+            graphics.PushBlendState(BlendState);
             graphics.Begin();
             if (Type == CameraType.Base)
             {
@@ -168,6 +171,7 @@ namespace kuujoo.Pixel
         public void EndRender(Graphics graphics)
         {
             graphics.End();
+            graphics.PopBLendState();
             graphics.PopSamplerState();
             graphics.PopEffect(Effect);
             graphics.PopMatrix(Matrix);

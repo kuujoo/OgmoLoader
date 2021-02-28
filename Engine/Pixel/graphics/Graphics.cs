@@ -6,6 +6,7 @@ using System.Text;
 
 namespace kuujoo.Pixel
 {
+
     public class Graphics
     {
         public GraphicsDeviceManager DeviceManager { get; private set; }
@@ -17,6 +18,7 @@ namespace kuujoo.Pixel
         public Stack<Matrix> _matrixStack = new Stack<Matrix>();
         public Stack<Effect> _effectStack = new Stack<Effect>();
         public Stack<SamplerState> _samplerStates = new Stack<SamplerState>();
+        public Stack<BlendState> _blendingStates = new Stack<BlendState>();
         public Graphics(GraphicsDeviceManager devicemanager)
         {
             DeviceManager = devicemanager;
@@ -43,6 +45,14 @@ namespace kuujoo.Pixel
         public void PopSamplerState()
         {
             _samplerStates.Pop();
+        }
+        public void PushBlendState(BlendState state)
+        {
+            _blendingStates.Push(state);
+        }
+        public void PopBLendState()
+        {
+            _blendingStates.Pop();
         }
         public void PushMatrix(Matrix matrix)
         {
@@ -88,13 +98,14 @@ namespace kuujoo.Pixel
 
             var effect = _effectStack.Count > 0 ? _effectStack.Peek() : null;
             var samplerState = _samplerStates.Peek();
+            var blendState = _blendingStates.Peek();
             if (_matrixStack.Count > 0)
             {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, samplerState, DepthStencilState.None, RasterizerState.CullNone, effect, _matrixStack.Peek());
+                SpriteBatch.Begin(SpriteSortMode.Deferred, blendState, samplerState, DepthStencilState.None, RasterizerState.CullNone, effect, _matrixStack.Peek());
             }
             else
             {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, samplerState, DepthStencilState.None, RasterizerState.CullNone, effect);
+                SpriteBatch.Begin(SpriteSortMode.Deferred, blendState, samplerState, DepthStencilState.None, RasterizerState.CullNone, effect);
             }
         }
         public void End()
@@ -124,6 +135,10 @@ namespace kuujoo.Pixel
         public void DrawTexture(Texture2D texture, Vector2 at)
         {
             SpriteBatch.Draw(texture, at, Color.White);
+        }
+        public void DrawTexture(Texture2D texture, Rectangle destination, Rectangle source, Color color)
+        {
+            SpriteBatch.Draw(texture, destination, source, color);
         }
         public void DrawText(BMFont font, string text, Vector2 position, Color color)
         {
