@@ -32,6 +32,40 @@ namespace kuujoo.Pixel
         {
             return rect0.Intersects(rect1);
         }
+        public static bool RectAndLine(Rectangle rect0, Vector2 p0, Vector2 p1)
+        {
+            var tl = new Vector2(rect0.Left, rect0.Top);
+            var tr = new Vector2(rect0.Right, rect0.Top);
+            var bl = new Vector2(rect0.Left, rect0.Bottom);
+            var br = new Vector2(rect0.Right, rect0.Bottom);
+
+            return LineAndLine(tl, tr, p0, p1) ||
+                LineAndLine(tr, br, p0, p1) ||
+                LineAndLine(br, bl, p0, p1) ||
+                LineAndLine(tl, bl, p0, p1);
+        }
+        public static bool LineAndLine(Vector2 a0, Vector2 a1, Vector2 b0, Vector2 b1)
+        {
+            Vector2 vector = a1 - a0;
+            Vector2 vector2 = b1 - b0;
+            float num = vector.X * vector2.Y - vector.Y * vector2.X;
+            if (num == 0f)
+            {
+                return false;
+            }
+            Vector2 vector3 = b0 - a0;
+            float num2 = (vector3.X * vector2.Y - vector3.Y * vector2.X) / num;
+            if (num2 < 0f || num2 > 1f)
+            {
+                return false;
+            }
+            float num3 = (vector3.X * vector.Y - vector3.Y * vector.X) / num;
+            if (num3 < 0f || num3 > 1f)
+            {
+                return false;
+            }
+            return true;
+        }
     }
     public static class CollisionMask
     {
