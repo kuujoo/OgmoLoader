@@ -121,44 +121,31 @@ namespace kuujoo.Pixel
             // Final render
             FinalRender(gfx);        
         }
-        Surface PostProcessSurface(Surface surface)
-        {
-            if (_postProcessors.Count == 0) return surface;
-            var gfx = Engine.Instance.Graphics;
-            Surface tmp = null;
-            for(var i = 0; i < _postProcessors.Count; i++)
-            {
-                if(tmp == null)
-                {
-                    tmp = _postProcessors[i].Process(gfx, surface);
-                }
-                else
-                {
-                    tmp = _postProcessors[i].Process(gfx, tmp);
-                }
-            }
-            return tmp;
-        }
         public virtual void FinalRender(Graphics gfx)
         {
-            var resultSurface = PostProcessSurface(ApplicationSurface);
-
-            if (FinalEffect != null)
+            if (_postProcessors.Count > 0)
             {
-                gfx.PushEffect(FinalEffect);
+                Surface tmp = ApplicationSurface;
+                for (var i = 0; i < _postProcessors.Count; i++)
+                {
+                    tmp = _postProcessors[i].Process(gfx, tmp, finalDestinationRect);
+                    if (tmp == null)
+                    {
+                        break;
+                    }
+                }
             }
-            gfx.PushSamplerState(SamplerState.PointClamp);
-            gfx.PushBlendState(BlendState.AlphaBlend);
-            gfx.Begin();
-            gfx.Device.Clear(Color.Black);
-            gfx.SpriteBatch.Draw(resultSurface.Target, finalDestinationRect, Color.White);
-            gfx.End();
-            if (FinalEffect != null)
+            else
             {
-                gfx.PopEffect(FinalEffect);   
+                gfx.PushSamplerState(SamplerState.PointClamp);
+                gfx.PushBlendState(BlendState.AlphaBlend);
+                gfx.Begin();
+                gfx.Device.Clear(Color.Black);
+                gfx.SpriteBatch.Draw(ApplicationSurface.Target, finalDestinationRect, Color.White);
+                gfx.End();
+                gfx.PopBLendState();
+                gfx.PopSamplerState();
             }
-            gfx.PopBLendState();
-            gfx.PopSamplerState();
         }
         public T AddSceneComponent<T>(T sceneComponent) where T: SceneComponent
         {
