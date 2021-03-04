@@ -114,23 +114,23 @@ namespace kuujoo.Pixel
         }
         public void DrawPoint(Vector2 at, Color color)
         {
-            SpriteBatch.Draw(Pixel, at, new Rectangle(0,0,1,1), color, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+            SpriteBatch.Draw(Pixel, at, new Rectangle(0,0,1,1), color, 0, Vector2.Zero, 1f, SpriteEffects.None, 0.5f);
         }
         public void DrawRect(Rectangle rect, Color color)
         {
-            SpriteBatch.Draw(Pixel, rect, color);
+            SpriteBatch.Draw(Pixel, rect, new Rectangle(0, 0, 1, 1), color, 0.0f, Vector2.Zero, SpriteEffects.None, 0.5f);
         }
         public void DrawHollowRect(Rectangle rect, Color color)
         {
-            SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Top, 1, rect.Height), color);
-            SpriteBatch.Draw(Pixel, new Rectangle(rect.Right, rect.Top, 1, rect.Height), color);
+            SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Top, 1, rect.Height), new Rectangle(0, 0, 1, 1), color, 0.0f, Vector2.Zero, SpriteEffects.None, 0.5f);
+            SpriteBatch.Draw(Pixel, new Rectangle(rect.Right, rect.Top, 1, rect.Height), new Rectangle(0,0,1,1), color, 0.0f, Vector2.Zero, SpriteEffects.None, 0.5f);
 
-            SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Top, rect.Width, 1), color);
-            SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Bottom, rect.Width, 1), color);       
+            SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Top, rect.Width, 1), new Rectangle(0, 0, 1, 1), color, 0.0f, Vector2.Zero, SpriteEffects.None, 0.5f);
+            SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Bottom, rect.Width, 1), new Rectangle(0, 0, 1, 1), color, 0.0f, Vector2.Zero, SpriteEffects.None, 0.5f);
         }
         public void DrawSpriteFrame(Vector2 at, Vector2 pivot, Vector2 scale, Sprite.Frame frame, Color color, SpriteEffects effect )
         {
-            SpriteBatch.Draw(frame.Texture, at, frame.Rect, color, 0.0f, pivot, scale, effect, 0.0f);
+            SpriteBatch.Draw(frame.Texture, at, frame.Rect, color, 0.0f, pivot, scale, effect, 0.5f);
         }
         public void DrawTexture(Texture2D texture, Vector2 at)
         {
@@ -138,7 +138,7 @@ namespace kuujoo.Pixel
         }
         public void DrawTexture(Texture2D texture, Rectangle destination, Rectangle source, Color color)
         {
-            SpriteBatch.Draw(texture, destination, source, color);
+            SpriteBatch.Draw(texture, destination, source, color, 0.0f, Vector2.Zero,SpriteEffects.None, 0.5f);
         }
         public void DrawText(BMFont font, string text, Vector2 position, Color color)
         {
@@ -147,7 +147,7 @@ namespace kuujoo.Pixel
                 var destRectangle = new Rectangle((int)(position.X + drawPos.X), (int)(position.Y + drawPos.Y),
                     (int)(data.Width), (int)(data.Height));
 
-                SpriteBatch.Draw(font.Texture, destRectangle, sourceRectangle, color);
+                SpriteBatch.Draw(font.Texture, destRectangle, sourceRectangle, color, 0.0f, Vector2.Zero, SpriteEffects.None, 0.5f);
             }, null);
         }
     }
