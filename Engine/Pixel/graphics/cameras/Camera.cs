@@ -41,7 +41,7 @@ namespace kuujoo.Pixel
         {
             get
             {
-                if(_updateMatrices)
+                if (_updateMatrices)
                 {
                     UpdateMatrices();
                     _updateMatrices = true;
@@ -59,6 +59,25 @@ namespace kuujoo.Pixel
                     _updateMatrices = false;
                 }
                 return _matrix;
+            }
+        }
+        public Matrix ProjectionMatrix
+        {
+            get
+            {
+                if (_updateMatrices)
+                {
+                    UpdateMatrices();
+                    _updateMatrices = false;
+                }
+                return _projectionMatrix;
+            }
+        }
+        public Matrix ViewProjectionMatrix
+        {
+            get
+            {
+                return Matrix * ProjectionMatrix;
             }
         }
         public float Zoom
@@ -88,6 +107,7 @@ namespace kuujoo.Pixel
         private Rectangle _bounds;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _inverseMatrix = Matrix.Identity;
+        private Matrix _projectionMatrix = Matrix.Identity;
         Vector2 _origin = Vector2.Zero;
         bool _updateMatrices = true;
         float _zoom = 1.0f;
@@ -121,6 +141,8 @@ namespace kuujoo.Pixel
             var br = Vector2.Transform(new Vector2(Viewport.Width, Viewport.Height), _inverseMatrix);
             var size = br - tl;
             _bounds = new Rectangle(Vector2.Transform(Vector2.Zero, _inverseMatrix).ToPoint(), size.ToPoint());
+
+            Matrix.CreateOrthographicOffCenter(0, Viewport.Width, Viewport.Height, 0, 0, -1.0f, out _projectionMatrix);
         }
         public void SetCenterOrigin()
         {
