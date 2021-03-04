@@ -36,9 +36,8 @@ namespace kuujoo.Pixel
             {
                 IsFullScreen = fullscreen,
                 SynchronizeWithVerticalRetrace = true,
-                PreferHalfPixelOffset = true,
                 PreferredBackBufferWidth = width,
-                PreferredBackBufferHeight = height
+                PreferredBackBufferHeight = height,
             };
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             graphics.DeviceReset += OnGraphicsDeviceReset;
