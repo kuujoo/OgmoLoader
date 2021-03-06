@@ -96,12 +96,14 @@ namespace kuujoo.Pixel
         }
         public void DebugRender(Graphics graphics)
         {
+#if DEBUG
             graphics.DrawHollowRect(Bounds, Color.Red);
             var rect = Bounds;
             for (var i = 0; i <  _lastCast.Count; i++)
             {
                 graphics.DrawHollowRect(new Rectangle(_lastCast[i].ToPoint(), rect.Size), Color.Red);
             }
+#endif
         }
         public void Render(Graphics graphics)
         {
