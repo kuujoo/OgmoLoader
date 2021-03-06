@@ -6,6 +6,7 @@ namespace kuujoo.Pixel
 {
     public class OgmoLevel
     {
+        public string Name { get; set; }
         public string OgmoVersion { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
@@ -17,7 +18,9 @@ namespace kuujoo.Pixel
         {
             var data = File.ReadAllText(path);
             if (data.Length == 0) return null;
-            return LoadFromData(data);
+            var level = LoadFromData(data);
+            level.Name = Path.GetFileNameWithoutExtension(path);
+            return level;
         }
         public static OgmoLevel LoadFromData(string data)
         {
