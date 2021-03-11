@@ -128,9 +128,9 @@ namespace kuujoo.Pixel
             SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Top, rect.Width, 1), new Rectangle(0, 0, 1, 1), color, 0.0f, Vector2.Zero, SpriteEffects.None, 0.5f);
             SpriteBatch.Draw(Pixel, new Rectangle(rect.Left, rect.Bottom, rect.Width, 1), new Rectangle(0, 0, 1, 1), color, 0.0f, Vector2.Zero, SpriteEffects.None, 0.5f);
         }
-        public void DrawSpriteFrame(Vector2 at, Vector2 pivot, Vector2 scale, Sprite.Frame frame, Color color, SpriteEffects effect )
+        public void DrawSpriteFrame(Vector2 at, Vector2 pivot, Vector2 scale, float rotation, Sprite.Frame frame, Color color, SpriteEffects effect )
         {
-            SpriteBatch.Draw(frame.Texture, at, frame.Rect, color, 0.0f, pivot, scale, effect, 0.5f);
+            SpriteBatch.Draw(frame.Texture, at, frame.Rect, color, rotation, pivot, scale, effect, 0.5f);
         }
         public void DrawTexture(Texture2D texture, Vector2 at)
         {

@@ -15,6 +15,7 @@ namespace kuujoo.Pixel
             Once,
         }
         public Vector2 Scale { get; set; }
+        public float Rotation { get; set; }
         public bool FlipX { get; set; }
         public int AnimationIndex { 
             get { 
@@ -79,7 +80,7 @@ namespace kuujoo.Pixel
         {
             if (Sprite == null) return;
 
-            graphics.DrawSpriteFrame(Entity.Transform.Position.ToVector2(), Sprite.Pivot, Scale, CurrentFrame, Color, FlipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None);  
+            graphics.DrawSpriteFrame(Entity.Transform.Position.ToVector2(), Sprite.Pivot, Scale, Rotation, CurrentFrame, Color, FlipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None);  
         }
         public bool IsVisibleFromCamera(Camera camera)
         {
