@@ -110,13 +110,13 @@ namespace kuujoo.Pixel
             if (!Bounds.Contains(p1))
             {
                 var r = new Rectangle(p1.X, p1.Y, 0, 0);
-                MathExt.UnionRects(ref Bounds, ref r, out Bounds);
+                Calc.UnionRects(ref Bounds, ref r, out Bounds);
             }
 
             if (!Bounds.Contains(p2))
             {
                 var r = new Rectangle(p2.X, p2.Y, 0, 0);
-                MathExt.UnionRects(ref Bounds, ref r, out Bounds);
+                Calc.UnionRects(ref Bounds, ref r, out Bounds);
             }
 
             for (var x = p1.X; x <= p2.X; x++)

@@ -3,7 +3,7 @@ using System;
 
 namespace kuujoo.Pixel
 {
-    public static class MathExt
+    public static class Calc
     {
 		public static float Approach(float start, float end, float shift)
 		{
@@ -24,5 +24,9 @@ namespace kuujoo.Pixel
 			result.Width = Math.Max(value1.Right, value2.Right) - result.X;
 			result.Height = Math.Max(value1.Bottom, value2.Bottom) - result.Y;
 		}
+		public static float DegToRad(float deg)
+        {
+			return ( (float)Math.PI / 180.0f) * deg;
+        }
 	}
 }
