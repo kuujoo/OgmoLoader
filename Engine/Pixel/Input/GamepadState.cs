@@ -5,6 +5,8 @@ namespace kuujoo.Pixel
 {
 	public class GamepadState
 	{
+		public Vector2 LeftStick { get; private set; }
+		public Vector2 RightStick { get; private set; }
 		public bool Used { get; private set; }
 		public GamePadDeadZone DeadZone = GamePadDeadZone.IndependentAxes;
 		PlayerIndex _playerIndex;
@@ -32,6 +34,8 @@ namespace kuujoo.Pixel
 					GamePad.SetVibration(_playerIndex, 0, 0);
 				}
 			}
+			LeftStick = _currentState.ThumbSticks.Left;
+			RightStick = _currentState.ThumbSticks.Right;
 		}
 		public void SetVibration(float left, float right, float duration)
 		{

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace kuujoo.Pixel
 {
@@ -10,5 +11,7 @@ namespace kuujoo.Pixel
         public bool IsButtonPressed(int index, Buttons key);
         public bool IsButtonDown(int index, Buttons key);
         public bool IsButtonReleased(int index, Buttons key);
+        public Vector2 GetLeftStickValue(int index);
+        public Vector2 GetRightStickValue(int index);
     }
 }

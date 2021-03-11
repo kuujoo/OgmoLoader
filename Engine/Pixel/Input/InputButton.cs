@@ -9,8 +9,15 @@ namespace kuujoo.Pixel
         public static int Player = 1;
         public static int Menu = 2;
     }
+    public interface IInputNode
+    {
+        public void Update(IInputState state);
+        public bool Down { get; }
+        public bool Pressed { get; }
+        public bool Released { get; }
+    }
 
-    public class Input
+    public class InputButton
     {
         public int Tag { get; set; }
         public bool Down { get; private set; }
@@ -20,7 +27,7 @@ namespace kuujoo.Pixel
         float _buffer_timer = 0.0f;
         float _buffer_time = 0.0f;
         List<IInputNode> _nodes = new List<IInputNode>();
-        public Input(float buffer_time)
+        public InputButton(float buffer_time)
         {
             _buffer_time = buffer_time;
         }
@@ -31,17 +38,17 @@ namespace kuujoo.Pixel
             Released = false;
             _buffer_timer = 0.0f;
         }
-        public Input SetKey(Keys key)
+        public InputButton SetKey(Keys key)
         {
             _nodes.Add(new KeyboardInput(key));
             return this;
         }
-        public Input SetButton(int _gamepad, Buttons button)
+        public InputButton SetButton(int _gamepad, Buttons button)
         {
             _nodes.Add(new GamepadInput(0, button));
             return this;
         }
-        public Input SetTag(int tag)
+        public InputButton SetTag(int tag)
         {
             Tag = tag;
             return this;

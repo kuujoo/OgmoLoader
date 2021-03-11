@@ -6,7 +6,9 @@ namespace kuujoo.Pixel
 {
     public class SceneInputs : SceneComponent, IInputState
     {
-        List<Input> _inputs = new List<Input>();
+        List<InputButton> _inputs = new List<InputButton>();
+        List<InputStick> _inputSticks = new List<InputStick>();
+
         KeyboardState _keyboard = new KeyboardState();
         GamepadState[] _gamePads;
         List<int> _disabledInputs = new List<int>();
@@ -29,11 +31,17 @@ namespace kuujoo.Pixel
         {
             _disabledInputs.Remove(tag);
         }
-        public Input CreateInput(float buffer = 0.0f)
+        public InputButton CreateInputButton(float buffer = 0.0f)
         {
-            var input = new Input(buffer);
+            var input = new InputButton(buffer);
             _inputs.Add(input);
             return input;
+        }
+        public InputStick CreateInputStick()
+        {
+            var stick = new InputStick();
+            _inputSticks.Add(stick);
+            return stick;
         }
         public bool IsButtonDown(int index, Buttons key)
         {
@@ -66,16 +74,24 @@ namespace kuujoo.Pixel
                 _gamePads[0].SetVibration(strength, strength, time);
             }
         }
+        public Vector2 GetLeftStickValue(int index)
+        {
+            return _gamePads[index].LeftStick;
+        }
+        public Vector2 GetRightStickValue(int index)
+        {
+            return _gamePads[index].RightStick;
+        }
         public override void Update()
         {
             bool gamePadUsed = false;
             _keyboard.Update();
-            for(var i = 0; i < _gamePads.Length; i++)
+            for (var i = 0; i < _gamePads.Length; i++)
             {
                 _gamePads[i].Update();
                 gamePadUsed |= _gamePads[i].Used;
             }
-            for(var i = 0; i < _inputs.Count; i++)
+            for (var i = 0; i < _inputs.Count; i++)
             {
                 if (_disabledInputs.Contains(_inputs[i].Tag))
                 {
@@ -84,9 +100,9 @@ namespace kuujoo.Pixel
                 }
 
                 _inputs[i].Update(this);
-                if(_inputs[i].Pressed)
+                if (_inputs[i].Pressed)
                 {
-                    if(gamePadUsed)
+                    if (gamePadUsed)
                     {
                         _gamepadActive = true;
                     }
@@ -95,6 +111,10 @@ namespace kuujoo.Pixel
                         _gamepadActive = false;
                     }
                 }
+            }
+            for (var i = 0; i < _inputSticks.Count; i++)
+            {
+                _inputSticks[i].Update(this);
             }
         }
     }
