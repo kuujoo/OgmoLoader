@@ -27,7 +27,14 @@ namespace kuujoo.Pixel
 		}
 		public static Vector2 Approach(Vector2 start, Vector2 end, float shift)
 		{
-			return new Vector2(Approach(start.X, end.X, shift), Approach(start.Y, end.Y, shift));
+			var to = end - start;
+			float sdist = to.LengthSquared();
+			if (sdist == 0 || (shift >= 0 && sdist <= shift * shift))
+			{
+				return end;
+			}
+			var d = (float)Math.Sqrt(sdist);
+			return new Vector2(start.X + to.X / d * shift, start.Y + to.Y / d * shift);
 		}
 		public static float AngleDiff(float radians0, float radians1)
 		{
