@@ -136,7 +136,7 @@ namespace kuujoo.Pixel
             }
             if (_nextScene != null)
             {
-                _scene.OnGraphicsDeviceReset();
+                _nextScene.OnGraphicsDeviceReset();
             }
         }
         private void OnClientSizeChanged(object sender, EventArgs e)
