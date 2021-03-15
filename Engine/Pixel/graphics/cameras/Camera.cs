@@ -13,6 +13,14 @@ namespace kuujoo.Pixel
         Base,
         Overlay
     }
+    public enum ScalePolicy
+    {
+        None,
+        Min,
+        Max,
+        Stretch
+    }
+
     public class Camera : Component, IComparable<Camera>
     {
         public Effect Effect { get; set; }
@@ -25,6 +33,7 @@ namespace kuujoo.Pixel
         public int Priority { get; set; }
         public Surface Surface { get; set; }
         public Viewport Viewport { get; private set; }
+        public ScalePolicy ScalePolicy { get; private set; }
         public Vector2 Position
         {
             get
@@ -44,7 +53,7 @@ namespace kuujoo.Pixel
                 if (_updateMatrices)
                 {
                     UpdateMatrices();
-                    _updateMatrices = true;
+                    _updateMatrices = false;
                 }
                 return _matrix;
             }
@@ -59,37 +68,6 @@ namespace kuujoo.Pixel
                     _updateMatrices = false;
                 }
                 return _matrix;
-            }
-        }
-        public Matrix ProjectionMatrix
-        {
-            get
-            {
-                if (_updateMatrices)
-                {
-                    UpdateMatrices();
-                    _updateMatrices = false;
-                }
-                return _projectionMatrix;
-            }
-        }
-        public Matrix ViewProjectionMatrix
-        {
-            get
-            {
-                return Matrix * ProjectionMatrix;
-            }
-        }
-        public float Zoom
-        { 
-            get
-            {
-                return _zoom;
-            }
-            set
-            {
-                _zoom = value;
-                _updateMatrices = true;
             }
         }
         public Rectangle Bounds
@@ -107,32 +85,64 @@ namespace kuujoo.Pixel
         private Rectangle _bounds;
         private Matrix _matrix = Matrix.Identity;
         private Matrix _inverseMatrix = Matrix.Identity;
-        private Matrix _projectionMatrix = Matrix.Identity;
         Vector2 _origin = Vector2.Zero;
         bool _updateMatrices = true;
-        float _zoom = 1.0f;
-        public Camera(int width, int height, CameraType type = CameraType.Base)
+        Vector2 _scale = Vector2.One;
+        int _width;
+        int _height;
+        public Camera()
         {
-            var port = default(Viewport);
-            port.Width = width;
-            port.Height = height;
-            Viewport = port;
-            Type = type;
             Priority = 0;
             BackgroundColor = Color.Black;
             ExcludeLayers = new List<int>();
             IncludeLayers = new List<int>();
             SamplerState = SamplerState.PointClamp;
             BlendState = BlendState.AlphaBlend;
+            ScalePolicy = ScalePolicy.Max;
+        }
+        public void SetSize(int width, int height)
+        {
+            _width = width;
+            _height = height;
+            _updateMatrices = true;
         }
         public override void TransformChanged(Transform transform)
         {
             _updateMatrices = true;
         }
+        public void SetViewport(int width, int height)
+        {
+            var port = default(Viewport);
+            port.Width = width;
+            port.Height = height;
+            Viewport = port;
+            _updateMatrices = true;
+        }
         void UpdateMatrices()
         {
+            _origin = new Vector2(Viewport.Width / 2.0f, Viewport.Height / 2.0f);
+            if (ScalePolicy == ScalePolicy.Max)
+            {
+                var v = Math.Max(Viewport.Width / _width, Viewport.Height / _height);
+                _scale = Vector2.One * v;
+            }
+            else if(ScalePolicy == ScalePolicy.Min)
+            {
+                var v = Math.Min(Viewport.Width / _width, Viewport.Height / _height);
+                _scale = Vector2.One * v;
+            }
+            else if(ScalePolicy == ScalePolicy.Stretch)
+            {
+                var w = (float)Viewport.Width / _width;
+                var h = (float)Viewport.Height / _height;
+                _scale = new Vector2(w, h);
+            }
+            else
+            {
+                _scale = Vector2.One;
+            }
             var translation = Matrix.CreateTranslation(new Vector3(-(int)Math.Floor(Position.X), -(int)Math.Floor(Position.Y), 0f));
-            var scale = Matrix.CreateScale(_zoom, _zoom, 1.0f);
+            var scale = Matrix.CreateScale(_scale.X, _scale.Y, 1.0f);
             var origin_translation = Matrix.CreateTranslation(new Vector3((int)_origin.X, (int)_origin.Y, 0.0f));
             _matrix = Matrix.Identity * translation * scale * origin_translation;
             _inverseMatrix = Matrix.Invert(_matrix);
@@ -141,13 +151,6 @@ namespace kuujoo.Pixel
             var br = Vector2.Transform(new Vector2(Viewport.Width, Viewport.Height), _inverseMatrix);
             var size = br - tl;
             _bounds = new Rectangle(Vector2.Transform(Vector2.Zero, _inverseMatrix).ToPoint(), size.ToPoint());
-
-            Matrix.CreateOrthographicOffCenter(0, Viewport.Width, Viewport.Height, 0, 0, -1.0f, out _projectionMatrix);
-        }
-        public void SetCenterOrigin()
-        {
-            _origin = new Vector2(Viewport.Width / 2.0f, Viewport.Height / 2.0f);
-            _updateMatrices = true;
         }
         public int CompareTo([AllowNull] Camera other)
         {

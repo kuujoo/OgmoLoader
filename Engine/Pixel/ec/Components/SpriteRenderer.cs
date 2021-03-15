@@ -37,10 +37,12 @@ namespace kuujoo.Pixel
                 _frameIndex = value % Sprite.Animations[AnimationIndex].Frames.Count;
             }
         }
+        public int UpdateOrder { get; set; }
         public Color Color { get; set; }
         public Sprite.Frame CurrentFrame => Sprite.Animations[_animationIndex].Frames[_frameIndex];
         public int Frame { get; set; }
         public Sprite Sprite { get; set; }
+
         int _animationIndex = 0;
         int _frameIndex = 0;
         bool _play = false;
@@ -54,13 +56,31 @@ namespace kuujoo.Pixel
             FlipX = false;
             Color = Color.White;
         }
+        public void Set(Sprite sprite)
+        {
+            Sprite = sprite;
+        }
+        public override void CleanUp()
+        {
+            base.CleanUp();
+            _animationIndex = 0;
+            _frameIndex = 0;
+            _play = false;
+            _paused = false;
+            _frameTimer = 0.0f;
+            Sprite = null;
+            Scale = Vector2.One;
+            Frame = 0;
+            FlipX = false;
+            Color = Color.White;
+        }
         public void Update()
         {
             if (Sprite == null || _paused) return;
 
             if(_play)
             {
-                _frameTimer = MathExt.Approach(_frameTimer, 0.0f, Time.DeltaTime);
+                _frameTimer = Calc.Approach(_frameTimer, 0.0f, Time.DeltaTime);
                 if(_frameTimer <= 0)
                 {
                     FrameIndex += 1;

@@ -13,38 +13,12 @@ namespace kuujoo.Pixel
         public int Width => _grid == null ? 0 : _grid.Width;
         public int Height => _grid == null ? 0 : _grid.Height;
         ByteGrid _grid;
-        public GridCollider(int width, int height, int cellw, int cellh)
-        {
-            CellWidth = cellw;
-            CellHeight = cellh;
-            _grid = new ByteGrid(width, height);
-        }
-        public GridCollider(ByteGrid grid, int cellw, int cellh)
+        public void Set(ByteGrid grid, int cellw, int cellh)
         {
             _grid = grid;
             CellWidth = cellw;
             CellHeight = cellh;
-        }
-        public void SetGrid(ByteGrid grid)
-        {
-            _grid = grid;
             Updated?.Invoke(this);
-        }
-        public byte GetValue(int x, int y)
-        {
-            return GetValueByIndex(y * Width + x);
-        }
-        public byte GetValueByIndex(int idx)
-        {
-            return _grid.GetValueByIndex(idx);
-        }
-        public void SetValue(int x, int y, byte value)
-        {
-            _grid.SetValue(x, y, value);
-        }
-        public void SetValueByIndex(int index, byte value)
-        {
-            _grid.SetValueByIndex(index, value);
         }
         public override bool Collides(Collider other, Point offset)
         {
@@ -79,7 +53,7 @@ namespace kuujoo.Pixel
             {
                 for (var i = left; i <= right; i++)
                 {
-                    if(GetValue(i, j) != 0)
+                    if(_grid.GetValue(i, j) != 0)
                     {
                         graphics.DrawHollowRect(new Rectangle(Entity.Transform.Position.X + i * CellWidth, Entity.Transform.Position.Y + j * CellHeight, CellWidth, CellHeight), Color.Red);
                     }

@@ -11,13 +11,13 @@ namespace kuujoo.Pixel
         public Transform Transform { get; private set; }
         public bool Enabled => _enabled;
         public string Name { get; set; }
-        public ComponentList Components { get; private set; }
+        public List<Component> Components { get; private set; }
         public Scene Scene { get; set; }
         bool _enabled = true;
         public Entity()
         {
-            Components = new ComponentList();
             Transform = new Transform();
+            Components = new List<Component>();
         }
         public void SetEnabled(bool enabled)
         {
@@ -25,33 +25,22 @@ namespace kuujoo.Pixel
         }
         public T AddComponent<T>(T component) where T: Component
         {
-            component.Entity = this;
-            Components.Add(component);
-            component.Initialize();
-            component.AddedToEntity();
-            Scene.GetSceneComponent<Tracker>().AddComponent(component);
-            return component;
+            return Scene.AddComponent(this, component);
         }
         public void RemoveComponent(Component component)
         {
-            if(Components.Contains(component))
-            {
-                Scene.GetSceneComponent<Tracker>().RemoveComponent(component);
-                component.CleanUp();
-                component.RemovedFromEntity();
-                Components.Remove(component);
-            }
-        }
-        public void RemoveComponents()
-        {
-            Components.ForEach((Component component) =>
-            {
-                RemoveComponent(component);
-            });        
+            Scene.RemoveComponent(this, component);
         }
         public T GetComponent<T>() where T : class
         {
-            return Components.GetItemOfType<T>();
+            for(var i = 0; i < Components.Count; i++)
+            {
+                if(Components[i] is T)
+                {
+                    return Components[i] as T;
+                }
+            }
+            return null;
         }
     }
 }

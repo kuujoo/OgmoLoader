@@ -16,5 +16,10 @@ namespace kuujoo.Pixel
         public bool FlippedX { get; set; }
         public bool FlippedY { get; set; }
         public Dictionary<string, object> Values {get;set;}
+        public bool CheckEnum(string key, string value)
+        {
+            var json = (System.Text.Json.JsonElement)Values[key];
+            return value == json.GetString();
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace kuujoo.Pixel
     {
         public int Layer { get; set; }
         Color _color;
-        public RectangleRenderer(Color color)
+        public void Set(Color color)
         {
             _color = color;
         }
@@ -26,17 +26,15 @@ namespace kuujoo.Pixel
 
     public class RectangleScene : Scene
     {
-        Input UpInput;
-        Input DownInput;
-        Input LeftInput;
-        Input RightInput;
-        Input SwitchCameraInput;
-        Input ZoomInInput;
-        Input ZoomOutInput;
+        InputButton UpInput;
+        InputButton DownInput;
+        InputButton LeftInput;
+        InputButton RightInput;
+        InputButton SwitchCameraInput;
 
-        Camera _camera;
-        Camera _camera2;
-        Camera _currentCamera;
+        LayerCamera _camera;
+        LayerCamera _camera2;
+        LayerCamera _currentCamera;
  
         public RectangleScene() : base(384, 216)
         {
@@ -44,13 +42,11 @@ namespace kuujoo.Pixel
         void InitInputs()
         {
             var inputs = AddSceneComponent(new SceneInputs());
-            LeftInput = inputs.CreateInput().SetKey(Keys.Left).SetButton(0, Buttons.DPadLeft);
-            RightInput = inputs.CreateInput().SetKey(Keys.Right).SetButton(0, Buttons.DPadRight);
-            UpInput = inputs.CreateInput().SetKey(Keys.Up).SetButton(0, Buttons.DPadUp);
-            DownInput = inputs.CreateInput().SetKey(Keys.Down).SetButton(0, Buttons.DPadDown);
-            SwitchCameraInput = inputs.CreateInput().SetKey(Keys.Space).SetButton(0, Buttons.A);
-            ZoomOutInput = inputs.CreateInput().SetKey(Keys.Subtract).SetButton(0, Buttons.LeftTrigger);
-            ZoomInInput = inputs.CreateInput().SetKey(Keys.Add).SetButton(0, Buttons.RightTrigger);
+            LeftInput = inputs.CreateInputButton().SetKey(Keys.Left).SetButton(0, Buttons.DPadLeft);
+            RightInput = inputs.CreateInputButton().SetKey(Keys.Right).SetButton(0, Buttons.DPadRight);
+            UpInput = inputs.CreateInputButton().SetKey(Keys.Up).SetButton(0, Buttons.DPadUp);
+            DownInput = inputs.CreateInputButton().SetKey(Keys.Down).SetButton(0, Buttons.DPadDown);
+            SwitchCameraInput = inputs.CreateInputButton().SetKey(Keys.Space).SetButton(0, Buttons.A);
         }
         public override void Initialize()
         {
@@ -59,30 +55,32 @@ namespace kuujoo.Pixel
             InitInputs();
 
             var cameraEntity = CreateEntity();
-            _camera = cameraEntity.AddComponent(new LayerCamera(384, 216)
-            {
-                RenderLayer= 1,
-                Priority = 0
-            });
+            _camera = cameraEntity.AddComponent(Get<LayerCamera>());
+            _camera.SetSize(384, 216);
+            _camera.SetViewport(384, 216);
+            _camera.RenderLayer = 1;
+            _camera.Priority = 0;
+
 
             var cameraEntity2 = CreateEntity();
-            _camera2 = cameraEntity2.AddComponent(new LayerCamera(384, 216)
-            {
-                RenderLayer = 2,
-                Priority = 1
-            });
-            _camera.SetCenterOrigin();
-            _camera2.SetCenterOrigin();
+            _camera2 = cameraEntity2.AddComponent(Get<LayerCamera>());
+            _camera2.SetSize(384, 216);
+            _camera2.SetViewport(384, 216);
+            _camera2.RenderLayer = 2;
+            _camera2.Priority = 0;
 
             AddCamera(_camera);
             AddCamera(_camera2);
             _currentCamera = _camera2;
+
             for(var i = 0; i < 384 / 12; i++)
             {
                 for (var j = 0; j < 216 / 12; j++)
                 {
                     var e = CreateEntity();
-                    e.AddComponent(new RectangleRenderer(Color.White)).Layer = 1;
+                    var rect = e.AddComponent(Get<RectangleRenderer>());
+                    rect.Layer = 1;
+                    rect.Set(Color.White);
                     e.Transform.SetPosition(i * 12, j * 12);
                 }
             }
@@ -92,7 +90,9 @@ namespace kuujoo.Pixel
                 for (var j = 0; j < 216 / 12; j++)
                 {
                     var e = CreateEntity();
-                    e.AddComponent(new RectangleRenderer(Color.Red)).Layer = 2;
+                    var rect = e.AddComponent(Get<RectangleRenderer>());
+                    rect.Layer = 2;
+                    rect.Set(Color.Red);
                     e.Transform.SetPosition(i * 12, j * 12);
                 }
             }
@@ -114,14 +114,6 @@ namespace kuujoo.Pixel
             if (DownInput.Down)
             {
                 _currentCamera.Entity.Transform.Translate(0, (int)(60 * Time.DeltaTime));
-            }
-            if (ZoomInInput.Down)
-            {
-                _currentCamera.Zoom = MathHelper.Clamp(_currentCamera.Zoom + 0.5f * Time.DeltaTime, 1.0f, 3.0f);
-            }
-            if (ZoomOutInput.Down)
-            {
-                _currentCamera.Zoom = MathHelper.Clamp(_currentCamera.Zoom - 0.5f * Time.DeltaTime, 1.0f, 3.0f);
             }
             if (SwitchCameraInput.Pressed)
             {

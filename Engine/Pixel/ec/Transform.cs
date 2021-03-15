@@ -15,15 +15,16 @@ namespace kuujoo.Pixel
         }
         public void SetPosition(int x, int y)
         {
-            _position.X = x;
-            _position.Y = y;
-            Changed?.Invoke(this);
+            if (x != _position.X || y != _position.Y)
+            {
+                _position.X = x;
+                _position.Y = y;
+                Changed?.Invoke(this);
+            }
         }
         public void SetPosition(Vector2 position)
         {
-            _position.X = (int)position.X;
-            _position.Y = (int)position.Y;
-            Changed?.Invoke(this);
+            SetPosition((int)position.X, (int)position.Y);
         }
         public void TranslateX(int amount)
         {

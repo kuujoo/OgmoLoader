@@ -4,12 +4,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace kuujoo.Pixel
 {
-    public class Component : IComparable<Component>
+    public class Component
     {
         public bool Enabled => (Entity == null || Entity.Enabled) && _enabled;
         public Entity Entity {get; set;}
         public Scene Scene => Entity.Scene;
-        public int UpdateOrder { get; set; }
         bool _enabled = true;
         public void SetEnabled(bool enabled)
         {
@@ -23,11 +22,6 @@ namespace kuujoo.Pixel
         public void RemovedFromEntity()
         {
             Entity.Transform.Changed -= TransformChanged;
-            Scene.GetSceneComponent<Tracker>().RemoveComponent(this);
-        }
-        public virtual void StartUp()
-        {
-
         }
         public virtual void TransformChanged(Transform transform)
         {
@@ -37,9 +31,11 @@ namespace kuujoo.Pixel
         }
         public virtual void CleanUp() {
         }
-        public int CompareTo(Component other)
+        public virtual void RemovedFromScene()
         {
-            return UpdateOrder.CompareTo(other.UpdateOrder);
+        }
+        public virtual void AddedToScene()
+        {
         }
         public ICoroutine StartCoroutine(IEnumerator enumerator)
         {

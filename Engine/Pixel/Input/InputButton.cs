@@ -59,7 +59,7 @@ namespace kuujoo.Pixel
         }
         public void Update(IInputState state)
         {
-            _buffer_timer = MathExt.Approach(_buffer_timer, 0.0f, Time.DeltaTime);
+            _buffer_timer = Calc.Approach(_buffer_timer, 0.0f, Time.DeltaTime);
             Pressed = false;
             Down = false;
             Released = false;

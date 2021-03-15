@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace kuujoo.Pixel
 {
-    public class BoxCollider : Collider, IRenderable
+    public class BoxCollider : Collider
     {
         public int Layer => 0;
         public override Rectangle Bounds => new Rectangle((Entity.Transform.Position + _position), _size.ToPoint());
@@ -16,15 +16,23 @@ namespace kuujoo.Pixel
 #if DEBUG
         List<Vector2> _lastCast = new List<Vector2>();
 #endif
-        public BoxCollider(Rectangle rect)
-        {
-            _position = rect.Location;
-            _size = rect.Size.ToVector2();
-        }
-        public BoxCollider(int x, int y, int width, int height)
+        public void Set(int x, int y, int width, int height)
         {
             _position = new Point(x, y);
             _size = new Vector2(width, height);
+        }
+        public override void CleanUp()
+        {
+            base.CleanUp();
+#if DEBUG
+            _lastCast.Clear();
+#endif
+            _castX.Reset();
+            _castY.Reset();
+        }
+        public void Set(Rectangle rect)
+        {
+            Set(rect.X, rect.Y, rect.Width, rect.Height);
         }
         public override bool Collides(Collider other, Point offset)
         {
@@ -89,24 +97,6 @@ namespace kuujoo.Pixel
             _position = rect.Location;
             _size = rect.Size.ToVector2();
             Updated?.Invoke(this);
-        }
-        public bool IsVisibleFromCamera(Camera camera)
-        {
-            return camera.Bounds.Intersects(Bounds);
-        }
-        public void DebugRender(Graphics graphics)
-        {
-#if DEBUG
-            graphics.DrawHollowRect(Bounds, Color.Red);
-            var rect = Bounds;
-            for (var i = 0; i <  _lastCast.Count; i++)
-            {
-                graphics.DrawHollowRect(new Rectangle(_lastCast[i].ToPoint(), rect.Size), Color.Red);
-            }
-#endif
-        }
-        public void Render(Graphics graphics)
-        {
         }
     }
 }

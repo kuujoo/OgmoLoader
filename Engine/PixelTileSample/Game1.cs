@@ -15,15 +15,23 @@ namespace kuujoo.Pixel
 
             var room = new Scene(384, 216);
             string[] sprites = { "Content/Sprites" };
-            var res = room.AddSceneComponent(new RuntimeSpriteLibrary(128,128, sprites)) as RuntimeSpriteLibrary;
+            var res = room.AddSceneComponent(new RuntimeSpriteLibrary(128,128, sprites));
             var cameraEntity = room.CreateEntity();
-            room.AddCamera(cameraEntity.AddComponent(new Camera(384, 216)));
+            var camera = cameraEntity.AddComponent(room.Get<Camera>());
+            camera.SetSize(384, 216);
+            camera.SetViewport(384, 216);
+            cameraEntity.Transform.SetPosition(384 / 2, 216 / 2);
+            room.AddCamera(camera);
+
             var sprite = res.GetSprite("sheet");
             var r = room.CreateEntity();
-            var tilemap = r.AddComponent(new TilemapRenderer(100, 100, new Tileset(16, 16, sprite.DefaultFrame.Texture, sprite.DefaultFrame.Rect)));
+            var tilemap = r.AddComponent(room.Get<TilemapRenderer>());
+
+            ByteGrid grid = new ByteGrid(100, 100);
+            tilemap.Set(grid, new Tileset(16, 16, sprite.DefaultFrame.Texture, sprite.DefaultFrame.Rect));
             for(var i = 0; i < 100 * 100; i++)
             {
-                tilemap.SetValueByIndex(i, (byte)(i % 3 + 1));
+                grid.SetValueByIndex(i, (byte)(i % 3 + 1));
             }
             Scene = room;
         }

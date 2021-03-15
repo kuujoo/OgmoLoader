@@ -9,43 +9,37 @@ namespace kuujoo.Pixel
     {
         public int Layer { get; set; }
         public static byte EmptyTile = 0;
-        public int Width => _grid.Width;
-        public int Height => _grid.Height;
+        public int Width => Grid.Width;
+        public int Height => Grid.Height;
         public Tileset Tileset { get; set; }
-        ByteGrid _grid;
-        public TilemapRenderer(int wtiles, int htiles, Tileset tileset)
+        public ByteGrid Grid { get; set; }
+        public TilemapRenderer()
         {
-            _grid = new ByteGrid(wtiles, htiles);
+
+        }
+        public void Set(ByteGrid grid, Tileset tileset)
+        {
+            Grid = grid;
             Tileset = tileset;
         }
-        public TilemapRenderer(ByteGrid grid, Tileset tileset)
+        public override void Initialize()
         {
-            _grid = grid;
-            Tileset = tileset;
+            base.Initialize();
         }
         public override void CleanUp()
         {
-        }
-        public byte GetValue(int x, int y)
-        {
-            return _grid.GetValue(x, y);
-        }
-        public byte GetValueByIndex(int idx)
-        {
-            return _grid.GetValueByIndex(idx);
+            Grid = null;
+            Tileset = null;
         }
         public bool IsVisibleFromCamera(Camera camera)
         {
-            return _grid != null && Tileset != null;
+            return Grid != null && Tileset != null;
         }
-        public void SetGrid(ByteGrid grid)
-        {
-            _grid = grid;
-        }
+
         public void Render(Graphics graphics)
         {
             if (Tileset == null) return;
-            if (_grid == null) return;
+            if (Grid == null) return;
             var gfx = Engine.Instance.Graphics;
             var bounds = graphics.Camera.Bounds;
             bounds.Location -= Entity.Transform.Position;
@@ -54,10 +48,10 @@ namespace kuujoo.Pixel
             int top = Math.Clamp((int)Math.Floor((float)bounds.Top / Tileset.TileHeight), 0, Height - 1);
             int bottom = Math.Clamp((int)Math.Floor((float)bounds.Bottom / Tileset.TileHeight), 0, Height - 1);
             for (var j = top; j <= bottom; j++)
-            {
+            { 
                 for (var i = left; i <= right; i++)
                 {
-                    var tile_id = _grid.GetValue(i, j);
+                    var tile_id = Grid.GetValue(i, j);
                     if (tile_id != EmptyTile)
                     {
                         var tile = Tileset.GetTile(tile_id);
@@ -68,14 +62,6 @@ namespace kuujoo.Pixel
         }
         public void DebugRender(Graphics graphics)
         {
-        }
-        public void SetValue(int x, int y, byte value)
-        {
-            _grid.SetValue(x, y, value);
-        }
-        public void SetValueByIndex(int index, byte value)
-        {
-            _grid.SetValueByIndex(index, value);
         }
     }
 }

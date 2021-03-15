@@ -13,9 +13,40 @@ namespace kuujoo.Pixel
 			}
 			return Math.Max(start - shift, end);
 		}
+		public static int Approach(int start, int end, int shift)
+		{
+			if (start < end)
+			{
+				return Math.Min(start + shift, end);
+			}
+			return Math.Max(start - shift, end);
+		}
+		public static float PointAngle(Vector2 v0, Vector2 v1)
+        {
+			return (float)Math.Atan2(v1.Y - v0.Y, v1.X - v0.X);
+		}
 		public static Vector2 Approach(Vector2 start, Vector2 end, float shift)
 		{
 			return new Vector2(Approach(start.X, end.X, shift), Approach(start.Y, end.Y, shift));
+		}
+		public static float AngleDiff(float radians0, float radians1)
+		{
+			float num;
+			for (num = radians1 - radians0; num > (float)Math.PI; num -= (float)Math.PI * 2f)
+			{
+			}
+			for (; num <= -(float)Math.PI; num += (float)Math.PI * 2f)
+			{
+			}
+			return num;
+		}
+		public static Vector2 LengthDir(float dist, float angle)
+        {
+			return new Vector2( dist * (float)Math.Cos((double)angle), dist * -(float)Math.Sin((double)angle) );
+		}
+		public static float AngleApproach(float val, float target, float maxMove)
+		{
+			return val + Math.Clamp(AngleDiff(val, target), 0f - maxMove, maxMove);
 		}
 		public static void UnionRects(ref Rectangle value1, ref Rectangle value2, out Rectangle result)
 		{

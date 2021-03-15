@@ -45,13 +45,15 @@ namespace kuujoo.Pixel
             string[] sprites = { "Content/Sprites" };
             var resources = room.AddSceneComponent(new RuntimeSpriteLibrary(256, 256, sprites));
             var cameraEntity = room.CreateEntity();
-            var camera = cameraEntity.AddComponent(new Camera(1920, 1080)
-            {
-                BackgroundColor = Color.Aquamarine
-            });
+            var camera = cameraEntity.AddComponent(room.Get<Camera>());
+
+            camera.SetViewport(1920, 1080);
+            camera.SetSize(1920, 1080);
+            camera.BackgroundColor = Color.Aquamarine;
+
             room.AddCamera(camera);
             var texturepages_entity = room.CreateEntity();
-            texturepages_entity.AddComponent(new TexturePagesRenderer());
+            texturepages_entity.AddComponent(room.Get<TexturePagesRenderer>());
             texturepages_entity.Transform.SetPosition(12, 12);
             room.AddEntity(texturepages_entity);
             Scene = room;

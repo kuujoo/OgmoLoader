@@ -13,8 +13,8 @@ namespace kuujoo.Pixel
         {
             base.Initialize();
             _speed = Random.Range(new Vector2(-100, -100), new Vector2(100, 100));
-            Entity.AddComponent(new BoxCollider(0, 0, 32, 32));
-            _collider = Entity.GetComponent<BoxCollider>();
+            _collider = Entity.AddComponent(Scene.Get<BoxCollider>());
+            _collider.Set(0, 0, 8, 8);
             _collider.Mask = CollisionMask.Solid;
         }
         public void Update()
@@ -26,7 +26,7 @@ namespace kuujoo.Pixel
             if (_speed.Y > 0 && Entity.Transform.Position.Y > 216) _speed.Y *= -1;
             if (_speed.Y < 0 && Entity.Transform.Position.Y < 0) _speed.Y *= -1;
 
-            if (_collider.Check(CollisionMask.Solid, Point.Zero) != null)
+            if (true || _collider.Check(CollisionMask.Solid, Point.Zero) != null)
             {
                 _color = Color.Red;
             }
@@ -59,16 +59,17 @@ namespace kuujoo.Pixel
 
             var room = new Scene(384, 216);
             var cameraEntity = room.CreateEntity();
-            var camera = cameraEntity.AddComponent(new Camera(384, 216)
-            {
-                BackgroundColor = Color.Aquamarine
-            });
+            var camera = cameraEntity.AddComponent(room.Get<Camera>());
+            camera.BackgroundColor = Color.Aquamarine;
+            camera.SetSize(384, 216);
+            camera.SetViewport(384, 216);
+            cameraEntity.Transform.SetPosition(384 / 2, 216 / 2);
             room.AddCamera(camera);
             room.DebugRender = true;
-            for(var i = 0; i< 10; i++)
+            for(var i = 0; i< 1000; i++)
             {
                 var e = room.CreateEntity();
-                e.AddComponent(new Test());
+                e.AddComponent(room.Get<Test>());
                 e.Transform.SetPosition(Random.Range(0, 384), Random.Range(0, 216));
             }
             Scene = room;

@@ -28,7 +28,7 @@ namespace kuujoo.Pixel
 			Used = (_currentState.Buttons != _previousState.Buttons || _currentState.DPad != _previousState.DPad);
 			if (_rumbleTime > 0f)
 			{
-				_rumbleTime = MathExt.Approach(_rumbleTime, 0.0f, Time.UnscaledDeltaTime);
+				_rumbleTime = Calc.Approach(_rumbleTime, 0.0f, Time.UnscaledDeltaTime);
 				if (_rumbleTime <= 0f)
 				{
 					GamePad.SetVibration(_playerIndex, 0, 0);

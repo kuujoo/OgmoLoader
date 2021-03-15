@@ -21,12 +21,9 @@ namespace kuujoo.Pixel
     public class Tracker : SceneComponent
     {
         SpatialHash _hash = new SpatialHash();
-
         List<IRenderable> _renderables = new List<IRenderable>();
         List<IUpdateable> _updateables = new List<IUpdateable>();
-        List<IResettable> _resettables = new List<IResettable>();
         Dictionary<Type, List<Component>> _components = new Dictionary<Type, List<Component>>();
-
         public void AddComponent(Component component)
         {
             var type = component.GetType();
@@ -37,11 +34,6 @@ namespace kuujoo.Pixel
             if(component is IUpdateable)
             {
                 _updateables.Add(component as IUpdateable);
-            }
-
-            if(component is IResettable)
-            {
-                _resettables.Add(component as IResettable);
             }
 
             if(component is Collider)
@@ -74,10 +66,6 @@ namespace kuujoo.Pixel
             {
                 _updateables.Remove(component as IUpdateable);
             }
-            if (component is IResettable)
-            {
-                _resettables.Remove(component as IResettable);
-            }
             if (component is Collider)
             {
                 var collider = component as Collider;
@@ -95,10 +83,6 @@ namespace kuujoo.Pixel
         {
             _updateables.Sort(UpdateableSorter);
             return _updateables;
-        }
-        public List<IResettable> GetResettables()
-        {
-            return _resettables;
         }
         public void UpdateCollider(Collider collider)
         {

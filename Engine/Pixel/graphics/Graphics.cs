@@ -136,6 +136,15 @@ namespace kuujoo.Pixel
         {
             SpriteBatch.Draw(texture, at, Color.White);
         }
+        public void DrawLine(Vector2 start, Vector2 end, Color color)
+        {
+            DrawLineAngle(start, Calc.PointAngle(start, end), Vector2.Distance(start, end), color);
+        }
+        public void DrawLineAngle(Vector2 start, float angle, float length, Color color)
+        {
+            SpriteBatch.Draw(Pixel, start, new Rectangle(0,0,1,1), color, angle, Vector2.Zero, new Vector2(length, 1f), SpriteEffects.None, 0f);
+        }
+
         public void DrawTexture(Texture2D texture, Rectangle destination, Rectangle source, Color color)
         {
             SpriteBatch.Draw(texture, destination, source, color, 0.0f, Vector2.Zero,SpriteEffects.None, 0.5f);

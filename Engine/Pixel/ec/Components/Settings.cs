@@ -15,6 +15,11 @@ namespace kuujoo.Pixel
         Dictionary<string, string[]> _sArrayValues = new Dictionary<string, string[]>();
         Dictionary<string, Point> _pointValues = new Dictionary<string, Point>();
         Dictionary<string, Vector2> _vectorValues = new Dictionary<string, Vector2>();
+        public override void CleanUp()
+        {
+            base.CleanUp();
+
+        }
         public void SetBool(string key, bool value)
         {
             _bValues[key] = value;

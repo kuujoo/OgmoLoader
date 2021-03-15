@@ -35,7 +35,7 @@ namespace kuujoo.Pixel
             var graphics = new GraphicsDeviceManager(this)
             {
                 IsFullScreen = fullscreen,
-                SynchronizeWithVerticalRetrace = true,
+                SynchronizeWithVerticalRetrace = false,
                 PreferredBackBufferWidth = width,
                 PreferredBackBufferHeight = height,
             };
@@ -118,7 +118,7 @@ namespace kuujoo.Pixel
 #if DEBUG
             RenderTimer.Stop();
             RenderFps = (int)Math.Ceiling(1.0 / gameTime.ElapsedGameTime.TotalSeconds);
-            Window.Title = $"Render ms: {RenderTimer.Max} Render FPS: {RenderFps} Update MS: {UpdateTimer.Max} Update FPS: {UpdateFps}";
+            Window.Title = $"Render ms: {RenderTimer.Max} Render FPS: {RenderFps} Update MS: {UpdateTimer.Max} Update FPS: {UpdateFps}, 'FPS:' { 1000.0f / Math.Max(RenderTimer.Max + UpdateTimer.Max, 0.00001f) }";
 #endif
             base.Draw(gameTime);
 

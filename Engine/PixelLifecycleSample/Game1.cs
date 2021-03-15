@@ -26,9 +26,8 @@ namespace kuujoo.Pixel
             base.Initialize();
             var room = new Scene(384, 216);
             var entity = room.CreateEntity();
-            entity.AddComponent(new LifeCyclePrinter()); // Componoent::Initialize
+            entity.AddComponent(room.Get<LifeCyclePrinter>()); // Componoent::Initialize
             room.DestroyEntity(entity); // Component::Destroy, Component::Cleanup
-            Scene = room;
         }
     }
 }
