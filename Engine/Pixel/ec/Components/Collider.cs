@@ -67,27 +67,6 @@ namespace kuujoo.Pixel
             return true;
         }
     }
-    public static class CollisionMask
-    {
-        public static int Solid = 1 << 0;
-        public static int JumpThroughSolid = 1 << 1;
-        public static int Danger = 1 << 2;
-        public static int Actor = 1 << 3;
-        public static int Player = 1 << 4;
-        public static int Trigger = 1 << 5;
-        public static int Enemy = 1 << 6;
-        public static int Death = 1 << 7;
-        public static int Interactable = 1 << 8;
-        public static int Breakable = 1 << 9;
-        public static int Landable = 1 << 10;
-        public static int PlayerDetector = 1 << 11;
-        public static int Checkpoint = 1 << 12;
-        public static int Blocker = 1 << 13;
-        public static int Grabable = 1 << 14;
-        public static int Pushable = 1 << 15;
-        public static int PlayerHurtable = 1 << 16;
-        public static int enemyHurtable = 1 << 17;
-    }
 
     public abstract class Collider : Component
     {
