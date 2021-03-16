@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace kuujoo.Pixel
@@ -123,9 +124,23 @@ namespace kuujoo.Pixel
                     FrameIndex = 0;
                     _frameTimer = Sprite.Animations[_animationIndex].Frames[_frameIndex].Duration;
                     _play = true;
-                    break;
+                    return;
                 }
             }
+            Debug.Assert(false, "Animation not found");
+        }
+        public void SetFrame(string name, int frame)
+        {
+            for (var i = 0; i < Sprite.Animations.Count; i++)
+            {
+                if (Sprite.Animations[i].Name == name)
+                {
+                    AnimationIndex = i;
+                    FrameIndex = frame;
+                    return;
+                }
+            }
+            Debug.Assert(false, "Animation not found");
         }
         public void Pause()
         {
