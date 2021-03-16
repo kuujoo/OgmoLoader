@@ -24,6 +24,11 @@ namespace kuujoo.Pixel
         List<IRenderable> _renderables = new List<IRenderable>();
         List<IUpdateable> _updateables = new List<IUpdateable>();
         Dictionary<Type, List<Component>> _components = new Dictionary<Type, List<Component>>();
+        Action<Collider> _updateCollider;
+        public Tracker()
+        {
+            _updateCollider = UpdateCollider;
+        }
         public void AddComponent(Component component)
         {
             var type = component.GetType();
@@ -39,7 +44,7 @@ namespace kuujoo.Pixel
             if(component is Collider)
             {
                 var collider = component as Collider;
-                collider.Updated += UpdateCollider;
+                collider.Updated += _updateCollider;
                 _hash.Register(collider);
             }
 
@@ -70,7 +75,7 @@ namespace kuujoo.Pixel
             {
                 var collider = component as Collider;
                 _hash.Unregister(collider);
-                collider.Updated -= UpdateCollider;
+                collider.Updated -= _updateCollider;
             }
             _components[type].Remove(component);
         }
