@@ -18,6 +18,14 @@ namespace kuujoo.Pixel
         {
             Transform = new Transform();
             Components = new List<Component>();
+            Transform.Changed = OnTransformChanged;
+        }
+        void OnTransformChanged(Transform transform)
+        {
+            for (var i = 0; i < Components.Count; i++)
+            {
+                Components[i].TransformChanged(transform);
+            }
         }
         public void SetEnabled(bool enabled)
         {

@@ -10,10 +10,8 @@ namespace kuujoo.Pixel
         public Entity Entity {get; set;}
         public Scene Scene => Entity.Scene;
         bool _enabled = true;
-        Action<Transform> _transformChangedAction;
         public Component()
         {
-            _transformChangedAction = TransformChanged;
         }
         public void SetEnabled(bool enabled)
         {
@@ -21,12 +19,11 @@ namespace kuujoo.Pixel
         }
         public void AddedToEntity()
         {
-            Entity.Transform.Changed += _transformChangedAction;
+
 
         }
         public void RemovedFromEntity()
         {
-            Entity.Transform.Changed -= _transformChangedAction;
         }
         public virtual void TransformChanged(Transform transform)
         {
