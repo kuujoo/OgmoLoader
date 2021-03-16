@@ -6,6 +6,9 @@ namespace kuujoo.Pixel
     public class Test : Component, IRenderable, IUpdateable
     {
         public int Layer { get; set; }
+
+        public int UpdateOrder { get; set; }
+
         Vector2 _speed;
         BoxCollider _collider;
         Color _color = Color.White;
@@ -15,7 +18,7 @@ namespace kuujoo.Pixel
             _speed = Random.Range(new Vector2(-100, -100), new Vector2(100, 100));
             _collider = Entity.AddComponent(Scene.Get<BoxCollider>());
             _collider.Set(0, 0, 8, 8);
-            _collider.Mask = CollisionMask.Solid;
+            _collider.Mask = 1;
         }
         public void Update()
         {
@@ -26,7 +29,7 @@ namespace kuujoo.Pixel
             if (_speed.Y > 0 && Entity.Transform.Position.Y > 216) _speed.Y *= -1;
             if (_speed.Y < 0 && Entity.Transform.Position.Y < 0) _speed.Y *= -1;
 
-            if (true || _collider.Check(CollisionMask.Solid, Point.Zero) != null)
+            if (true || _collider.Check(1, Point.Zero) != null)
             {
                 _color = Color.Red;
             }
