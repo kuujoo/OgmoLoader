@@ -23,6 +23,8 @@ namespace kuujoo.Pixel
 
     public class Camera : Component, IComparable<Camera>
     {
+        public int Width { get; private set; }
+        public int Height { get; private set; }
         public Effect Effect { get; set; }
         public List<int> ExcludeLayers { get; private set; }
         public List<int> IncludeLayers { get; private set; }
@@ -88,8 +90,6 @@ namespace kuujoo.Pixel
         Vector2 _origin = Vector2.Zero;
         bool _updateMatrices = true;
         Vector2 _scale = Vector2.One;
-        int _width;
-        int _height;
         public Camera()
         {
             Priority = 0;
@@ -102,8 +102,8 @@ namespace kuujoo.Pixel
         }
         public void SetSize(int width, int height)
         {
-            _width = width;
-            _height = height;
+            Width = width;
+            Height = height;
             _updateMatrices = true;
         }
         public override void TransformChanged(Transform transform)
@@ -123,18 +123,18 @@ namespace kuujoo.Pixel
             _origin = new Vector2(Viewport.Width / 2.0f, Viewport.Height / 2.0f);
             if (ScalePolicy == ScalePolicy.Max)
             {
-                var v = Math.Max(Viewport.Width / _width, Viewport.Height / _height);
+                var v = Math.Max(Viewport.Width / Width, Viewport.Height / Height);
                 _scale = Vector2.One * v;
             }
             else if(ScalePolicy == ScalePolicy.Min)
             {
-                var v = Math.Min(Viewport.Width / _width, Viewport.Height / _height);
+                var v = Math.Min(Viewport.Width / Width, Viewport.Height / Height);
                 _scale = Vector2.One * v;
             }
             else if(ScalePolicy == ScalePolicy.Stretch)
             {
-                var w = (float)Viewport.Width / _width;
-                var h = (float)Viewport.Height / _height;
+                var w = (float)Viewport.Width / Width;
+                var h = (float)Viewport.Height / Height;
                 _scale = new Vector2(w, h);
             }
             else
